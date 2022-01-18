@@ -1,12 +1,12 @@
 Package: kmod-ebtables
 Version: 4.9.206-1
-Depends: kernel (=4.9.206-1-eef4e7657600654501bc5c4649a445db), kmod-ipt-core
+Depends: kernel (=4.9.206-1-16d3e7543a47724fc9ab98990d7ee14a), kmod-ipt-core
 Source: package/kernel/linux
 SourceName: kmod-ebtables
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 18528
+Installed-Size: 18514
 Description:  ebtables is a general, extensible frame/packet identification
  framework. It provides you to do Ethernet
  filtering/NAT/brouting on the Ethernet bridge.

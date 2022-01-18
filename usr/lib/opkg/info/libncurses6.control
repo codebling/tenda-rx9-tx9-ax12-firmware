@@ -8,5 +8,5 @@ License: MIT
 LicenseFiles: README
 Section: libs
 Architecture: mips_24kc_nomips16
-Installed-Size: 166787
+Installed-Size: 166776
 Description:  Terminal handling library (Unicode)

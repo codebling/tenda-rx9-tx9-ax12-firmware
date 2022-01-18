@@ -63,7 +63,8 @@ proto_dhcp_setup() {
 	append dhcpopts "-O 249"
 
 	if [ $iface = "br-lan" -a "$ipaddr"x != "x" ];then
-        ifconfig br-lan $ipaddr
+		local mask=`uci get network.lan.netmask`
+        ifconfig br-lan $ipaddr netmask $mask
 		/etc/init.d/dnsmasq restart
     fi
 	

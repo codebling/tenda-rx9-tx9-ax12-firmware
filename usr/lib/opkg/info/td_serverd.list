@@ -1,10 +1,12 @@
 /etc/sh/icmp_drop_rule.sh
+/etc/sh/CE_tx_power.sh
 /etc/config/ipv6UserCfg
 /bin/td_serverd
 /etc/sh/rem_web_rule_on.sh
 /etc/hotplug.d/iface/10-promote_secondaries
 /etc/hotplug.d/iface/05-check-ipv4-default-route
 /etc/init.d/watchdog
+/etc/sh/dfs_check.sh
 /etc/sh/hostapd_acs_schedule
 /etc/sh/acs_scan.sh
 /etc/sh/iw_scan.sh

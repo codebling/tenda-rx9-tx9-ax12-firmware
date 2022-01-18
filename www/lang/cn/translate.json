@@ -665,7 +665,7 @@
     "When it is enabled, indicators are turned off and the WiFi network and USB port enter the Sleeping mode to reduce power consumption.": "启用智能省电，指示灯将关闭，WiFi以及USB接口将进入休眠状态，节能环保。",
     "How to use the WiFi network when the router is in Sleeping mode?": "智能省电时间段内想使用WiFi，怎么办？",
     "Method 1: Press the WiFi button on the router.": "方法1. 按下路由器上WiFi按键打开WiFi即可",
-    "Method 2: Wake up the router using Tenda WiFi App. (To download Tenda WiFi App, choose Advanced Settings > Tenda WiFi App and scan the QR code.)": "方法2. 安装Tenda WiFi APP进行唤醒路由器即可（高级功能 - APP远程管理 - 扫描二维码 即可下载Tenda WiFi APP）",
+    "Wake up the router using Tenda WiFi App. (To download Tenda WiFi App, choose Advanced Settings > Tenda WiFi App and scan the QR code.)": "安装Tenda WiFi APP进行唤醒路由器即可（高级功能 - APP远程管理 - 扫描二维码 即可下载Tenda WiFi APP）",
     "Method 1: Wake up the router using Tenda WiFi App. (To download Tenda WiFi App, choose Advanced Settings > Tenda WiFi App and scan the QR code.)": "方法1. 安装Tenda WiFi APP进行唤醒路由器即可（高级功能 - APP远程管理 - 扫描二维码 即可下载Tenda WiFi APP）",
     "Destination Network": "目标网络",
     "Gateway": "网关",
@@ -976,5 +976,6 @@
     "WPS:": "WPS：",
     "Current Channel:": "当前信道：",
     "Current Bandwidth:": "当前频宽：",
-    "Interface": "接口"
+    "Interface": "接口",
+    "Set up the this machine's WiFi name and password to the same as those of the Base Station.": "本机无线名称和密码与上级无线信号一致"
 }

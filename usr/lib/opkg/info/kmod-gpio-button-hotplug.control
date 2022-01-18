@@ -1,6 +1,6 @@
 Package: kmod-gpio-button-hotplug
 Version: 4.9.206-3
-Depends: kernel (=4.9.206-1-eef4e7657600654501bc5c4649a445db)
+Depends: kernel (=4.9.206-1-16d3e7543a47724fc9ab98990d7ee14a)
 Source: package/kernel/gpio-button-hotplug
 SourceName: kmod-gpio-button-hotplug
 License: GPL-2.0

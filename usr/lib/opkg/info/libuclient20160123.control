@@ -8,5 +8,5 @@ License: ISC
 Section: libs
 Maintainer: Felix Fietkau <nbd@nbd.name>
 Architecture: mips_24kc_nomips16
-Installed-Size: 10198
+Installed-Size: 10196
 Description:  HTTP/1.1 client library

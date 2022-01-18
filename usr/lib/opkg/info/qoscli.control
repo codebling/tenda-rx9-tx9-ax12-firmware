@@ -7,5 +7,5 @@ License: Intel
 Section: utils
 Maintainer: Intel Corporation
 Architecture: mips_24kc_nomips16
-Installed-Size: 21496
+Installed-Size: 21492
 Description:  Intel UGW QoS FAPI CLI

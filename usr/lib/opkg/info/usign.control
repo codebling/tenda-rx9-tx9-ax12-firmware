@@ -7,5 +7,5 @@ License: ISC
 Section: base
 Maintainer: Felix Fietkau <nbd@nbd.name>
 Architecture: mips_24kc_nomips16
-Installed-Size: 11340
+Installed-Size: 11338
 Description:  OpenWrt signature verification utility

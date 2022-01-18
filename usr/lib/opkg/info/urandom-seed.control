@@ -6,5 +6,5 @@ SourceName: urandom-seed
 License: GPL-2.0
 Section: base
 Architecture: mips_24kc_nomips16
-Installed-Size: 834
+Installed-Size: 836
 Description:  /etc/urandom.seed handling for OpenWrt

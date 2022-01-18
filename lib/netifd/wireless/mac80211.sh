@@ -886,7 +886,7 @@ mac80211_custom_teardown_vif() {
 
 	case "$mode" in
 		ap)
-			iw dev $ifname iwlwav sreliablemcast $sreliablemcast
+			iw dev $ifname iwlwav sReliableMcast ${sreliablemcast:-0}
 		;;
 	esac
 
@@ -987,6 +987,25 @@ mac80211_prepare_vif() {
 	json_select ..
 }
 
+#zly++ for l2nat
+l2nat_conf(){
+	proto=$(uci get network.lan.proto 2>/dev/null)
+	[ "$proto" != "dhcp" ] &&{
+		return
+	}
+	
+	json_select config
+	json_get_vars ifname
+	json_select ..
+
+	[ -n "$ifname" ] && {
+		logger "$ifname add l2nat dev"
+		echo add $ifname > /proc/l2nat/dev
+		echo enable > /proc/ppa/api/bridged_flow_learning 
+		ppacmd setbr -f 0
+	}
+}
+
 mac80211_setup_supplicant() {
 	wpa_supplicant_prepare_interface "$ifname" nl80211 || return 1
 	wpa_supplicant_add_network "$ifname"
@@ -1083,8 +1102,8 @@ mac80211_setup_vif() {
 	json_select config
 	json_get_vars mode
 
-	# try again if up wlanX fail.
-	ip link set dev "$ifname" up || sleep 3
+	# try again if up wlanX fail.fixed by netifd
+	#ip link set dev "$ifname" up || sleep 3
 	ip link set dev "$ifname" up || {
 		wireless_setup_vif_failed IFUP_ERROR
 		json_select ..
@@ -1444,10 +1463,12 @@ setup_reconf() {
 	if [ "$action" = "setup" ]; then
 		for_each_interface "sta adhoc mesh monitor" mac80211_setup_vif
 		wireless_set_up
+		for_each_interface "sta" l2nat_conf
 	fi
 }
 
 drv_mac80211_setup() {
+	echo "$@" >/tmp/wlan_test
 	setup_reconf "setup" "$@"
 }
 

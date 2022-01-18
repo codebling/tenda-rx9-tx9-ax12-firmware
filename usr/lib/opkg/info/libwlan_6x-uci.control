@@ -6,5 +6,5 @@ SourceName: libwlan_6x-uci
 Section: utils
 Maintainer: Intel Corporation
 Architecture: mips_24kc_nomips16
-Installed-Size: 1294
+Installed-Size: 1295
 Description:  Intel SL for WLAN Support

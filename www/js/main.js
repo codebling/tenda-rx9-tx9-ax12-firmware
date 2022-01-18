@@ -827,9 +827,15 @@ staInfo = {
             if (G.workMode == "router") {
                 staInfo.setRouterMode(obj);
                 $("#routerMode").removeClass("none");
-            } else {
+            } else if(G.workMode == "ap") {
                 $("#apMode").removeClass("none");
                 staInfo.setAPMode(obj);
+            } else if(G.workMode == "wisp") {
+                $("#apMode").removeClass("none");
+                staInfo.setWispMode(obj);
+            } else if(G.workMode == "client+ap") {
+                $("#apMode").removeClass("none");
+                staInfo.setApclientMode(obj);
             }
         }
 
@@ -856,6 +862,10 @@ staInfo = {
             if (workMode == "client+ap") {
                 hideArr.push("adv_sleepMode");
             }
+        }else if (workMode == "wisp") {
+            $("[href='#guest-setting']").parent().addClass("none");
+            $("[href='#parent-control']").parent().removeClass("none");
+            hideArr = ["wrl_wps", "wrl_wifi_time", "adv_sleepMode", "adv_iptv"];
         }
         if (nodeType === "agent") { //子节点信息
             $("[href='#wireless-setting']").parent().addClass("none");hid
@@ -897,6 +907,29 @@ staInfo = {
         } else {
             $("#statusApDisconnected").removeClass("none");
         }
+    },
+
+    setWispMode: function (obj) {
+        var wispConnectStatus = obj.wanInfo[0].wanStatus;
+        $("#statusApConnected").addClass("none");
+        $("#statusApDisconnected").addClass("none");
+        $("#statusMeshConnected").addClass("none");
+        //TODO: 设置是否连接上级成功
+        if (wispConnectStatus.charAt(2) == "1") {
+            $("#statusApConnected").removeClass("none");
+        } else {
+            $("#statusApDisconnected").removeClass("none");
+        }
+    },
+    setApclientMode: function (obj) {
+        var apConnectStatus = obj.wanInfo[0].wanStatus;
+        apConnectStatus = apConnectStatus.slice(-4);
+        if (apConnectStatus == "2003") {
+            $("#statusApConnected").removeClass("none");
+        } else {
+            $("#statusApDisconnected").removeClass("none");
+        }
+
     },
 
     setWlStatus: function (obj) {
@@ -1960,9 +1993,9 @@ wrlInfo = {
             case "wrl_wifi_time":
                 showIframe(_("WiFi Schedule"), "wifi_time.html", 610, 470);
                 break;
-            // case "wrl_bridge":
-            //     showIframe(_("Wireless Repeating"), "wisp.html", 700, 350);
-            //     break;
+            case "wrl_bridge":
+                showIframe(_("Wireless Repeating"), "wisp.html", 700, 350);
+                break;
             case "wrl_channel":
                 showIframe(_("Channel & Bandwidth"), "wireless.html", 460, 480);
                 break;
@@ -2015,16 +2048,16 @@ wrlInfo = {
         } else {
             $("#wrl_ap_mode .function-status").html(_("Disable"));
         }
-        // if (obj.wispEn == 0) {
-        //     $("#wrl_bridge .function-status").html(_("Disable"));
-        //     //$("#sys_lan_status").removeClass("disabled");
-        // } else if (obj.wispEn == 2) {
-        //     //$("#sys_lan_status").addClass("disabled");
-        //     $("#wrl_bridge .function-status").html(_("Connected"));
-        // } else {
-        //     //$("#sys_lan_status").addClass("disabled");
-        //     $("#wrl_bridge .function-status").html(_("Enable"));
-        // }
+        if (obj.wispEn == 0) {
+            $("#wrl_bridge .function-status").html(_("Disable"));
+            //$("#sys_lan_status").removeClass("disabled");
+        } else if (obj.wispEn == 2) {
+            //$("#sys_lan_status").addClass("disabled");
+            $("#wrl_bridge .function-status").html(_("Connected"));
+        } else {
+            //$("#sys_lan_status").addClass("disabled");
+            $("#wrl_bridge .function-status").html(_("Enable"));
+        }
 
         if (obj.WifiAntijamEn == "false") {
             $("#wrl_anti_interference .function-status").html(_("Disable"));
@@ -2162,31 +2195,6 @@ guestInfo = {
         }
     },
     checkValidate: function () {},
-    isShowDfs:function () {
-        var guestArr = ['guestSsid','guestSsid_5g','guestWrlPwd']
-        if(guestInfo.main5gEn =="1"){
-            // if (guestInfo.initObj.guestEn_5g =="1"&& guestInfo.dfsEnable == 1 && guestInfo.setGuestInfo.guestEn_5g == "1") {
-            //     for(var item in guestInfo._5gOption){
-            //         if(guestInfo.initObj[guestInfo._5gOption[item]] != guestInfo.setGuestInfo[guestInfo._5gOption[item]]){
-            //             return true;
-            //         }
-            //     }
-            // }
-            // if(guestInfo.initObj.guestEn_5g == "0" &&guestInfo.setGuestInfo.guestEn_5g == "1"){
-            //     return true;
-            // }
-            if($("#guestEn").val()!= Number(guestInfo.initObj.guestEn == "1" || guestInfo.initObj.guestEn_5g =="1")){
-                return true
-            }
-            for(var i = 0;i<guestArr.length;i++){
-                console.log()
-                if($("#"+guestArr[i]).val() != guestInfo.initObj[guestArr[i]]){
-                    return true
-                }
-            }
-        }
-        return false
-    },
     preSubmit: function () {
         var subData,
           dataObj,
@@ -2208,6 +2216,9 @@ guestInfo = {
             "effectiveTime": $("[name=effectiveTime]").val(),
             "shareSpeed": $("#shareSpeed")[0].val() * 128
         };
+        if (guestInfo.initObj.guestSsid_5g != dataObj.guestSsid_5g || guestInfo.initObj.guestWrlPwd_5g != dataObj.guestWrlPwd_5g || guestInfo.initObj.guestEn_5g != dataObj.guestEn_5g){
+            dataObj['wifi_chkHz']='1'; 
+        }
         guestInfo.setGuestInfo = dataObj;
         subData = objTostring(dataObj);
         subObj = {
@@ -2222,10 +2233,10 @@ guestInfo = {
             return;
         }
         var num = $.parseJSON(str).errCode;
-        if(guestInfo.isShowDfs()){
-            showDFSMsg(num);
+        if(num ==1){
+            top.showDFSMsg(0);
         }else{
-            showSaveMsg(num);
+            top.showSaveMsg(num);
         }
         if (num == 0) {
             $("#guest_submit").blur();

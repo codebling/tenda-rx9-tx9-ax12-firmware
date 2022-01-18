@@ -7,5 +7,5 @@ SourceName: libxtables
 License: GPL-2.0
 Section: libs
 Architecture: mips_24kc_nomips16
-Installed-Size: 45497
+Installed-Size: 45496
 Description:  IPv4/IPv6 firewall - shared xtables library

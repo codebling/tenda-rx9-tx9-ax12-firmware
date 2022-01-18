@@ -1,10 +1,10 @@
 Package: kmod-crypto-iv
 Version: 4.9.206-1
-Depends: kernel (=4.9.206-1-eef4e7657600654501bc5c4649a445db), kmod-crypto-manager, kmod-crypto-rng, kmod-crypto-wq
+Depends: kernel (=4.9.206-1-16d3e7543a47724fc9ab98990d7ee14a), kmod-crypto-manager, kmod-crypto-rng, kmod-crypto-wq
 Source: package/kernel/linux
 SourceName: kmod-crypto-iv
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 200
+Installed-Size: 199
 Description:  CryptoAPI initialization vectors

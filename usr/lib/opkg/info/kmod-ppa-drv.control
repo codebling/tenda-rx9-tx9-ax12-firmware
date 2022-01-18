@@ -1,6 +1,6 @@
 Package: kmod-ppa-drv
 Version: 4.9.206+1.0-1
-Depends: kernel (=4.9.206-1-eef4e7657600654501bc5c4649a445db), kmod-nf-conntrack, kmod-ppa-drv-stack-al, kmod-ppa-drv-grx500, kmod-ppa-drv-prx300, kmod-ppa-drv-grx500-mpe, kmod-nf-ipt
+Depends: kernel (=4.9.206-1-16d3e7543a47724fc9ab98990d7ee14a), kmod-nf-conntrack, kmod-ppa-drv-stack-al, kmod-ppa-drv-grx500, kmod-ppa-drv-prx300, kmod-ppa-drv-grx500-mpe, kmod-nf-ipt
 Source: intel_source/feeds/ugw/net/ppa/ppa-drv
 SourceName: kmod-ppa-drv
 License: GPL-2.0

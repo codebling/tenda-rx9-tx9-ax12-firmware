@@ -22,9 +22,12 @@ clear_lan_ipaddr(){
 		return
 	fi
 	lan_addr=$(uci get network.lan.ipaddr)
+	lan_mask=$(uci get network.lan.netmask)
+	local prefix
+	eval "$(ipcalc.sh "$lan_addr $lan_mask")";prefix="$PREFIX"
 	[ -n $lan_addr -a $lan_addr != $ip ]&&{
        		logger "Tenda :Lan switch to AP mode - $ip"
-       		ip addr del $lan_addr/24 dev br-lan
+       		ip addr del $lan_addr/$prefix dev br-lan
     	}
 	/etc/init.d/dnsmasq stop
 }

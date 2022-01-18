@@ -1,6 +1,6 @@
 Package: kmod-mac-violation-mirror
 Version: 4.9.206+1.0-1
-Depends: kernel (=4.9.206-1-eef4e7657600654501bc5c4649a445db), kmod-ppa-drv
+Depends: kernel (=4.9.206-1-16d3e7543a47724fc9ab98990d7ee14a), kmod-ppa-drv
 Source: intel_source/feeds/ugw/net/ppa/ppa-drv
 SourceName: kmod-mac-violation-mirror
 License: GPL-2.0

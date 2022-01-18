@@ -98,8 +98,9 @@ detect_mac80211() {
 		#SUFFIX=`echo ${macaddr#*:*:*:} | sed 's/://g'`
 		hostmac=$(macaddr_add "$phymac" 1)
 		guestmac=$(macaddr_add "$phymac" 2)
+		repeatermac=$(macaddr_add "$phymac" 2)
 		ifaceidx=0
-
+		ifname=1
 		iw phy "$dev" info | grep -q 'Capabilities:' && htmode="HT40+"
 
 		iw phy "$dev" info | grep -q '5180 MHz' && {
@@ -109,7 +110,10 @@ detect_mac80211() {
 			doth="set wireless.radio${devidx}.doth=0"
 			acs_fallback_chan='36 40 80'
 			ifaceidx=2
+			ifname=3
 			iw phy "$dev" info | grep -q 'VHT Capabilities' && htmode="VHT80"
+			limit_main="set wireless.radio${devidx}_0.maxassoc=32"
+		        limit_guest="set wireless.radio${devidx}_1.maxassoc=32"
 		}||{
 			#obbs_interval="set wireless.radio${devidx}.obss_interval=0"
 			#ignore_40mhz="set wireless.radio${devidx}.ignore_40_mhz_intolerant=1"
@@ -132,7 +136,19 @@ detect_mac80211() {
 		else
 			dev_id="set wireless.radio${devidx}.macaddr=$(cat /sys/class/ieee80211/${dev}/macaddress)"
 		fi
-
+		
+		set_uuid="$(uci get wireless.radio0_0.wps_uuid)"
+		[ -z "$set_uuid" ] && {
+			set_uuid="$(uci get wireless.radio1_0.wps_uuid)"
+		}
+		[ -z "$set_uuid" ] && {
+			set_uuid="87654321-9abc-def0-5678-70f9e65c2508"
+			uuid="$(cat /proc/sys/kernel/random/uuid | md5sum | cut -c 1-12)"
+			[ -z "$uuid" ] || {
+				set_uuid="87654321-9abc-def0-5678-${uuid}"
+			}
+		}
+		
 		uci -q batch <<-EOF
 			set wireless.radio${devidx}=wifi-device
 			set wireless.radio${devidx}.phy=${dev}
@@ -154,6 +170,8 @@ detect_mac80211() {
 			${obbs_interval}
 			${ignore_40mhz}
 			set wireless.radio${devidx}.sDisableMasterVap=1
+			set wireless.radio${devidx}.full_ch_master_control=0
+			set wireless.radio${devidx}.current_rssi=-100
 			
 
 			set wireless.default_radio${band:-24}G=wifi-iface
@@ -182,15 +200,17 @@ detect_mac80211() {
 			set wireless.radio${devidx}_0.maxassoc=128
 			set wireless.radio${devidx}_0.isolate=0
 			set wireless.radio${devidx}_0.encryption=none
-			set wireless.radio${devidx}_0.wpa_group_rekey=3600
+			set wireless.radio${devidx}_0.wpa_group_rekey=43200
 			set wireless.radio${devidx}_0.ieee80211w=0
 			set wireless.radio${devidx}_0.macfilter=Disabled
 			set wireless.radio${devidx}_0.wps_pushbutton=1
+			set wireless.radio${devidx}_0.wps_uuid=${set_uuid}
 			set wireless.radio${devidx}_0.wps_pin=${wps_pin}
 			set wireless.radio${devidx}_0.sreliablemcast=1
 			set wireless.radio${devidx}_0.disabled=0
 			set wireless.radio${devidx}_0.acs_bg_scan_do_switch=1
 			set wireless.radio${devidx}_0.dtim_period=1
+			set wireless.radio${devidx}_0.s11nProtection=1
 			
 			set wireless.radio${devidx}_1=wifi-iface
 			set wireless.radio${devidx}_1.device=radio${devidx}
@@ -206,13 +226,27 @@ detect_mac80211() {
 			set wireless.radio${devidx}_1.maxassoc=128
 			set wireless.radio${devidx}_1.isolate=0
 			set wireless.radio${devidx}_1.encryption=none
-			set wireless.radio${devidx}_1.wpa_group_rekey=3600
+			set wireless.radio${devidx}_1.wpa_group_rekey=43200
 			set wireless.radio${devidx}_1.ieee80211w=0
 			set wireless.radio${devidx}_1.macfilter=Disabled
 			set wireless.radio${devidx}_1.wps_pushbutton=0
 			set wireless.radio${devidx}_1.disabled=1
 			set wireless.radio${devidx}_1.expire=480
 			set wireless.radio${devidx}_1.dtim_period=1
+			set wireless.radio${devidx}_1.s11nProtection=1
+			${limit_main}
+			${limit_guest}
+			
+			set wireless.radio${devidx}_2=wifi-iface
+			set wireless.radio${devidx}_2.device=radio${devidx}
+			set wireless.radio${devidx}_2.mode=sta
+			set wireless.radio${devidx}_2.ifname=wlan${ifname}
+			set wireless.radio${devidx}_2.macaddr=${repeatermac}
+			set wireless.radio${devidx}_2.encryption=none
+			set wireless.radio${devidx}_2.ieee80211w=0
+			set wireless.radio${devidx}_2.disabled=1
+			set wireless.radio${devidx}_2.repeater_mode=ap
+			
 EOF
 		uci -q commit wireless
 

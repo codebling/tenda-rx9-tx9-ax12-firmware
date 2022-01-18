@@ -1,6 +1,6 @@
 Package: kmod-br-netfilter
 Version: 4.9.206-1
-Depends: kernel (=4.9.206-1-eef4e7657600654501bc5c4649a445db), kmod-ipt-core
+Depends: kernel (=4.9.206-1-16d3e7543a47724fc9ab98990d7ee14a), kmod-ipt-core
 Source: package/kernel/linux
 SourceName: kmod-br-netfilter
 License: GPL-2.0

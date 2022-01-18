@@ -6,5 +6,5 @@ SourceName: td_ddns
 Section: Tenda Property
 Maintainer: Cheung<zhanglingyun@tenda.cn>
 Architecture: mips_24kc_nomips16
-Installed-Size: 40744
+Installed-Size: 40796
 Description:  Tenda behavor manager utils for lua.

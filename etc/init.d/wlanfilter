@@ -40,8 +40,8 @@ append_mac_list(){
 check_mf_type(){
         [  -f /tmp/macfilter ] &&{
                 echo "change filter type" >/dev/console
-                hostapd_cli -i wlan0 reconf wlan0.1
-                hostapd_cli -i wlan2 reconf wlan2.1
+                hostapd_cli -i wlan0 reconf wlan0.1 &
+                hostapd_cli -i wlan2 reconf wlan2.1 &
                 rm /tmp/macfilter
                 wlmfl_tc_ifb_add_wlan
         }

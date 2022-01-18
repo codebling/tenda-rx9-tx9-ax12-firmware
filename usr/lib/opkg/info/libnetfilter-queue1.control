@@ -7,7 +7,7 @@ SourceName: libnetfilter-queue
 License: GPL-2.0+
 Section: libs
 Architecture: mips_24kc_nomips16
-Installed-Size: 8484
+Installed-Size: 8483
 Description:  libnetfilter_queue is a userspace library providing a programming
  interface (API) to the in-kernel connection tracking state table.
  This library is currently used by conntrack-tools.

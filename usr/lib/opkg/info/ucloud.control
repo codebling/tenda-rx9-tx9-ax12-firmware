@@ -6,5 +6,5 @@ SourceName: ucloud
 Section: Tenda Property
 Maintainer: zzliu<liuzhangzhang@tenda.cn>
 Architecture: mips_24kc_nomips16
-Installed-Size: 519382
+Installed-Size: 519404
 Description:  Tenda ucloud client.

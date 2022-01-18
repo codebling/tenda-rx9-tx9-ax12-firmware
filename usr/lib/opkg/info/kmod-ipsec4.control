@@ -1,12 +1,12 @@
 Package: kmod-ipsec4
 Version: 4.9.206-1
-Depends: kernel (=4.9.206-1-eef4e7657600654501bc5c4649a445db), kmod-ipsec, kmod-iptunnel4
+Depends: kernel (=4.9.206-1-16d3e7543a47724fc9ab98990d7ee14a), kmod-ipsec, kmod-iptunnel4
 Source: package/kernel/linux
 SourceName: kmod-ipsec4
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 12736
+Installed-Size: 12735
 Description:  Kernel modules for IPsec support in IPv4.
  Includes:
  - ah4

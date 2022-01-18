@@ -8,5 +8,5 @@ License: LGPL-2.1
 Section: libs
 Maintainer: Felix Fietkau <nbd@nbd.name>
 Architecture: mips_24kc_nomips16
-Installed-Size: 10627
+Installed-Size: 10628
 Description:  OpenWrt RPC client library

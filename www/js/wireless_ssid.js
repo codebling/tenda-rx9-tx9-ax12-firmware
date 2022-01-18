@@ -91,20 +91,8 @@ function callback(str) {
 		return;
 	}
     var num = $.parseJSON(str).errCode;
-    // if (G.dfsEnable == '1' && G.conGetData && G.conSetData && G.conGetData != G.conSetData) {
-    //     // top.showDFSMsg(num);
-    //     top.showDFSMsg(num);
-    // } else {
-    //     top.showSaveMsg(num);
-    // }
-	if(isShowDfs()){
-		$.getJSON("goform/GetDfsCfg?" + Math.random(), function (obj) {
-		    if(obj.enable == "1"){
-					top.showDFSMsg(num);
-				}else{
-					top.showSaveMsg(num);
-				}
-		});
+	if(num ==1){
+		top.showDFSMsg(0);
 	}else{
 		top.showSaveMsg(num);
 	}
@@ -142,7 +130,8 @@ var moduleModel = R.moduleModel({
 				"wrlPwd": $("#wrlPwd").val(),
 				"wrlPwd_5g": $("#wrlPwd_5g").val()
 			},
-			dataStr;
+			dataStr,
+		    compare =['wrlEn_5g','ssid_5g','hideSsid_5g','wrlPwd_5g','security_5g'];
 		if(dataObj.doubleBand == "1"){  //双频优选开启时  5g信息保持和24g一样
 			for(prop in dataObj){
 				if(prop.indexOf("_5g")){
@@ -151,7 +140,15 @@ var moduleModel = R.moduleModel({
 			}
 		}
 		G.setWifiData = dataObj;
-
+		if(dataObj.doubleBand == '0'){
+			for (var i = 0; i < compare.length ; i++) {
+				if(dataObj[compare[i]] != G.initWifiData[compare[i]]){
+					dataObj.wifi_chkHz = "1"
+					break
+				}
+			}
+		}
+		console.log(dataObj)
 		dataStr = objTostring(dataObj);
 		return dataStr;
 	}

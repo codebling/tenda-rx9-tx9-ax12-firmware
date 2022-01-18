@@ -5,5 +5,5 @@ Source: intel_source/feeds/ugw/wlan/feed_wlan_6x_uci/wlan_wave_feed/iwlwav-tools
 SourceName: iwlwav-tools
 Section: net
 Architecture: mips_24kc_nomips16
-Installed-Size: 203317
+Installed-Size: 203313
 Description:  Intel toolset for wave HW

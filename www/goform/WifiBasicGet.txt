@@ -1,8 +1,8 @@
 {
-"doubleBand":"1",
+"doubleBand":"0",
 
-"wrlEn": "0",
-"wrlEn_5g": "0",
+"wrlEn": "1",
+"wrlEn_5g": "1",
 
 "ssid": "Tenda123",
 "ssid_5g": "Tenda_43543",

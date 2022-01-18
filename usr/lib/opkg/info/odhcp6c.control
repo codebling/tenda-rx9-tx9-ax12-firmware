@@ -8,5 +8,5 @@ License: GPL-2.0
 Section: net
 Maintainer: Hans Dedecker <dedeckeh@gmail.com>
 Architecture: mips_24kc_nomips16
-Installed-Size: 27654
+Installed-Size: 27653
 Description:  Embedded DHCPv6-client for OpenWrt

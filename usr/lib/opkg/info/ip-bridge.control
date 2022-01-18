@@ -7,5 +7,5 @@ License: GPL-2.0
 Section: net
 Maintainer: Russell Senior <russell@personaltelco.net>
 Architecture: mips_24kc_nomips16
-Installed-Size: 29427
+Installed-Size: 29424
 Description:  Bridge configuration utility from iproute2

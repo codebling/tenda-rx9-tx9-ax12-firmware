@@ -6,5 +6,5 @@ SourceName: ip6tables
 License: GPL-2.0
 Section: net
 Architecture: mips_24kc_nomips16
-Installed-Size: 214
+Installed-Size: 215
 Description:  IPv6 firewall administration tool

@@ -7,5 +7,5 @@ SourceName: libnl-core
 License: LGPL-2.1
 Section: libs
 Architecture: mips_24kc_nomips16
-Installed-Size: 38194
+Installed-Size: 38192
 Description:  Common code for all netlink libraries

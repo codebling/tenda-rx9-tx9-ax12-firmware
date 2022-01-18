@@ -1,6 +1,6 @@
 Package: kmod-ppa-drv-mpe-ip97
 Version: 4.9.206+1.0-1
-Depends: kernel (=4.9.206-1-eef4e7657600654501bc5c4649a445db), kmod-eip97
+Depends: kernel (=4.9.206-1-16d3e7543a47724fc9ab98990d7ee14a), kmod-eip97
 Source: intel_source/feeds/ugw/net/ppa/ppa-drv
 SourceName: kmod-ppa-drv-mpe-ip97
 License: GPL-2.0

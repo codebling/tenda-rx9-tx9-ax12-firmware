@@ -7,5 +7,5 @@ SourceName: libip6tc
 License: GPL-2.0
 Section: libs
 Architecture: mips_24kc_nomips16
-Installed-Size: 19760
+Installed-Size: 19757
 Description:  IPv6 firewall - shared libiptc library

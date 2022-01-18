@@ -1,9 +1,9 @@
 Package: kmod-url_filter
 Version: 4.9.206-1
-Depends: kernel (=4.9.206-1-eef4e7657600654501bc5c4649a445db), kmod-nf-conntrack, kmod-bm
+Depends: kernel (=4.9.206-1-16d3e7543a47724fc9ab98990d7ee14a), kmod-nf-conntrack, kmod-bm
 Source: package/tenda_property/kmod-td_filter/url_filter
 SourceName: kmod-url_filter
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 18431
+Installed-Size: 18430
 Description:  Tenda's url_filter Component

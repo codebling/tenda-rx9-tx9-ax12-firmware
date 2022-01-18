@@ -208,9 +208,10 @@ function checkData() {
 			/*if (guestIp != "" && checkIpInSameSegment(guestIp, G.data.guestMask, lanIp, lanMask)) {
 				return _("%s and %s (%s) must not be in the same network segment.", [_("LAN IP"),_("Guest Network IP"),guestIp]);
 			}*/
-			if (pptpSvrIp != "" && checkIpInSameSegment(pptpSvrIp, G.data.pptpSvrMask, lanIp, lanMask)) {
+			// pptpSvrIp后台给定的值无效，不需判断
+			/*if (pptpSvrIp != "" && checkIpInSameSegment(pptpSvrIp, G.data.pptpSvrMask, lanIp, lanMask)) {
 				return _("%s and %s (%s) must not be in the same network segment.", [_("LAN IP Address"), _("PPTP Server IP Address"), pptpSvrIp]);
-			}
+			}*/
 
 			if ($("#dhcpEn").val() == "1") {
 				if (parseInt($("#startIp").val(), 10) > parseInt($("#endIp").val(), 10)) {

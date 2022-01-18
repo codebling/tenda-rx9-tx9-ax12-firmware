@@ -8,5 +8,5 @@ Section: base
 Require-User: :dialout=20 :audio=29
 Maintainer: John Crispin <john@phrozen.org>
 Architecture: mips_24kc_nomips16
-Installed-Size: 49560
+Installed-Size: 49558
 Description:  OpenWrt system process manager

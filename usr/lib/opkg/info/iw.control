@@ -7,5 +7,5 @@ License: GPL-2.0
 Section: net
 Maintainer: Felix Fietkau <nbd@nbd.name>
 Architecture: mips_24kc_nomips16
-Installed-Size: 38878
+Installed-Size: 38873
 Description:  cfg80211 interface configuration utility

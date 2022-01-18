@@ -8,7 +8,7 @@
 "security":"none",
 "signal":"-81",
 "nettype":"bgn",
-"wifi_chkHz":"0"},
+"wifi_chkHz":"1"},
 
 
 
@@ -21,7 +21,7 @@
  "security":"wpa&wpa2/aes",
  "signal":"-85",
  "nettype":"bgn",
- "wifi_chkHz":"0"},
+ "wifi_chkHz":"1"},
 
 
  {"ssid":"!@@#$%^&*()!#$%$^%^><asdfaf",
@@ -32,9 +32,9 @@
  "security":"none",
  "signal":"-86",
  "nettype":"bgn",
- "wifi_chkHz":"0"},
+ "wifi_chkHz":"1"},
 
- 
+
  {"ssid":"Tenda_009C70sdfzsdfasdfasdfasdfasdfasfasdf","mac":"C8:3A:35:00:9C:70","channel":"10","nctrlsb":"none","bandwidth":"20","security":"none","signal":"-64","nettype":"bgn","wifi_chkHz":"0"},
  {"ssid":"Tenda_0335E8","mac":"C8:3A:35:03:35:E8","channel":"9","nctrlsb":"none","bandwidth":"20","security":"none","signal":"-64","nettype":"bgn","wifi_chkHz":"0"},
  {"ssid":"Tenda_0335EC","mac":"C8:3A:35:03:35:EC","channel":"10","nctrlsb":"none","bandwidth":"20","security":"none","signal":"-63","nettype":"bgn","wifi_chkHz":"0"},

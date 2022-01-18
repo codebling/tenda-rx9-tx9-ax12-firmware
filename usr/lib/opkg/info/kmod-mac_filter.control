@@ -1,6 +1,6 @@
 Package: kmod-mac_filter
 Version: 4.9.206-1
-Depends: kernel (=4.9.206-1-eef4e7657600654501bc5c4649a445db), kmod-nf-conntrack, kmod-bm
+Depends: kernel (=4.9.206-1-16d3e7543a47724fc9ab98990d7ee14a), kmod-nf-conntrack, kmod-bm
 Source: package/tenda_property/kmod-td_filter/mac_filter
 SourceName: kmod-mac_filter
 Section: kernel

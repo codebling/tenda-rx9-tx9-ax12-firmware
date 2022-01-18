@@ -6,5 +6,5 @@ SourceName: fwtool
 Section: utils
 Maintainer: Felix Fietkau <nbd@nbd.name>
 Architecture: mips_24kc_nomips16
-Installed-Size: 3819
+Installed-Size: 3817
 Description:  Utility for appending and extracting firmware metadata and signatures

@@ -245,6 +245,7 @@ generate_static_system() {
 		set system.@system[-1].ttylogin='1'
 		set system.@system[-1].log_size='64'
 		set system.@system[-1].urandom_seed='0'
+		set system.@system[-1].work_mode='router'
 
 		delete system.ntp
 		set system.ntp='timeserver'

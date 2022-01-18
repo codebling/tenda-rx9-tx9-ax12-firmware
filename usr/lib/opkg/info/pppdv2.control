@@ -5,5 +5,5 @@ Source: package/tenda_property/pppoes
 SourceName: pppdv2
 Section: Tenda Property
 Architecture: mips_24kc_nomips16
-Installed-Size: 60188
+Installed-Size: 60189
 Description:  Tenda pppdv2 

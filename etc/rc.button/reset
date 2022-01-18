@@ -10,6 +10,12 @@ ps | grep ate | awk '{print $5}' | grep ^ate > /dev/null
         exit
 }
 
+ps | grep spi_upgrade | grep -v grep
+[ "$?" = "0" ] && {
+        echo "- Ignor Reset  : Upgrade Mode -" > /dev/console
+        exit
+}
+
 case "$ACTION" in
 pressed)
 	[ -z "$OVERLAY" ] && return 0

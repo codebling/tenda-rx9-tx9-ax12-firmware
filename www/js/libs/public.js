@@ -423,7 +423,9 @@ function showSaveMsg (num, str, flag, change,time) {
 	} else if (num == "999") {
 		hideDialog = false; //不隐藏弹出框
 		$(".save-msg").removeClass("none");
-		$("#page-message").html(_("Saving success"));
+		 //todo
+		$("#page-message").html(_("Try Later"));
+		//$("#page-message").html(_("Saving success"));
 		$("#page-message").addClass("none");
 		top.location.reload(true);
 	}else if(num == "-2"){
@@ -435,7 +437,9 @@ function showSaveMsg (num, str, flag, change,time) {
 		}, 1000);
 	} else {
 		$(".save-msg").removeClass("none");
-		$("#page-message").html(_("Saving success"));
+		 //todo Saving failed多语言词条需更新
+        $("#page-message").html(_("Try Later"));
+		//$("#page-message").html(_("Saving success"));
 		setTimeout(function () {
 			$(".save-msg").addClass("none");
 			$("#gbx_overlay").remove();

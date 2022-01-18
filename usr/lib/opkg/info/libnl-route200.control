@@ -7,5 +7,5 @@ SourceName: libnl-route
 License: LGPL-2.1
 Section: libs
 Architecture: mips_24kc_nomips16
-Installed-Size: 147845
+Installed-Size: 147842
 Description:  Routing Netlink Library Functions

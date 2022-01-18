@@ -17,6 +17,19 @@ uci_apply_defaults() {
 	uci commit
 }
 
+get_nvram_val(){
+        local mtdpart=$1
+        local name=$2
+        val=`strings /dev/$mtdpart | grep $name | awk -F "=" '{print $2}' `
+        
+        [ -n "$val" ] && {
+                echo "$val"
+        } || {
+                echo  "0"
+        }
+}
+
+
 boot() {
 	[ -f /proc/mounts ] || /sbin/mount_root
 	[ -f /proc/jffs2_bbc ] && echo "S" > /proc/jffs2_bbc
@@ -42,6 +55,19 @@ boot() {
 	[ -f /opt/intel/wave/*.tar.gz ] && {
                 rm /opt/intel/wave/*.tar.gz
     	}
+		
+	rf1=`get_nvram_val mtdblock2 RFTestFlag`
+	[ $rf1 -eq 0 ] &&{
+		rf2=`get_nvram_val mtdblock3 RFTestFlag`       
+        [ $rf2 -ne 0 ] && {
+                logger "restore nvram from backup"
+				mtd dump /dev/mtd3 > /dev/mtdblock2
+        }
+    }
+	[ `uci get firewall.icmp_drop` ] && {
+		uci delete firewall.icmp_drop 2>/dev/null
+	}
+
 
 	[ ! -f /etc/config/wireless ] && {
 		# compat for brcm47xx and mvebu

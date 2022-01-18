@@ -6,5 +6,5 @@ SourceName: ltq-gphy-fw-xrx5xx
 Section: firmware
 Maintainer: Lantiq Beteiligungs GmbH
 Architecture: mips_24kc_nomips16
-Installed-Size: 33141
+Installed-Size: 33142
 Description:  GPHY Firmware XRX5xx Gigabit Ethernet

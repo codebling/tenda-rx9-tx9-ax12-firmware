@@ -9,5 +9,5 @@ License: GPL-2.0
 Section: net
 Maintainer: Russell Senior <russell@personaltelco.net>
 Architecture: mips_24kc_nomips16
-Installed-Size: 200502
+Installed-Size: 200499
 Description:  Routing control utility (Full)

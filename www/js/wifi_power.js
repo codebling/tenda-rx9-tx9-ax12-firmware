@@ -33,8 +33,11 @@ var view = R.moduleView({
 var moduleModel = R.moduleModel({
     initData: initValue,
     getSubmitData: function() {
-        G.setPower_5g = $("[name='power_5g']:checked").val();
-        return "power=" + $("[name='power']:checked").val() + "&power_5g=" + $("[name='power_5g']:checked").val();
+        var submitStr ="power=" + $("[name='power']:checked").val() + "&power_5g=" + $("[name='power_5g']:checked").val()
+        if(G.initData.power_5g != $("[name='power_5g']:checked").val() ){
+            submitStr += '&wifi_chkHz=1'
+        }
+        return submitStr
     }
 });
 
@@ -64,6 +67,7 @@ function initEvent() {
 }
 
 function initValue(obj) {
+    G.initData = obj
     top.$(".main-dailog").removeClass("none");
     top.$("iframe").removeClass("none");
     top.$(".loadding-page").addClass("none");
@@ -96,19 +100,9 @@ function callback(str) {
         return;
     }
     var num = $.parseJSON(str).errCode;
-    if ( G.main5gEn =="1" && (G.initPower_5g != G.setPower_5g)) {
-        $.getJSON("goform/GetDfsCfg?" + Math.random(), function (obj,status) {
-            if(status == 'success'){
-                if(obj.enable == 1){
-                    top.showDFSMsg(num);
-                }else{
-                    top.showSaveMsg(num);
-                }
-            }else{
-                top.showSaveMsg(num);
-            }
-        });
-    } else {
+    if(num ==1){
+        top.showDFSMsg(0);
+    }else{
         top.showSaveMsg(num);
     }
     if (num == 0) {

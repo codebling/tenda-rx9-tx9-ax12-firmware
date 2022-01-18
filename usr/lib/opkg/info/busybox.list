@@ -46,6 +46,7 @@
 /usr/bin/seq
 /bin/sleep
 /bin/nice
+/sbin/watchdog
 /bin/kill
 /bin/mktemp
 /usr/bin/tr

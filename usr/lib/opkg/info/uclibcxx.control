@@ -6,5 +6,5 @@ SourceName: uclibcxx
 License: LGPL-2.1-or-later
 Section: libs
 Architecture: mips_24kc_nomips16
-Installed-Size: 69106
+Installed-Size: 69105
 Description:  C++ library for embedded systems

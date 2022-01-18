@@ -31,7 +31,19 @@ var view = R.moduleView({
 var moduleModel = R.moduleModel({
 	initData: initValue,
 	getSubmitData: function () {
-		return $("#wireless").serialize();
+		var compare = ['adv_band_5g','adv_channel_5g','adv_mode_5g'],
+			obj = {
+			'adv_band_5g': $('#adv_band_5g').val(),
+			'adv_channel_5g': $('#adv_channel_5g').val(),
+			'adv_mode_5g': $('#adv_mode_5g').val()
+			},
+			submitStr = $("#wireless").serialize();
+		for (var i = 0; i < compare.length ; i++) {
+			if(obj[compare[i]] != G_data[compare[i]]){
+				submitStr += '&wifi_chkHz=1'
+			}
+		}
+		return submitStr
 	}
 });
 
@@ -175,9 +187,12 @@ function initValue(obj) {
     // $.getJSON("goform/GetDfsCfg?" + Math.random(), function (obj) {
     //     G.dfsEnable = obj.enable;
     // });
-	//获取主网络5G是否开启
-	$.getJSON("goform/WifiBasicGet?" + Math.random(), function(obj){
-		G.main5gEn = obj.wrlEn_5g;
+	//wisp与apclient模式下信道不能设置
+	$.GetSetData.getJson("goform/getMeshStatus", function(obj){
+		if(obj.workMode == 'wisp' || obj.workMode =='client+ap'){
+			$("#adv_channel").attr("disabled",true);
+			$("#adv_channel_5g").attr("disabled",true);
+		}
 	});
 }
 
@@ -195,64 +210,15 @@ function callback(str) {
 		return;
 	}
 	var num = $.parseJSON(str).errCode;
-	// $.getJSON("goform/GetDfsCfg?" + Math.random(), function (obj) {
-	// 	G.dfsEnable = obj.enable;
-	// });
-	if (isShowDfs()) {
-		top.showDFSMsg(num);
-	} else {
+	if(num == 1){
+		top.showDFSMsg(0);
+	}else{
 		top.showSaveMsg(num);
 	}
 	if (num == "0") {
 		window.clearTimeout(getDataTimer);
 		ajaxInterval && ajaxInterval.stopUpdate();
 	}
-}
-function isShowDfs(){
-	//5G是否开启
-	if(G.main5gEn !="1"){
-		return false;
-	}
-	//更5G改模式会有检测
-	if($("#adv_mode_5g").val() != G_data.adv_mode_5g){
-		return true
-	}
-	//5G信道与无线频宽无修改不显示dfs
-	if(($("#adv_channel_5g").val() == G_data.adv_channel_5g) && ($("#adv_band_5g").val() == G_data.adv_band_5g)){
-		return false
-	}
-		//5G信道是否更改且为自动,或者频宽160且信道小于149
-	if($("#adv_channel_5g").val() != G_data.adv_channel_5g){
-		if($("#adv_channel_5g").val() == "0"){
-			return true
-		}
-		if(($("#adv_channel_5g").val()) >= 149){
-			return false
-		}
-		if(($("#adv_channel_5g").val() < 149) && ($("#adv_band_5g").val() == "160" || $("#adv_band_5g").val() =='auto')){
-			return true
-		}
-		if(($("#adv_channel_5g").val() < 149) && ($("#adv_band_5g").val() == "auto" && $("#adv_current_band_5g").val() == '160')){
-			return true
-		}
-	}
-	//5G频宽是否更改且满足信道小于149的情况下
-
-	if($("#adv_band_5g").val() != G_data.adv_band_5g){
-		//如果当前信道为自动
-		if($("#adv_channel_5g").val() >=149 || $("#adv_current_channel_5g").val()>=149){
-			return false
-		}
-		if($("#adv_channel_5g").val() == "0"){
-			return true
-		}
-		if($("#adv_channel_5g").val() <149 || $("#adv_current_channel_5g").val()<149){
-			if($("#adv_band_5g").val() == "160" || $("#adv_band_5g").val() =='auto'){
-				return true
-			}
-		}
-	}
-	return false
 }
 
 /***************************************************************/

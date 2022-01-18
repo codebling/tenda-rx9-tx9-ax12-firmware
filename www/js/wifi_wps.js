@@ -137,22 +137,11 @@ function callback(str) {
 		return;
 	}
 	var num = $.parseJSON(str).errCode;
-
 	if (num == 0) {
 		if(G.unShow){
 			G.unShow = false
 		}else{
-			$.getJSON("goform/GetDfsCfg?" + Math.random(), function (obj,status) {
-				if(status == 'success'){
-					if(obj.enable == 1){
-						top.showDFSMsg(num);
-					}else{
-						top.showSaveMsg(num);
-					}
-				}else{
-					top.showSaveMsg(num);
-				}
-			});
+			top.showSaveMsg(num);
 		}
         // if (G.main5gEn =="1" && G.dfsEnable == '1' && G.conGetData && G.conSetData && G.conGetData != G.conSetData) {
         //     top.showDFSMsg(num);
@@ -163,7 +152,9 @@ function callback(str) {
 			$("#waitingTip").html(" ").addClass("none");
 			// $("#waitingTip").next().remove();
 		}, 2000);
-	}else{
+	}else if(num == 1) {
+		top.showDFSMsg(0)
+	} else{
 		if ($("#wpsEn").val() == "1"){
 			$("#waitingTip").html("<span style='color:#f00;'>请您等待无线接口起来后再开启WPS</span>").removeClass("none")
 			$("#wpsEn").attr("class", "btn-off");

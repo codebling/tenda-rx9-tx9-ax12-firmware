@@ -7,5 +7,5 @@ SourceName: libnl-nf
 License: LGPL-2.1
 Section: libs
 Architecture: mips_24kc_nomips16
-Installed-Size: 24174
+Installed-Size: 24175
 Description:  Netfilter Netlink Library Functions

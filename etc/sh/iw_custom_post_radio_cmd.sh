@@ -5,7 +5,6 @@ mac80211_custom_post_radio() {
 	local ifname="$1"
 
 	iw dev $ifname iwlwav sFastDrop 0
-	iw dev $ifname iwlwav s11nProtection 2
 
 	phy=`cat /sys/class/net/$ifname/phy80211/name`
 	iw phy "$phy" info | grep -q '2412 MHz' && {

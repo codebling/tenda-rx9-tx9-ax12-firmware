@@ -1,1 +1,1 @@
-{"errCode": "0"}
+{"errCode": "0","dfs":"1"}

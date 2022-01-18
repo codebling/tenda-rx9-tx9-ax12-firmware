@@ -7,5 +7,5 @@ License: GPL-2.0
 Section: base
 Maintainer: John Crispin <john@phrozen.org>
 Architecture: mips_24kc_nomips16
-Installed-Size: 10239
+Installed-Size: 10237
 Description:  OpenWrt system log implementation
