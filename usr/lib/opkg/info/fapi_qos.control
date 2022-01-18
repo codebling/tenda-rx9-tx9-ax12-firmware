@@ -1,0 +1,11 @@
+Package: fapi_qos
+Version: 2.0.1.33
+Depends: libc, switch_cli_ugw8, libhelper, libubox20191228, libubus20191227, libezxml, kmod-intel-extmark, kmod-intel-iptables, ebtables, kmod-intel-ebtables, kmod-ebtables-ipv4, iptables-mod-ipopt, kmod-intel-qos, safeclibs, tc, libugwhelper, libfirewallnat, libblobmsg-json, kmod-ifb
+Source: intel_source/feeds/ugw/net/qos_service/fapi_qos
+SourceName: fapi_qos
+License: Intel
+Section: libs
+Maintainer: Intel Corporation
+Architecture: mips_24kc_nomips16
+Installed-Size: 154813
+Description:  Intel UGW QoS FAPI

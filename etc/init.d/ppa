@@ -1,0 +1,122 @@
+#!/bin/sh /etc/rc.common
+# Add Physical Interfaces to PPA via System FAPI CLI.
+#
+
+START=20
+USE_PROCD=1
+
+. /etc/profile.d/intel.sh
+
+sys_cli_ppa_file=/tmp/ppa_cfg.conf
+
+# Get ethsw separated LAN interfaces and add with lower layer.
+add_ethsw_alias()
+{
+	local _iface _ival;
+	_iface=$(ip link|grep @$1:|cut -d: -f2)
+	[ -n "$_iface" ] && {
+		for _ival in ${_iface//@$1}; do
+			if [ $2 ]
+			then
+				echo "add_lan:$_ival $2 $1" >> $sys_cli_ppa_file
+			else
+				echo "add_lan:$_ival $1" >> $sys_cli_ppa_file
+			fi
+		done
+	}
+}
+
+prepare_ppa_config() {
+	local section="$1"
+	local section_type
+	local i
+	local rename
+	local section_bond="bond"
+	local mode
+	local bondslave
+	local baseif
+
+	config_get section_type $section type
+	config_get ifname $section ifname
+	config_get bondslave $section_bond bondslave
+
+	if [ $section_type == "lan" ]
+	then
+		for i in $ifname
+		do
+			if [ "$i" == $bondslave ]
+			then
+				echo "####skip  adding this interface to lan"
+			else
+				config_get rename $i alias
+				if [ $rename ]
+				then
+					echo "add_base:$i $rename" >> $sys_cli_ppa_file
+					add_ethsw_alias $ifname $rename
+				else
+					echo "add_base:$i" >> $sys_cli_ppa_file
+					add_ethsw_alias $ifname
+				fi
+			fi
+		done
+	elif [ $section_type == "wan" ]
+	then
+		for i in $ifname
+		do
+			config_get rename $i alias
+			if [ $rename ]
+			then
+				echo "add_wan:$i $rename" >> $sys_cli_ppa_file
+			else
+				echo "add_wan:$i" >> $sys_cli_ppa_file
+			fi
+		done
+	elif [ "$section_type" == "bond" ]
+	then
+		config_get baseif $section baseif
+		config_get bondslave $section bondslave
+		config_get mode $section mode
+		if [ "$mode" == "lan" ]
+		then
+			echo "add_base:$bondslave $bondslave" >> $sys_cli_ppa_file
+			echo "add_lan:$ifname $ifname $bondslave" >> $sys_cli_ppa_file
+		elif [ "$mode" == "wan" ]
+		then
+			echo "add_wan:$bondslave $bondslave" >> $sys_cli_ppa_file
+			echo "add_wan:$ifname $ifname $bondslave" >> $sys_cli_ppa_file
+		fi
+	fi
+}
+
+
+start_service() {
+	config_load ppa
+	umask 0007
+	> $sys_cli_ppa_file
+	chown :ppa $sys_cli_ppa_file
+	config_foreach prepare_ppa_config ppa
+	procd_open_instance
+	procd_set_param env PATH=${PATH}:/opt/intel/sbin:/opt/intel/usr/sbin:/opt/intel/bin LD_LIBRARY_PATH=/opt/intel/lib:/opt/intel/usr/lib:${LD_LIBRARY_PATH}
+	procd_set_param command sys_cli eth -F $sys_cli_ppa_file
+	procd_set_param stdout 1
+	procd_set_param stderr 1
+	procd_set_param user ppa
+	procd_set_param capabilities /usr/share/capabilities/ppa_cap.json
+	procd_set_param pseudofs_acl /usr/share/pseudofs_acl/ppa_pseudofs_acl.json
+	procd_close_instance
+}
+
+stop_service() {
+	sys_cli eth -P 1
+}
+
+service_triggers()
+{
+	procd_add_reload_trigger "ppa"
+}
+
+reload_service()
+{
+	stop
+	start
+}

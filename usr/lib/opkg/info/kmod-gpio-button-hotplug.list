@@ -1,0 +1,3 @@
+/lib/modules/4.9.206/gpio-button-hotplug.ko
+/etc/modules-boot.d/30-gpio-button-hotplug
+/etc/modules.d/30-gpio-button-hotplug

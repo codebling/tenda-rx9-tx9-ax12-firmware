@@ -1,0 +1,11 @@
+Package: kmod-litepath-hwacc
+Version: 4.9.206+1.0-1
+Depends: kernel (=4.9.206-1-eef4e7657600654501bc5c4649a445db), kmod-ppa-drv, kmod-ppa-drv-accel, kmod-ppa-drv-grx500
+Source: intel_source/feeds/ugw/net/ppa/ppa-drv
+SourceName: kmod-litepath-hwacc
+License: GPL-2.0
+Section: kernel
+Maintainer: Intel
+Architecture: mips_24kc_nomips16
+Installed-Size: 4622
+Description:  Kernel support for tcp litepath hw acceleration

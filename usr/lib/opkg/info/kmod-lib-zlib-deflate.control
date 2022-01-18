@@ -1,0 +1,10 @@
+Package: kmod-lib-zlib-deflate
+Version: 4.9.206-1
+Depends: kernel (=4.9.206-1-eef4e7657600654501bc5c4649a445db)
+Source: package/kernel/linux
+SourceName: kmod-lib-zlib-deflate
+License: GPL-2.0
+Section: kernel
+Architecture: mips_24kc_nomips16
+Installed-Size: 195
+Description:  Zlib support

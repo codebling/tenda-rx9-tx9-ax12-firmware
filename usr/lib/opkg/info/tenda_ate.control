@@ -1,0 +1,9 @@
+Package: tenda_ate
+Version: 12
+Depends: libc, libubox20191228, libnl-tiny
+Source: package/tenda_property/tenda_ate
+SourceName: tenda_ate
+Section: Tenda Property
+Architecture: mips_24kc_nomips16
+Installed-Size: 15824
+Description:  tenda_ate

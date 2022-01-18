@@ -1,0 +1,3 @@
+config interface urlfilter
+	option size '0'
+	option enable '0'

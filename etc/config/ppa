@@ -1,0 +1,31 @@
+
+
+config ppa 'lan'
+        option type 'lan'
+        option ifname 'eth0_1 eth0_2 eth0_3 eth0_4 eth0_5'
+
+config ppa 'wan'
+        option type 'wan'
+        option ifname 'eth1 ptm0'
+
+config interface 'eth0_1'
+	option alias  eth0_1
+
+config interface 'eth0_2'
+	option alias  eth0_2
+
+config interface 'eth0_3'
+	option alias  eth0_3
+
+config interface 'eth0_4'
+	option alias  eth0_4
+
+config interface 'eth0_5'
+	option alias  eth0_5
+
+config interface 'eth1'
+	option alias  eth1
+
+config interface 'ptm0'
+	option alias  ptm0
+

@@ -1,0 +1,14 @@
+/lib/modules/4.9.206/nf_log_common.ko
+/lib/modules/4.9.206/iptable_mangle.ko
+/lib/modules/4.9.206/iptable_filter.ko
+/lib/modules/4.9.206/ipt_REJECT.ko
+/lib/modules/4.9.206/xt_TCPMSS.ko
+/lib/modules/4.9.206/xt_mark.ko
+/lib/modules/4.9.206/xt_multiport.ko
+/lib/modules/4.9.206/nf_log_ipv4.ko
+/etc/modules.d/ipt-core
+/lib/modules/4.9.206/xt_time.ko
+/lib/modules/4.9.206/xt_LOG.ko
+/lib/modules/4.9.206/xt_comment.ko
+/lib/modules/4.9.206/xt_limit.ko
+/lib/modules/4.9.206/xt_mac.ko

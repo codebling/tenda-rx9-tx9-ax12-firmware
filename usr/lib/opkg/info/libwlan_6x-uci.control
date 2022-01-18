@@ -1,0 +1,10 @@
+Package: libwlan_6x-uci
+Version: 1.0.4.49
+Depends: libc, swpal_6x-uci, dwpal_6x-uci
+Source: intel_source/feeds/ugw/wlan/sl_wlan_6x_uci
+SourceName: libwlan_6x-uci
+Section: utils
+Maintainer: Intel Corporation
+Architecture: mips_24kc_nomips16
+Installed-Size: 1294
+Description:  Intel SL for WLAN Support

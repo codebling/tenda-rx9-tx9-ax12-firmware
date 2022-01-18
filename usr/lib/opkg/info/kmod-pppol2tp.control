@@ -1,0 +1,10 @@
+Package: kmod-pppol2tp
+Version: 4.9.206-1
+Depends: kernel (=4.9.206-1-eef4e7657600654501bc5c4649a445db), kmod-ppp, kmod-pppox, kmod-l2tp
+Source: package/kernel/linux
+SourceName: kmod-pppol2tp
+License: GPL-2.0
+Section: kernel
+Architecture: mips_24kc_nomips16
+Installed-Size: 10814
+Description:  Kernel modules for PPPoL2TP (PPP over L2TP) support

@@ -1,0 +1,14 @@
+{
+   "IPv6En": "1",
+    "conType": "Static",
+    "ISPusername": "123456",
+    "ISPpassword": "123456",
+    "lanType": "1",
+    "prefixDelegate": "1",
+    "wanAddr": "2001:250:207:1::ff02/64",
+    "gateWay": "2001:250:207:1::1",
+    "wanPreDNS": "2001::444",
+    "wanAltDNS": "2001::13",
+    "lanAddr": "2005:20::1/64",
+    "lanPrefix": "2005:20::"
+}

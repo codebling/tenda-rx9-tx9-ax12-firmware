@@ -1,0 +1,9 @@
+Package: td_serverd
+Version: 12
+Depends: libc, libubox20191228, libuci20130104, libubus20191227, libcommon, td_bm_utils, libnl-tiny, libsqlite3-0, qos_nl
+Source: package/tenda_property/td_serverd
+SourceName: td_serverd
+Section: Tenda Property
+Architecture: mips_24kc_nomips16
+Installed-Size: 109771
+Description:  td_serverd

@@ -1,0 +1,9 @@
+#!/bin/sh
+
+[ "$ACTION" == "ifup" ] && [ "$DEVICE" == "pppoe-wan" ] && {
+	default=$(ip ro | grep default)
+	if [ ! -n "$default" ] ;then
+		ptpaddress=$(ubus call network.interface.wan status | jsonfilter -e '@["ipv4-address"][0].ptpaddress')
+		ip ro add default via $ptpaddress dev pppoe-wan proto static
+	fi
+}

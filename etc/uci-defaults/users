@@ -1,0 +1,27 @@
+#!/bin/sh
+
+DEFAULT_USERS="ugw"
+
+which smbpasswd >/dev/null && samba_enabled=1
+which vsftpd >/dev/null && vsftpd_enabled=1
+
+for _user in $DEFAULT_USERS; do
+	grep -q ^$_user: /etc/passwd || {
+		PASSWD="$(echo -n \"ugw\" |xargs openssl passwd -1)"
+		echo "$_user:$PASSWD:201:0:ugw:/mnt/usb:ftp" >> /etc/passwd
+	}
+
+	[ -n "$samba_enabled" ] && {
+		grep -q ^$_user: /etc/samba/smbpasswd 2>/dev/null || {
+			smbpasswd $_user $_user
+		}
+	}
+
+	[ -n "$vsftpd_enabled" ] && {
+		grep -w -q ^$_user /etc/vsftpd.users 2>/dev/null || {
+			echo "$_user" >> /etc/vsftpd.users
+		}
+	}
+done
+
+exit 0

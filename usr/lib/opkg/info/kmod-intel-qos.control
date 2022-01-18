@@ -1,0 +1,11 @@
+Package: kmod-intel-qos
+Version: 4.9.206+2.0.1.33-1
+Depends: kernel (=4.9.206-1-eef4e7657600654501bc5c4649a445db), kmod-sched
+Source: intel_source/feeds/ugw/net/qos_service/fapi_qos
+SourceName: kmod-intel-qos
+License: Intel
+Section: kernel
+Maintainer: Intel
+Architecture: mips_24kc_nomips16
+Installed-Size: 104
+Description:  Kernel Support for QoS.

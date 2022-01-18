@@ -1,0 +1,10 @@
+Package: dwpal_6x-uci
+Version: 1.0.0.1
+Depends: libc, libnl200, librt, libsafec3, libncurses6, libreadline8, iwlwav-hostap-uci
+Source: intel_source/feeds/ugw/wlan/feed_wlan_6x_uci/wlan_wave_feed/dwpal_6x-uci
+SourceName: dwpal_6x-uci
+Section: net
+Maintainer: Intel Corporation
+Architecture: mips_24kc_nomips16
+Installed-Size: 41566
+Description:  D-WPAL: Dynamic Wireless Platform Abstraction Layer

@@ -1,0 +1,4 @@
+/usr/sbin/hostapd
+/usr/sbin/hostapd_cli
+/usr/sbin/hostapd.eap_user
+/etc/iwlwav_hostap.ver

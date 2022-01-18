@@ -1,0 +1,189 @@
+@font-face {
+  font-family: 'iconmoon';
+  src:  url('../fonts/iconmoon.eot?t5czvn');
+  src:  url('../fonts/iconmoon.eot?t5czvn#iefix') format('embedded-opentype'),
+    url('../fonts/iconmoon.ttf?t5czvn') format('truetype'),
+    url('../fonts/iconmoon.woff?t5czvn') format('woff'),
+    url('../fonts/iconmoon.svg?t5czvn#iconmoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="r-icon-"], [class*=" r-icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'iconmoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.r-icon-ofdma:before {
+  content: "\e900";
+}
+.r-icon-firewall:before {
+  content: "\e901";
+}
+.r-icon-ddns:before {
+  content: "\e902";
+}
+.r-icon-dmz:before {
+  content: "\e903";
+}
+.r-icon-iptv:before {
+  content: "\e904";
+}
+.r-icon-led:before {
+  content: "\e905";
+}
+.r-icon-macfilter:before {
+  content: "\e906";
+}
+.r-icon-bandwidth:before {
+  content: "\e907";
+}
+.r-icon-power:before {
+  content: "\e908";
+}
+.r-icon-static-route:before {
+  content: "\e909";
+}
+.r-icon-tr069:before {
+  content: "\e90a";
+}
+.r-icon-upnp:before {
+  content: "\e90b";
+}
+.r-icon-virtual-server:before {
+  content: "\e90c";
+}
+.r-icon-warnnig:before {
+  content: "\e90d";
+}
+.r-icon-backup:before {
+  content: "\e90e";
+}
+.r-icon-advanced:before {
+  content: "\e90f";
+}
+.r-icon-username:before {
+  content: "\e910";
+}
+.r-icon-ipv6:before {
+  content: "\e911";
+}
+.r-icon-internet:before {
+  content: "\e912";
+}
+.r-icon-parent-control:before {
+  content: "\e913";
+}
+.r-icon-system-manage:before {
+  content: "\e914";
+}
+.r-icon-usb:before {
+  content: "\e915";
+}
+.r-icon-autofixed:before {
+  content: "\e916";
+}
+.r-icon-vpn:before {
+  content: "\e917";
+}
+.r-icon-wifi-setting:before {
+  content: "\e918";
+}
+.r-icon-lan:before {
+  content: "\e919";
+}
+.r-icon-round:before {
+  content: "\e91a";
+}
+.r-icon-log:before {
+  content: "\e91b";
+}
+.r-icon-ok:before {
+  content: "\e91c";
+}
+.r-icon-restart:before {
+  content: "\e91d";
+}
+.r-icon-static-ip:before {
+  content: "\e91e";
+}
+.r-icon-system-status:before {
+  content: "\e91f";
+}
+.r-icon-time:before {
+  content: "\e920";
+}
+.r-icon-upgrade:before {
+  content: "\e921";
+}
+.r-icon-wan-parameter:before {
+  content: "\e922";
+}
+.r-icon-web-manage:before {
+  content: "\e923";
+}
+.r-icon-dlna:before {
+  content: "\e924";
+}
+.r-icon-file-share:before {
+  content: "\e925";
+}
+.r-icon-printer:before {
+  content: "\e926";
+}
+.r-icon-vpn-client:before {
+  content: "\e927";
+}
+.r-icon-vpn-online:before {
+  content: "\e928";
+}
+.r-icon-pptp-server:before {
+  content: "\e929";
+}
+.r-icon-anti-interference:before {
+  content: "\e92a";
+}
+.r-icon-wifi-power:before {
+  content: "\e92b";
+}
+.r-icon-ap:before {
+  content: "\e92c";
+}
+.r-icon-beamforming:before {
+  content: "\e92d";
+}
+.r-icon-channel:before {
+  content: "\e92e";
+}
+.r-icon-wifi:before {
+  content: "\e92f";
+}
+.r-icon-wifi-time:before {
+  content: "\e930";
+}
+.r-icon-wifi-repeater:before {
+  content: "\e931";
+}
+.r-icon-wps:before {
+  content: "\e932";
+}
+.r-icon-guest:before {
+  content: "\e933";
+}
+.r-icon-app:before {
+  content: "\e934";
+}
+.r-icon-internet-setting:before {
+  content: "\e935";
+}

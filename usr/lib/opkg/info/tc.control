@@ -1,0 +1,11 @@
+Package: tc
+Version: 5.0.0-2.1
+Depends: libc, kmod-sched-core, libxtables12, libelf1, libcap
+Source: package/network/utils/iproute2
+SourceName: tc
+License: GPL-2.0
+Section: net
+Maintainer: Russell Senior <russell@personaltelco.net>
+Architecture: mips_24kc_nomips16
+Installed-Size: 170605
+Description:  Traffic control utility

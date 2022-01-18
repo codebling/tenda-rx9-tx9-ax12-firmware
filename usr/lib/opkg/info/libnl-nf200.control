@@ -1,0 +1,11 @@
+Package: libnl-nf200
+Version: 3.4.0-2
+Depends: libc, libnl-route200
+Provides: libnl-nf
+Source: package/libs/libnl
+SourceName: libnl-nf
+License: LGPL-2.1
+Section: libs
+Architecture: mips_24kc_nomips16
+Installed-Size: 24174
+Description:  Netfilter Netlink Library Functions

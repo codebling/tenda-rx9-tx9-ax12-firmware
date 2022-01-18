@@ -1,0 +1,13 @@
+Package: libgcc1
+Version: 8.3.0-2
+Provides: libgcc
+Source: package/libs/toolchain
+SourceName: libgcc
+License: GPL-3.0-with-GCC-exception
+Section: libs
+Status: unknown hold not-installed
+Essential: yes
+Maintainer: Felix Fietkau <nbd@nbd.name>
+Architecture: mips_24kc_nomips16
+Installed-Size: 35215
+Description:  GCC support library

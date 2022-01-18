@@ -1,0 +1,1 @@
+/sbin/sysctl net.ipv4.conf.br-lan.promote_secondaries=1

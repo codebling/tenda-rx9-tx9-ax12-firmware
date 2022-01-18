@@ -1,0 +1,6 @@
+/usr/lib/libc.so.0
+/etc/init.d/ucloud
+/usr/lib/libucapi.so
+/usr/lib/libcloud.so
+/bin/ucloud
+/etc/hotplug.d/iface/ucloudController

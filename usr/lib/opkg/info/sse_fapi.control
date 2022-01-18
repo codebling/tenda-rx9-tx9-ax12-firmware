@@ -1,0 +1,11 @@
+Package: sse_fapi
+Version: 2.0.5.7
+Depends: libc, kmod-sse_driver, kmod-sse_storage_drv, libhelper, safeclibs3
+Source: intel_source/feeds/ugw/net/system_service/sse_fapi
+SourceName: sse_fapi
+License: Intel
+Section: libs
+Maintainer: Intel Corporation
+Architecture: mips_24kc_nomips16
+Installed-Size: 10185
+Description:  Secure FAPI for Encrypt and Decrypt APIs.

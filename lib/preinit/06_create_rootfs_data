@@ -1,0 +1,16 @@
+#!/bin/sh
+
+. /lib/functions/lantiq.sh
+
+lantiq_create_rootfs_data() {
+
+	board=$(lantiq_board_name)
+
+	case "$board" in
+	EASY350*|EASY550*|Falcon*|PRX*|"EASY PRX"*)
+		ubinfo /dev/ubi0 --name=rootfs_data  &>/dev/null || ubimkvol /dev/ubi0 -N rootfs_data -s 0x2000000
+		;;
+	esac
+}
+
+[ "$INITRAMFS" = "1" ] || boot_hook_add preinit_main lantiq_create_rootfs_data

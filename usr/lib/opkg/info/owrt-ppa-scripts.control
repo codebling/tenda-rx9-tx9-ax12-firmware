@@ -1,0 +1,11 @@
+Package: owrt-ppa-scripts
+Version: 1.0.0-1
+Depends: libc, kmod-ppa-drv
+Source: intel_source/feeds/ugw/net/ppa/owrt-ppa-scripts
+SourceName: owrt-ppa-scripts
+License: Intel
+Section: utils
+Maintainer: Intel Corporation
+Architecture: mips_24kc_nomips16
+Installed-Size: 1258
+Description:  Contains PPA init and hotplug script

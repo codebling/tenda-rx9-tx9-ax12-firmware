@@ -1,0 +1,11 @@
+Package: libnl-genl200
+Version: 3.4.0-2
+Depends: libc, libnl-core200
+Provides: libnl-genl
+Source: package/libs/libnl
+SourceName: libnl-genl
+License: LGPL-2.1
+Section: libs
+Architecture: mips_24kc_nomips16
+Installed-Size: 7536
+Description:  Generic Netlink Library Functions

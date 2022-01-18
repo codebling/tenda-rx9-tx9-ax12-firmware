@@ -1,0 +1,5 @@
+/sbin/mount_root
+/lib/libubi-utils-sh.so
+/sbin/jffs2reset
+/sbin/jffs2mark
+/lib/libfstools.so

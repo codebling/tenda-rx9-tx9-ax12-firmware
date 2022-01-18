@@ -1,0 +1,18 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2010-2012 OpenWrt.org
+
+USE_PROCD=1
+START=97
+SERVICE_DAEMONIZE=1
+
+start_service() {
+    stop_service
+    isFast=`uci get advance.safety.fast`
+    if [[ "$isFast" = "0" ]];then
+        return
+    fi
+    procd_open_instance wan_type_probe
+    procd_set_param respawn
+    procd_set_param command /usr/sbin/wan_type_probe -i eth1 -o /tmp/wan_detecttype
+    procd_close_instance
+}

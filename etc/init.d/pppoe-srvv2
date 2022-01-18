@@ -1,0 +1,14 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2010-2012 OpenWrt.org
+
+USE_PROCD=1
+START=98
+SERVICE_DAEMONIZE=1
+
+start_service() {
+    stop_service
+    procd_open_instance pppoe-srvv2
+    procd_set_param respawn
+    procd_set_param command /usr/bin/pppoe-srvv2 -I br-lan -L 10.10.10.1 -R 10.10.10.2-10.10.10.129 -N 50
+    procd_close_instance
+}

@@ -1,0 +1,10 @@
+Package: kmod-intel_eth_xrx500_fw
+Version: 4.9.206-1
+Depends: kernel (=4.9.206-1-eef4e7657600654501bc5c4649a445db)
+Source: package/kernel/linux
+SourceName: kmod-intel_eth_xrx500_fw
+License: GPL-2.0
+Section: kernel
+Architecture: mips_24kc_nomips16
+Installed-Size: 4928
+Description:  Intel Ethernet Driver FW loading (Module Support)

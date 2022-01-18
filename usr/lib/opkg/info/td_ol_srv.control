@@ -1,0 +1,9 @@
+Package: td_ol_srv
+Version: 12
+Depends: libc, libuci20130104, libubox20191228, libubus20191227, libcommon, libpthread, td_serverd, libsqlite3-0, ucloud, qos_nl
+Source: package/tenda_property/td_ol_srv
+SourceName: td_ol_srv
+Section: Tenda Property
+Architecture: mips_24kc_nomips16
+Installed-Size: 38314
+Description:  td_ol_srv

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <link href="css/reasy-ui.css" rel="stylesheet">
+    <script src="lang/b28n_async.js"></script>
+    <script>
+    B.setTextDomain(["translate"]);
+    </script>
+</head>
+
+<body>
+    <fieldset class="">
+        <div class="legend-main" style="margin-top:60px;">
+            <div class="control-group">
+                <label class="control-label">通信公平:</label>
+                <div class="controls">
+                    <div id="">
+                        <label for="openJam" class="radio">
+                            <input  id="openJam" type="radio" value="true" name="WifiAtfEn">Enable
+                        </label>
+                        <label for="closeJam" class="radio">
+                            <input id="closeJam" type="radio" value="false" name="WifiAtfEn">Disable
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div style="width: 600px;margin: 0 auto;">
+                <div class="text-left text-muted">通信公平：当2.4GHz的设备在远处信号临界点时，可能会拖慢其它2.4G设备的网速。开启此功能可消除影响。</div>
+            </div>
+        </div>
+    </fieldset>
+    <script src="js/libs/j.js"></script>
+    <script src="js/libs/public.js"></script>
+    <script src="js/libs/reasy-ui-1.0.3.js"></script>
+    <script src="js/wifi_atf.js"></script>
+</body>
+
+</html>

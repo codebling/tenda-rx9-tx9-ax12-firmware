@@ -1,0 +1,17 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2006-2011 OpenWrt.org
+
+
+wait=30
+
+boot() {
+	watchdog -T $wait -t 2 /dev/watchdog1
+	watchdog -T $wait -t 2 /dev/watchdog2
+}
+
+stop(){
+	killall -9 watchdog
+	sleep 1 
+	echo V > /dev/watchdog1
+	echo V > /dev/watchdog2
+}

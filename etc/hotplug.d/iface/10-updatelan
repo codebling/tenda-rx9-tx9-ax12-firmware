@@ -1,0 +1,15 @@
+#!/bin/sh
+
+[ "$(uci get ipv6UserCfg.ipv6.enable)" = "0" ] && return
+[ "$(uci get ipv6UserCfg.ipv6.reqiapd)" = "0" ] && return
+
+[ "$ACTION" == "ifdown" -a -z "$DEVICE" ] && {
+	addr6list=$(ifconfig br-lan | grep inet6 | awk '{print $3}')
+	if [ -n "$addr6list" ];then
+		for addr in $addr6list
+		do
+			[ ${addr%%:*} = "fe80" ] && continue
+			ifconfig br-lan del $addr
+		done
+	fi
+}

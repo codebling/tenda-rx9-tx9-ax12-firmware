@@ -1,0 +1,9 @@
+Package: httpd
+Version: 1
+Depends: libc, libcommon, libmatrixssl, td_serverd, libuci20130104, libblobmsg-json, ucloud, libsqlite3-0, qos_nl
+Source: package/tenda_property/httpd
+SourceName: httpd
+Section: Tenda Property
+Architecture: mips_24kc_nomips16
+Installed-Size: 1252206
+Description:  HTTPd - tiny, single threaded HTTP server

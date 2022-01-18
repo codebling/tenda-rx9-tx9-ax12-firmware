@@ -1,0 +1,20 @@
+
+config global 'ipv6'
+	option enable '0'
+	option reqiapd '1'
+
+config interface 'wan'
+	option prefixlen '64'
+#	option dns1 '2001:1::1'
+#	option dns2 '2001:1::2'
+#	option ip6addr '2001:1234::8/64'
+#	option gateway '2001:1234::1'
+	option proto 'DHCP'
+#	option username 'intelbras'
+#	option password 'intelbras'
+
+config interface 'lan'
+	option prefixlen '64'
+	option mode '1'
+	option prefixaddr 'fd83:3fa9:649b::/64'
+

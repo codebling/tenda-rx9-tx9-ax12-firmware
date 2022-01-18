@@ -1,0 +1,14 @@
+Package: iptables-mod-nfqueue
+Version: 1.8.3-1
+Depends: libc, iptables, kmod-nfnetlink-queue, kmod-ipt-nfqueue
+Source: package/network/utils/iptables
+SourceName: iptables-mod-nfqueue
+License: GPL-2.0
+Section: net
+Architecture: mips_24kc_nomips16
+Installed-Size: 2436
+Description:  iptables extension for user-space queuing via NFNETLINK.
+ 
+ Includes:
+ - libxt_NFQUEUE
+ 

@@ -1,0 +1,11 @@
+Package: usign
+Version: 2019-08-06-5a52b379-1
+Depends: libc, libubox20191228
+Source: package/system/usign
+SourceName: usign
+License: ISC
+Section: base
+Maintainer: Felix Fietkau <nbd@nbd.name>
+Architecture: mips_24kc_nomips16
+Installed-Size: 11340
+Description:  OpenWrt signature verification utility

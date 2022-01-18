@@ -1,0 +1,10 @@
+Package: wav_api_6x-uci
+Version: 1.0.0.1-ea30404a637f1929b18983b5a0802ab0aefd69f9
+Depends: libc, libnl200, librt, libsafec3, libncurses6, dwpal_6x-uci, swpal_6x-uci
+Source: intel_source/feeds/ugw/wlan/feed_wlan_6x_uci/wlan_wave_feed/wav_api_6x-uci
+SourceName: wav_api_6x-uci
+Section: net
+Maintainer: Intel Corporation
+Architecture: mips_24kc_nomips16
+Installed-Size: 15714
+Description:  WAV-API: WAV API Layer. Includes: band steering lite application.

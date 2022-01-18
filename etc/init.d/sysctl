@@ -1,0 +1,67 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2006 OpenWrt.org
+
+START=11
+
+apply_defaults() {
+	local mem="$(awk '/^MemTotal:/ {print $2}' /proc/meminfo)"
+	local min_free frag_low_thresh frag_high_thresh
+
+	if [ "$mem" -gt 65536 ]; then # 128M
+		min_free=16384
+	elif [ "$mem" -gt 32768 ]; then # 64M
+		min_free=8192
+	else
+		min_free=1024
+		frag_low_thresh=393216
+		frag_high_thresh=524288
+	fi
+	min_free=1024
+	sysctl -qw vm.min_free_kbytes="$min_free"
+
+	[ "$frag_low_thresh" ] && sysctl -qw \
+		net.ipv4.ipfrag_low_thresh="$frag_low_thresh" \
+		net.ipv4.ipfrag_high_thresh="$frag_high_thresh" \
+		net.ipv6.ip6frag_low_thresh="$frag_low_thresh" \
+		net.ipv6.ip6frag_high_thresh="$frag_high_thresh" \
+		net.netfilter.nf_conntrack_frag6_low_thresh="$frag_low_thresh" \
+		net.netfilter.nf_conntrack_frag6_high_thresh="$frag_high_thresh"
+
+	# first set default, then all interfaces to avoid races with appearing interfaces
+	if [ -d /proc/sys/net/ipv6/conf ]; then
+		echo 0 > /proc/sys/net/ipv6/conf/default/accept_ra
+		for iface in /proc/sys/net/ipv6/conf/*/accept_ra; do
+			echo 0 > "$iface"
+		done
+	fi
+}
+
+virify_bank(){
+	local cmd_line t_active_bank active_bank t_update_chk update_chk
+	cmd_line="`cat /proc/cmdline`";
+
+	[ -z "${cmd_line##*active_bank=[AB]*}" ] && {
+		t_active_bank=${cmd_line##*active_bank=};
+		active_bank=${t_active_bank::1};
+	} || active_bank=A;
+
+	[ -z "${cmd_line##*update_chk=[0-4]*}" ] && {
+		t_update_chk=${cmd_line##*update_chk=};
+		update_chk=${t_update_chk::1};
+	} || update_chk=0;
+
+	if [ "$active_bank" = "B" -a "$update_chk" = "0" ]; then
+		/usr/sbin/uboot_env --set --name update_chk --value  2
+	elif [ "$active_bank" = "A" -a "$update_chk" != "0" ]; then
+		/usr/sbin/uboot_env --set --name update_chk --value 0
+	fi
+}
+
+start() {
+	apply_defaults
+	for CONF in /etc/sysctl.d/*.conf /etc/sysctl.conf; do
+		[ -f "$CONF" ] && sysctl -e -p "$CONF" >&-
+	done
+	virify_bank
+	ulimit -c 1024
+}

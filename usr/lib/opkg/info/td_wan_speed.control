@@ -1,0 +1,9 @@
+Package: td_wan_speed
+Version: 13
+Depends: libc, libcommon
+Source: package/tenda_property/td_wan_speed
+SourceName: td_wan_speed
+Section: Tenda Property
+Architecture: mips_24kc_nomips16
+Installed-Size: 3619
+Description:  td_wan_speed

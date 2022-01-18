@@ -1,0 +1,11 @@
+Package: ppacmd
+Version: 1.0-1
+Depends: libc, kmod-ppa-drv, libsafec3
+Source: intel_source/feeds/ugw/net/ppa/ppa-drv
+SourceName: ppacmd
+License: GPL-2.0
+Section: utils
+Maintainer: Intel
+Architecture: mips_24kc_nomips16
+Installed-Size: 36264
+Description:  Command line tool for PPA acceleration

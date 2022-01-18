@@ -1,0 +1,9 @@
+Package: kmod-iwlwav-driver-uci
+Version: 4.9.206+6.1.0-5ee0c7f0c08ae08b64b7044206bccb89e0c97208
+Depends: kernel (=4.9.206-1-eef4e7657600654501bc5c4649a445db), kmod-directconnect-dp
+Source: intel_source/feeds/ugw/wlan/feed_wlan_6x_uci/wlan_wave_feed/iwlwav-driver-uci
+SourceName: kmod-iwlwav-driver-uci
+Section: kernel
+Architecture: mips_24kc_nomips16
+Installed-Size: 1059580
+Description:  iwlwav WLAN Driver

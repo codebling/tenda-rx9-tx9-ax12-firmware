@@ -1,0 +1,10 @@
+Package: kmod-pppoe
+Version: 4.9.206-1
+Depends: kernel (=4.9.206-1-eef4e7657600654501bc5c4649a445db), kmod-ppp, kmod-pppox
+Source: package/kernel/linux
+SourceName: kmod-pppoe
+License: GPL-2.0
+Section: kernel
+Architecture: mips_24kc_nomips16
+Installed-Size: 7034
+Description:  Kernel module for PPPoE (PPP over Ethernet) support

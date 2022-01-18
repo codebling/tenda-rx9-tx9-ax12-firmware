@@ -1,0 +1,24 @@
+#!/bin/sh
+
+[ "$ACTION" == "ifup" ] && [ "$DEVICE" == "pppoe-wan" ] && {
+	[ "$(uci get ipv6UserCfg.ipv6.enable)" = "0" ] && return
+	dhcp_exit=$(ps | grep odhcp6c | grep pppoe-wan)
+	if [ -z "$dhcp_exit" ];then
+		sleep 3
+		dhcp_exit=$(ps | grep odhcp6c | grep pppoe-wan)
+		[ -z "$dhcp_exit" ] && ubus call network add_dynamic '{"name":"wan_6","ifname":"@wan","proto":"dhcpv6","zone":"wan","peerdns":true}' && sleep 4
+	fi
+	address=$(ubus call network.interface.wan_6 status | jsonfilter -e '@["ipv6-address"][0].address')
+	mask=$(ubus call network.interface.wan_6 status | jsonfilter -e '@["ipv6-address"][0].mask')
+	#set address#
+	[ -n "$address" ] && [ -n "$mask" ] && ifconfig pppoe-wan add $address/$mask > /dev/null 2>&1 
+	#set router#
+	target=$(ubus call network.interface.wan_6 status | jsonfilter -e '@["route"][1].target')
+	[ "$target" = "::" ] && gateway6=$(ubus call network.interface.wan_6 status | jsonfilter -e '@["route"][1].nexthop')
+	if [ -n "$gateway6" ];then
+		prefix6=$(ubus call network.interface.wan_6 status | jsonfilter -e '@["ipv6-prefix"][0].address')
+		mask6=$(ubus call network.interface.wan_6 status | jsonfilter -e '@["ipv6-prefix"][0].mask')
+		[ -n "$prefix6" ] && [ -n "mask6" ] && ip -6 ro add default from $prefix6/$mask6 via $gateway6 dev pppoe-wan proto static metric 512 pref medium > /dev/null 2>&1
+		ip -6 ro add default via $gateway6 dev pppoe-wan metric 1 pref medium > /dev/null 2>&1
+	fi
+}

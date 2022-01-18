@@ -1,0 +1,9 @@
+Package: td_conflict_check
+Version: 1
+Depends: libc, td_serverd, libubox20191228, libuci20130104, libubus20191227, libcommon, td_bm_utils, libnl3, libnl200, libsqlite3-0, qos_nl
+Source: package/tenda_property/td_conflict_check
+SourceName: td_conflict_check
+Section: Tenda Property
+Architecture: mips_24kc_nomips16
+Installed-Size: 1966
+Description:  tenda ip conflict check.

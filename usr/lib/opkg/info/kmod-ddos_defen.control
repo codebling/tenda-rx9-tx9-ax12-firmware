@@ -1,0 +1,9 @@
+Package: kmod-ddos_defen
+Version: 4.9.206-1
+Depends: kernel (=4.9.206-1-eef4e7657600654501bc5c4649a445db)
+Source: package/tenda_property/kmod-defen/ddos_defen
+SourceName: kmod-ddos_defen
+Section: kernel
+Architecture: mips_24kc_nomips16
+Installed-Size: 9217
+Description:  Tenda's ddos_defen Component

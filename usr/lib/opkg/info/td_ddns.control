@@ -1,0 +1,10 @@
+Package: td_ddns
+Version: 12
+Depends: libc, libcommon
+Source: package/tenda_property/td_ddns
+SourceName: td_ddns
+Section: Tenda Property
+Maintainer: Cheung<zhanglingyun@tenda.cn>
+Architecture: mips_24kc_nomips16
+Installed-Size: 40744
+Description:  Tenda behavor manager utils for lua.

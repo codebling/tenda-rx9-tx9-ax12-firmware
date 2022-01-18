@@ -1,0 +1,9 @@
+Package: qos_nl
+Version: 1
+Depends: libc, liblua5.1.5
+Source: package/tenda_property/qos_nl
+SourceName: qos_nl
+Section: Tenda Property
+Architecture: mips_24kc_nomips16
+Installed-Size: 1645
+Description:  Qos netlink for the traffic statistic info

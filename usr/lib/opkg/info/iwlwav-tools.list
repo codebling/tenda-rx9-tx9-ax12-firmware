@@ -1,0 +1,8 @@
+/opt/intel/bin/dutserver
+/opt/intel/bin/dump_handler
+/etc/iwlwav_tools.ver
+/opt/intel/bin/logserver
+/opt/intel/bin/drvhlpr
+/opt/intel/bin/BClSockServer
+/opt/intel/bin/mtlk_cli_dbg_server
+/opt/intel/bin/mtlk_cli

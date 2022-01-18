@@ -1,0 +1,12 @@
+{
+	"cap.groups": [
+		"secupg",
+		"ssgrp",
+		"dbgrp"
+	],
+	"cap.keep": [
+		"cap_sys_admin",
+		"cap_sys_resource"
+	],
+	"cap.drop": []
+}

@@ -1,0 +1,14 @@
+/opt/intel/usr/lib/qosal/libqosfapi.so
+/opt/intel/usr/lib/libppa.so
+/opt/intel/usr/lib/libutils.so
+/opt/intel/usr/lib/qosal/libqosipc.so
+/opt/intel/usr/lib/qosal/libsysapi.so
+/opt/intel/usr/lib/libqosipc.so
+/opt/intel/usr/lib/libcpu_n.so
+/opt/intel/usr/lib/libsysapi.so
+/opt/intel/usr/sbin/qosal_plat_cfg.xml
+/opt/intel/usr/lib/libqosfapi.so
+/opt/intel/usr/lib/qosal/libppa.so
+/opt/intel/usr/lib/qosal/libutils.so
+/opt/intel/usr/sbin/qosd
+/opt/intel/usr/lib/qosal/libcpu_n.so

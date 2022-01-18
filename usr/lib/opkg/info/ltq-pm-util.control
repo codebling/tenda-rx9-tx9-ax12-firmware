@@ -1,0 +1,16 @@
+Package: ltq-pm-util
+Version: 4.0.0-1
+Depends: libc, safeclibs3
+Source: intel_source/feeds/ugw/utils/ugw_utils/pm_util
+SourceName: ltq-pm-util
+Section: power
+Maintainer: Intel Corporation
+Architecture: mips_24kc_nomips16
+Installed-Size: 17801
+Description:  Power Management Utility supporting UGW8
+ This application offers access to system power info's.
+ Features:
+ - Display current power state of all registered modules
+ - Get module specific power state
+ - Change/Set power state of a specific module
+ Example: pm_util -h    "print help menu"

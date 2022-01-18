@@ -1,0 +1,10 @@
+Package: td_filter_ctrl
+Version: 12
+Depends: libc, libsqlite3-0, libuci20130104, libubox20191228, libubus20191227, td_serverd, td_bm_utils, libcommon, qos_nl
+Source: package/tenda_property/td_filter_ctrl
+SourceName: td_filter_ctrl
+Section: Tenda Property
+Maintainer: Cheung<zhanglingyun@tenda.cn>
+Architecture: mips_24kc_nomips16
+Installed-Size: 6421
+Description:  Tenda behavor manager utils for lua.

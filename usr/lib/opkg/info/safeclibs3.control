@@ -1,0 +1,13 @@
+Package: safeclibs3
+Version: 03032018.0-g570fa5-3.3.0
+Depends: libc
+Provides: libsafec3
+Source: intel_source/feeds/opensource/safec3
+SourceName: safeclibs3
+License: CISCO SYSTEMS
+LicenseFiles: COPYING
+Section: libs
+Maintainer: Bo Berry <bberryusa@users.sourceforge.net>
+Architecture: mips_24kc_nomips16
+Installed-Size: 56064
+Description:  This package contains the safec  shared library.

@@ -1,0 +1,44 @@
+#!/bin/sh
+#
+# Copyright (C) 2011-2015 OpenWrt.org
+# based on ar71xx
+#
+
+. /lib/functions/uci-defaults.sh
+. /lib/functions/lantiq.sh
+
+board_config_update
+
+led_wifi="$(lantiq_get_dt_led wifi)"
+[ -n "$led_wifi" ] && ucidef_set_led_wlan "wifi" "wifi" "$led_wifi" "phy0tpt"
+
+led_usb="$(lantiq_get_dt_led usb)"
+[ -n "$led_usb" ] && ucidef_set_led_usbdev "usb" "usb" "$led_usb" "1-1"
+
+led_usb2="$(lantiq_get_dt_led usb2)"
+[ -n "$led_usb2" ] && ucidef_set_led_usbdev "usb2" "usb2" "$led_usb2" "2-1"
+
+led_internet="$(lantiq_get_dt_led internet)"
+[ -n "$led_internet" ] && {
+	interface="nas0"
+	lantiq_is_vdsl_system && interface="ptm0"
+
+	led_dsl="$(lantiq_get_dt_led dsl)"
+	[ -n "$led_dsl" ] && {
+		interface="pppoe-wan"
+		ucidef_set_led_default "dsl" "dsl" "$led_dsl" "0"
+	}
+
+	ucidef_set_led_netdev "internet" "internet" "$led_internet" "$interface"
+}
+
+board=$(lantiq_board_name)
+
+case "$board" in
+*)
+	;;
+esac
+
+board_config_flush
+
+exit 0

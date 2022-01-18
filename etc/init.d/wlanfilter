@@ -1,0 +1,143 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) Tenda Corp
+START=19
+mac_list=""
+macfilter_type=""
+mac_list_path="/tmp/maclist"
+opt="ADD_MAC"
+acl_opt=""
+acl_info=""
+
+wlmfl_tc_ifb_add_wlan() {
+        local list=`cat /etc/config/qos | grep device_rule`
+        local workmode=`uci get network.lan.proto`       
+
+        #wireless
+        [ "$workmode" == "static" ]  && {
+            if [ -n "$list" ]; then
+                tc qdisc add dev wlan0.1 root handle 1: htb
+                tc filter add dev wlan0.1 parent 1: protocol all u32 match u32 0 0 action mirred egress redirect dev ifb1
+				tc qdisc add dev wlan2.1 root handle 1: htb
+                tc filter add dev wlan2.1 parent 1: protocol all u32 match u32 0 0 action mirred egress redirect dev ifb1
+            fi
+        }
+}
+
+append_mac_list(){
+        local mode macaddr
+        local cfg=$1
+
+        config_get mode $cfg black_white
+        config_get macaddr $cfg macaddr
+        [ "$mode" != "$macfilter_type" ]&&{
+                return
+        }
+        echo "$macaddr" >>$mac_list_path
+        hostapd_cli -i wlan0 $acl_opt wlan0.1 $opt $macaddr
+        hostapd_cli -i wlan2 $acl_opt wlan2.1 $opt $macaddr
+}
+
+check_mf_type(){
+        [  -f /tmp/macfilter ] &&{
+                echo "change filter type" >/dev/console
+                hostapd_cli -i wlan0 reconf wlan0.1
+                hostapd_cli -i wlan2 reconf wlan2.1
+                rm /tmp/macfilter
+                wlmfl_tc_ifb_add_wlan
+        }
+}
+
+wl_acl_clear(){
+        hostapd_cli -i wlan0 deny_acl wlan0.1 CLEAR
+        hostapd_cli -i wlan0 accept_acl wlan0.1 CLEAR
+        hostapd_cli -i wlan2 deny_acl wlan2.1 CLEAR
+        hostapd_cli -i wlan2 accept_acl wlan2.1 CLEAR
+}
+
+check_acl_info(){
+        mac_list=`cat $mac_list_path`
+        for mf_mac in $mac_list
+        do
+                [ "$1" = "$mf_mac" ] && return 1
+        done
+        return 0
+}
+
+start_service(){
+        local enable type
+        config_load macfilter
+        config_get enable macfilter enable
+
+        [ "$enable" = "0" ] &&{
+                stop_service
+                return
+        }
+        rm $mac_list_path
+        config_get type macfilter type
+        logger "macfilter type $type"
+
+        case $type in
+                black)
+                        macfilter_type="0"
+                        acl_opt="deny_acl"
+                        sed -i "s/accept_mac_file/deny_mac_file/" /var/run/hostapd-phy0.conf
+                        sed -i "s/macaddr_acl=1/macaddr_acl=0/" /var/run/hostapd-phy0.conf
+                        sed -i "s/accept_mac_file/deny_mac_file/" /var/run/hostapd-phy1.conf
+                        sed -i "s/macaddr_acl=1/macaddr_acl=0/" /var/run/hostapd-phy1.conf
+                ;;
+                white)
+                        macfilter_type="1"
+                        acl_opt="accept_acl"
+                        sed -i "s/deny_mac_file/accept_mac_file/" /var/run/hostapd-phy0.conf
+                        sed -i "s/macaddr_acl=0/macaddr_acl=1/" /var/run/hostapd-phy0.conf
+                        sed -i "s/deny_mac_file/accept_mac_file/" /var/run/hostapd-phy1.conf
+                        sed -i "s/macaddr_acl=0/macaddr_acl=1/" /var/run/hostapd-phy1.conf
+                       
+                ;;
+        esac
+        acl_info=`hostapd_cli -i wlan0 $acl_opt wlan0.1 SHOW`
+#        wl_acl_clear
+        config_foreach append_mac_list macfilter
+
+        cp $mac_list_path /var/run/hostapd-wlan0.1.maclist
+        cp $mac_list_path /var/run/hostapd-wlan2.1.maclist
+        check_mf_type
+        N=0
+        for acl_mac in $acl_info
+        do
+                [ $N -eq 1 ] && {
+                        N=0
+                        continue
+                }
+
+                if [ $type = "black" ]
+                then
+                        opt="DEL_MAC"
+                else
+                        opt="DIS_MAC"
+                fi
+                check_acl_info $acl_mac
+                [ $? -eq 0 ] && {
+                        echo $acl_mac >/dev/console
+                        hostapd_cli -i wlan0 $acl_opt wlan0.1 $opt $acl_mac
+                        hostapd_cli -i wlan2 $acl_opt wlan2.1 $opt $acl_mac
+                }
+                N=1
+        done
+}
+
+stop_service(){
+        rm $mac_list_path
+        echo -n ''  >/var/run/hostapd-wlan0.1.maclist
+        echo -n ''  >/var/run/hostapd-wlan2.1.maclist
+}
+
+restart(){
+        stop_service
+        start_service
+        #$(/sbin/wifi reload)
+}
+
+boot() {
+        start_service
+}

@@ -1,0 +1,14 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2010-2012 OpenWrt.org
+
+USE_PROCD=1
+START=99
+SERVICE_DAEMONIZE=1
+
+start_service() {
+    stop_service
+    procd_open_instance pppdv2
+    procd_set_param respawn
+    procd_set_param command /usr/bin/pppdv2
+    procd_close_instance
+}

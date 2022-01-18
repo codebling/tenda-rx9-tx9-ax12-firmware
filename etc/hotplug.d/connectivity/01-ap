@@ -1,0 +1,14 @@
+#!/bin/sh
+# Hotplug script to reload network config after network disconnect
+#
+
+. /lib/functions.sh
+logger "Tenda MODE :$WORKMODE , Active: $ACTION"
+
+[ -f "/var/run/led.state" ] && exit
+
+[ "$WORKMODE" = "ap" -a "$ACTION" = "loss" ]&&{
+        ifup lan
+        /etc/init.d/network restart
+		/etc/init.d/dnsmasq restart
+}

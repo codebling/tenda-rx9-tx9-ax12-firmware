@@ -1,0 +1,10 @@
+Package: kmod-intel_eth_toe_drv_xrx500
+Version: 4.9.206-1
+Depends: kernel (=4.9.206-1-eef4e7657600654501bc5c4649a445db), kmod-intel_eth_drv_xrx500
+Source: package/kernel/linux
+SourceName: kmod-intel_eth_toe_drv_xrx500
+License: GPL-2.0
+Section: kernel
+Architecture: mips_24kc_nomips16
+Installed-Size: 104
+Description:  Intel Ethernet TOE Driver

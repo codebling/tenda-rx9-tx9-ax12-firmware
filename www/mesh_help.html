@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html><head>
+    <meta charset="utf-8">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link href="css/reasy-ui.css" rel="stylesheet">
+    <title></title>
+  <script src="lang/b28n_async.js"></script>
+<script>
+B.setTextDomain(["translate"]);
+</script>
+</head>
+  <body>
+    <fieldset>
+    	<div class="legend-main">
+            <div class="tabs-group">
+              <div class="tabs-group-title clearfix">
+                <div class="tabs-title active" data-id="addTips">添加子节点</div>
+                <div class="tabs-title" data-id="delTips">删除子节点</div>
+              </div>
+
+            </div>
+            <div id="addTips" class="add-mesh-content">
+              <div class="add-mesh-node">
+                <div class="step-list">
+                  <span class="step-title">1</span>
+                  <div>
+                    <img src="img/add_1.png">
+                  </div>
+                  <div class="step-tips">
+                    请确保主节点联网正常，待添加节点已启动且处于出厂设置状态。两个节点之间保持近距离。
+                  </div>
+                </div>
+                <div class="step-list">
+                  <span class="step-title">2</span>
+                  <div>
+                    <img src="img/add_2.png">
+                  </div>
+                  <div class="step-tips">
+                    按一下主节点的WPS按钮（1~3秒），指示灯快闪。请在2分钟内按一下待添加节点的WPS按钮（1~3秒），指示灯快闪。
+                  </div>
+                </div>
+                <div class="step-list">
+                  <span class="step-title">3</span>
+                  <div>
+                    <img src="img/add_3.png">
+                  </div>
+                  <div class="step-tips">
+                    设备正在自动组网，时间不超过2分钟。
+                  </div>
+                </div>
+                <div class="step-list">
+                  <span class="step-title">4</span>
+                  <div>
+                    <img src="img/add_4.png">
+                  </div>
+                  <div class="step-tips">
+                    当子节点的指示灯变为长亮时，组网成功。
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <div id="delTips" class="add-mesh-content none">
+              <div class="add-mesh-node">
+                <div class="step-list">
+
+                  <div>
+                    <img src="img/del_1.png">
+                  </div>
+                  <div class="step-tips">
+                    <div>将该节点恢复出厂设置。</div>
+                    <div>方法：在节点已启动的状态下，按住复位按（RESET）约8秒，当指示灯快闪时松开，路由器将会恢复出厂设置。</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="control-group">
+                <div class="red page-err" id="msg-err">&nbsp;</div>
+            </div>
+
+            <div class="btn-group">
+            	<span type="button" class="btn-mesh" id="submit">我知道了</span>
+            </div>
+        </div>
+    </fieldset>
+
+    <script src="js/libs/j.js"></script>
+    <script src="js/libs/reasy-ui-1.0.3.js"></script>
+    <script src="js/libs/public.js"></script>
+    <script>
+      window.onload = function() {
+        $(".tabs-title").on("click", function() {
+          var targetId = $(this).attr("data-id");
+          $(".tabs-title").removeClass("active");
+          $(".add-mesh-content").addClass("none");
+
+          $(this).addClass("active");
+          $("#"+targetId).removeClass("none");
+        });
+
+        $("#submit").on("click", top.closeIframe);
+      }
+    </script>
+</body></html>

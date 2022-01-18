@@ -1,0 +1,5 @@
+cfg80211
+compat
+mac80211
+mtlk fastpath=1,1,1 ahb_off=1 loggersid=255,255 dual_pci=1,1
+mtlkroot

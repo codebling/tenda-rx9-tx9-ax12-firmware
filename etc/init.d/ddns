@@ -1,0 +1,22 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2010-2012 OpenWrt.org
+
+START=99
+
+start() {
+    /etc/ddns/ddns.sh start
+    logger "DDNS Service Start"
+}
+
+stop() {
+    /etc/ddns/ddns.sh stop
+    logger "DDNS Service Stop"
+}
+
+restart() {
+    /etc/ddns/ddns.sh restart
+}
+
+boot() {
+    start
+}

@@ -1,0 +1,3 @@
+/etc/modules.d/ppa-drv-grx500-mpe
+/lib/firmware/mpe_fw_be.img
+/lib/modules/4.9.206/ltq_mpe_hal_drv.ko

@@ -1,0 +1,12 @@
+Package: libcap
+Version: 2.27-1
+Depends: libc
+Source: intel_source/feeds/packages/libs/libcap
+SourceName: libcap
+License: GPL-2.0
+LicenseFiles: License
+Section: libs
+Maintainer: Paul Wassi <p.wassi@gmx.at>
+Architecture: mips_24kc_nomips16
+Installed-Size: 6888
+Description:  Linux capabilities library
