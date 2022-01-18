@@ -1,0 +1,10 @@
+Package: kmod-l2tp
+Version: 4.9.206-1
+Depends: kernel (=4.9.206-1-73b4078bb8acdc578ded46d0b302884e), kmod-udptunnel4, kmod-udptunnel6
+Source: package/kernel/linux
+SourceName: kmod-l2tp
+License: GPL-2.0
+Section: kernel
+Architecture: mips_24kc_nomips16
+Installed-Size: 15883
+Description:  Kernel modules for L2TP V3 Support

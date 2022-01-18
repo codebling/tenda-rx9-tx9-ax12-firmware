@@ -1,0 +1,10 @@
+Package: td_bm_utils
+Version: 12
+Depends: libc, liblua5.1.5
+Source: package/tenda_property/td_bm_utils
+SourceName: td_bm_utils
+Section: Tenda Property
+Maintainer: Cheung<zhanglingyun@tenda.cn>
+Architecture: mips_24kc_nomips16
+Installed-Size: 6301
+Description:  Tenda behavor manager utils for lua.

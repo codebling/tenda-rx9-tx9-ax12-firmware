@@ -1,0 +1,12 @@
+Package: kmod-nfnetlink-queue
+Version: 4.9.206-1
+Depends: kernel (=4.9.206-1-73b4078bb8acdc578ded46d0b302884e), kmod-nfnetlink
+Source: package/kernel/linux
+SourceName: kmod-nfnetlink-queue
+License: GPL-2.0
+Section: kernel
+Architecture: mips_24kc_nomips16
+Installed-Size: 7375
+Description:  Kernel modules support for queueing packets via NFNETLINK
+ Includes:
+ - NFQUEUE

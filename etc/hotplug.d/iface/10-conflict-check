@@ -1,0 +1,7 @@
+#!/bin/sh
+
+
+[ "$ACTION" == "ifup" ] && ([ "$DEVICE" == "eth1" ] || [ "$DEVICE" == "pppoe-wan" ])&& {
+  killall td_conflict_check
+  /usr/bin/td_conflict_check
+}

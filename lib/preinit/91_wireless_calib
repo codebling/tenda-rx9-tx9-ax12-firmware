@@ -1,0 +1,26 @@
+#!/bin/sh
+
+initwireless_calibration() {
+	mkdir -p /tmp/wlanconfig
+	read_img wlanconfig /tmp/wlanconfig/wlanconfig_cal_files.tar.gz
+	tar xzf /tmp/wlanconfig/wlanconfig_cal_files.tar.gz -C /tmp/wlanconfig/
+	chown -R nwk:nwk /tmp/wlanconfig
+	chmod 550 /tmp/wlanconfig
+	chmod 440 /tmp/wlanconfig/*
+}
+
+check_calibration() {
+	[ ! -f "/tmp/wlanconfig/cal_wlan0.bin" -a -f "/lib/firmware/cal_wlan0.bin.bk" ] && {
+		cp /lib/firmware/cal_wlan0.bin.bk /tmp/wlanconfig/cal_wlan0.bin
+#		cd /tmp && {
+#			tar -czf eeprom.tar.gz cal*.bin
+#			[ ! -f "/tmp/eeprom.tar.gz" ] && return
+#			upgrade /tmp/eeprom.tar.gz wlanconfig 0 0
+#			sync
+#			reboot -f
+#		}
+	}
+}
+
+boot_hook_add preinit_main initwireless_calibration
+boot_hook_add preinit_main check_calibration

@@ -1,0 +1,13 @@
+Package: safeclibs
+Version: v10052013
+Depends: libc
+Provides: libsafec
+Source: intel_source/feeds/opensource/safec
+SourceName: safeclibs
+License: CISCO SYSTEMS
+LicenseFiles: COPYING
+Section: libs
+Maintainer: Bo Berry <bberryusa@users.sourceforge.net>
+Architecture: mips_24kc_nomips16
+Installed-Size: 10927
+Description:  This package contains the safec  shared library.

@@ -1,0 +1,10 @@
+Package: td_defen_ctrl
+Version: 12
+Depends: libc, libcommon
+Source: package/tenda_property/td_defen_ctrl
+SourceName: td_defen_ctrl
+Section: Tenda Property
+Maintainer: <wuhongxing@tenda.cn>
+Architecture: mips_24kc_nomips16
+Installed-Size: 3783
+Description:  Tenda behavor manager utils for lua.

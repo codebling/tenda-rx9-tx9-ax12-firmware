@@ -1,0 +1,6 @@
+
+config admin
+	option username 'admin'
+	option baseusername 'admin'
+	option baseuserpass '21232f297a57a5a743894a0e4a801fc3'
+	option uc_enable '1'

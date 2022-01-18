@@ -1,0 +1,10 @@
+Package: ltq-gphy-fw-xrx5xx
+Version: 3.5-1
+Depends: libc
+Source: intel_source/feeds/ugw/net/gphy_firmware/ltq_fw_PHY_IP
+SourceName: ltq-gphy-fw-xrx5xx
+Section: firmware
+Maintainer: Lantiq Beteiligungs GmbH
+Architecture: mips_24kc_nomips16
+Installed-Size: 33143
+Description:  GPHY Firmware XRX5xx Gigabit Ethernet

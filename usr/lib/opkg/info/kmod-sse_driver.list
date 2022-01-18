@@ -1,0 +1,3 @@
+/lib/modules/4.9.206/secure_service_driver.ko
+/etc/modules-boot.d/80-sse_driver
+/etc/modules.d/80-sse_driver

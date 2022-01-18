@@ -1,0 +1,18 @@
+{
+"doubleBand":"0",
+
+"wrlEn": "1",
+"wrlEn_5g": "1",
+
+"ssid": "Tenda123",
+"ssid_5g": "Tenda_43543",
+
+"wrlPwd": "12345678",
+"wrlPwd_5g": "12345678",
+
+"security": "none",
+"security_5g": "wpapsk",
+
+"hideSsid": "1",
+"hideSsid_5g": "1"
+}

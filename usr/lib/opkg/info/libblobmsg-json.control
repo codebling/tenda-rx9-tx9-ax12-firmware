@@ -1,0 +1,11 @@
+Package: libblobmsg-json
+Version: 2020-01-20-43a103ff-1
+Depends: libc, libjson-c2, libubox20191228
+Source: package/libs/libubox
+SourceName: libblobmsg-json
+License: ISC
+Section: libs
+Maintainer: Felix Fietkau <nbd@nbd.name>
+Architecture: mips_24kc_nomips16
+Installed-Size: 4005
+Description:  blobmsg <-> json conversion library

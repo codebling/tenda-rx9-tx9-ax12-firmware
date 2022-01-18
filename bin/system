@@ -1,0 +1,36 @@
+###
+ # @Author: your name
+ # @Date: 2020-04-16 14:10:42
+ # @LastEditTime: 2020-04-16 14:48:32
+ # @LastEditors: Please set LastEditors
+ # @Description: In User Settings Edit
+ # @FilePath: \develop\overlay\generic\base-files\files\bin\system
+ ###
+#!/bin/sh
+#Tenda add for some system opration like reset...
+
+usage() {
+        cat <<EOF
+Usage: $0 [optiosn]
+	reset	reset the system 
+EOF
+        exit 1
+}
+
+system_reset() {
+	echo "FACTORY RESET" > /dev/console
+	
+	sleep 1
+	killall dropbear httpd
+	
+	#jffs2reset -y -r
+	#firstboot -y -r
+	sync && sleep 2 && jffs2reset -y  && sync &&  fsync / && sleep 5 && reboot
+}
+
+case "$1" in
+	reset) system_reset;;
+	--help|help) usage;;
+	*) usage;;
+esac
+

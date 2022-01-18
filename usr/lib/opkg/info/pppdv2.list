@@ -1,0 +1,4 @@
+/etc/init.d/pppoe-srvv2
+/etc/init.d/pppdv2
+/usr/bin/pppdv2
+/usr/bin/pppoe-srvv2

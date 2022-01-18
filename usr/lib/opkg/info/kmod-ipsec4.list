@@ -1,0 +1,8 @@
+/lib/modules/4.9.206/xfrm4_mode_tunnel.ko
+/lib/modules/4.9.206/ipcomp.ko
+/lib/modules/4.9.206/ah4.ko
+/lib/modules/4.9.206/xfrm4_tunnel.ko
+/lib/modules/4.9.206/xfrm4_mode_transport.ko
+/etc/modules.d/32-ipsec4
+/lib/modules/4.9.206/esp4.ko
+/lib/modules/4.9.206/xfrm4_mode_beet.ko

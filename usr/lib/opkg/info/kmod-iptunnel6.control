@@ -1,0 +1,10 @@
+Package: kmod-iptunnel6
+Version: 4.9.206-1
+Depends: kernel (=4.9.206-1-73b4078bb8acdc578ded46d0b302884e)
+Source: package/kernel/linux
+SourceName: kmod-iptunnel6
+License: GPL-2.0
+Section: kernel
+Architecture: mips_24kc_nomips16
+Installed-Size: 1833
+Description:  Kernel modules for IPv6 tunneling

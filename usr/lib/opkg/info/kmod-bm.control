@@ -1,0 +1,9 @@
+Package: kmod-bm
+Version: 4.9.206-1
+Depends: kernel (=4.9.206-1-73b4078bb8acdc578ded46d0b302884e), kmod-nf-conntrack
+Source: package/tenda_property/kmod-behavior_manager
+SourceName: kmod-bm
+Section: kernel
+Architecture: mips_24kc_nomips16
+Installed-Size: 8374
+Description:  Tenda's behavior manager Component bm.

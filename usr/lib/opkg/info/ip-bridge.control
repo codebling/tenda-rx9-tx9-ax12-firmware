@@ -1,0 +1,11 @@
+Package: ip-bridge
+Version: 5.0.0-2.1
+Depends: libc, libnl-tiny, libelf1, libcap
+Source: package/network/utils/iproute2
+SourceName: ip-bridge
+License: GPL-2.0
+Section: net
+Maintainer: Russell Senior <russell@personaltelco.net>
+Architecture: mips_24kc_nomips16
+Installed-Size: 29426
+Description:  Bridge configuration utility from iproute2

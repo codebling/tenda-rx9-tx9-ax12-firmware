@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html><head>
+    <meta charset="utf-8">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link href="css/reasy-ui.css" rel="stylesheet">
+    <title></title>
+    <script src="lang/b28n_async.js"></script>
+    <script>
+        B.setTextDomain(["translate"]);
+    </script>
+</head>
+<body>
+<fieldset class="ifmwrap-time">
+    <input type="hidden" id="time">
+    <div class="legend-main" style="margin-top: 80px;">
+        <div class="control-group none">
+            <label class="control-label">System Time:</label>
+            <div class="controls" style="height:24px;">
+                <label class="radio" for="syncSet">
+                    <input type="radio" name="timeType" id="syncSet" checked="" value="sync">Sync with internet time</label>
+                <label class="radio" for="manualSet">
+                    <input type="radio" name="timeType" id="manualSet" value="manual">Manual</label>
+            </div>
+        </div>
+        <div id="sync_set">
+            <div class="control-group">
+                <label class="control-label">Select Time Zone:</label>
+                <div class="controls">
+                    <select id="timeZone" style="width:300px;">
+                        <option value="0:00">(GMT-12:00) Eniwetok Island</option>
+                        <option value="1:00">(GMT-11:00) Samoa</option>
+                        <option value="2:00">(GMT-10:00) Hawaii</option>
+                        <option value="3:00">(GMT-09:00) Alaska</option>
+                        <option value="4:00">(GMT-08:00) San Francisco</option>
+                        <option value="5:00">(GMT-07:00) Denver</option>
+                        <option value="6:00">(GMT-06:00) Mexico City, Guatemala, Costa Rica, Salvador, Nicaragua</option>
+                        <option value="7:00">(GMT-05:00) New York, Ottawa</option>
+                        <option value="8:00">(GMT-04:00) Chile, Brazil</option>
+                        <option value="9:00">(GMT-03:00) Buenos Aires</option>
+                        <option value="10:00">(GMT-02:00) Mid-Atlantic</option>
+                        <option value="11:00">(GMT-01:00) Cape Verde Islands</option>
+                        <option value="12:00">(GMT) Greenwich Mean Time</option>
+                        <option value="13:00">(GMT+01:00) Denmark, Germany, Norway, Hungary, France, Belgium</option>
+                        <option value="14:10" class="ruTimezone">(GMT+02:00) Kaliningrad</option>
+                        <option value="14:00">(GMT+02:00) Israel, Egypt, Bucharest</option>
+                        <option value="15:10" class="ruTimezone">(GMT+03:00) Moscow, St. Petersburg, Kazan, Volgograd, Nizhny Novgorod, Krasnodar</option>
+                        <option value="15:00">(GMT+03:00) Moscow</option>
+                        <option value="16:10" class="ruTimezone">(GMT+04:00) Samara, Izhevsk</option>
+                        <option value="16:00">(GMT+04:00) Sultanate of Oman, Mauritania, Reunion Island</option>
+                        <option value="17:10" class="ruTimezone">(GMT+05:00) Yekaterinburg</option>
+                        <option value="17:00">(GMT+05:00) Pakistan, Novaya Zemlya, Maldives</option>
+                        <option value="17:30">(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi</option>
+                        <option value="18:10" class="ruTimezone">(GMT+06:00) Novosibirsk, Omsk, Tomsk, Barnaul, Gorno-Altaisk, Kemerovo</option>
+                        <option value="18:00">(GMT+06:00) Colombo</option>
+                        <option value="19:10" class="ruTimezone">(GMT+07:00) Krasnoyarsk</option>
+                        <option value="19:00">(GMT+07:00) Bangkok, Jakarta</option>
+                        <option value="20:10" class="ruTimezone">(GMT+08:00) Irkutsk</option>
+                        <option value="20:00">(GMT+08:00) Beijing, Chongqing, Hong Kong, Urumqi, Taipei</option>
+                        <option value="21:10" class="ruTimezone">(GMT+09:00) Yakutsk</option>
+                        <option value="21:00">(GMT+09:00) Tokyo, Pyongyang</option>
+                        <option value="22:10" class="ruTimezone">(GMT+10:00) Vladivostok</option>
+                        <option value="22:00">(GMT+10:00) Sydney, Guam</option>
+                        <option value="23:10" class="ruTimezone">(GMT+11:00) Magadan</option>
+                        <option value="23:00">(GMT+11:00) Solomon Islands</option>
+                        <option value="24:10" class="ruTimezone">(GMT+12:00) Peninsula Kamchatka</option>
+                        <option value="24:00">(GMT+12:00) Wellington</option>
+                        <option value="25:00">(GMT+13:00) Nuku'alofa</option>
+                    </select>
+                    <!--俄罗斯特有时区接口的分钟参数统一加多10-->
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Current Time:</label>
+                <div class="controls controls-text">
+                    <span id="sysTime"></span>
+                    <span>&nbsp;&nbsp;</span>
+                    <span id="syncInternetTips" class="txt-help-tips"></span>
+                </div>
+            </div>
+
+            <!-- <div class="control-group">
+                <label class="control-label">NTP Server:</label>
+                <div class="controls">
+                    <input type="text" id="ntpServer" required class="input-meidum validatebox" maxlength="64" data-options="{&quot;type&quot;:&quot;domain&quot;}">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Time Sync Period:</label>
+                <div class="controls">
+                    <select id="timePeriod">
+                        <option value="1800">30 mins</option>
+                        <option value="3600">1 hour</option>
+                        <option value="7200">2 hours</option>
+                        <option value="43200">12 hours</option>
+                        <option value="86400">1 day</option>
+                        <option value="172800">2 days</option>
+                        <option value="604800">7 days</option>
+                    </select>
+                </div>
+            </div> -->
+        </div>
+        <div id="manual_set" class="none">
+            <div class="control-group">
+                <label class="control-label">Date & Time</label>
+                <div class="controls">
+                    <input type="text" id="year" class="input-mini" size="4" maxlength="4" onKeyUp="value=this.value.replace(/[^0-9]/g,'')" required="required" />Year
+                    <input type="text" id="month" class="input-mic-mini" size="2" maxlength="2" onKeyUp="value=this.value.replace(/[^0-9]/g,'')" required="required"/>Month
+                    <input type="text" id="day" class="input-mic-mini" size="2" maxlength="2" onKeyUp="value=this.value.replace(/[^0-9]/g,'')" required="required"/>Day
+                    <input type="text" id="hour" class="input-mic-mini" size="2" maxlength="2" onKeyUp="value=this.value.replace(/[^0-9]/g,'')" required="required"/>hrs
+                    <input type="text" id="minute" class="input-mic-mini" size="2" maxlength="2" onKeyUp="value=this.value.replace(/[^0-9]/g,'')" required="required" />min
+                    <input type="text" id="second" class="input-mic-mini" size="2" maxlength="2" onKeyUp="value=this.value.replace(/[^0-9]/g,'')" required="required"/>sec
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label"></label>
+                <div class="controls">
+                    <input type="button" id="syncTime" value="Sync with Local PC Time" class="btn btn-small">
+                </div>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="red page-err" id="msg-err">&nbsp;</div>
+        </div>
+        <div class="btn-group">
+            <input type="button" class="btn btn-normal" id="submit" value="Save">
+        </div>
+    </div>
+</fieldset>
+
+<script src="js/libs/j.js"></script>
+<script src="js/libs/reasy-ui-1.0.3.js"></script>
+<script src="js/libs/public.js"></script>
+<script src="js/system_time.js"></script>
+</body></html>

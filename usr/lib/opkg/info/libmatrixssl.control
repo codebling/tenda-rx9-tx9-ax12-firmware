@@ -1,0 +1,10 @@
+Package: libmatrixssl
+Version: 1
+Depends: libc
+Source: package/tenda_property/libmatrixssl
+SourceName: libmatrixssl
+Section: libs
+Architecture: mips_24kc_nomips16
+Installed-Size: 210482
+Description:  libmatrixssl is a userspace library providing a low-level netlink
+ programming interface (API) to the in-kernel nf_tables subsystem.

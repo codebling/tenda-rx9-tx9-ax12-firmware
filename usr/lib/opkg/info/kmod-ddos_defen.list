@@ -1,0 +1,2 @@
+/etc/modules.d/70-ddos_defen
+/lib/modules/4.9.206/ddos_defen.ko

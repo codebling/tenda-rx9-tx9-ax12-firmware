@@ -1,0 +1,10 @@
+{
+        "user": "secupg",
+        "group": "secupg",
+        "access": {
+                "system": {
+                        "methods": ["reboot"]
+                }
+        }
+}
+

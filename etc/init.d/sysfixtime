@@ -1,0 +1,45 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2013-2014 OpenWrt.org
+
+START=00
+STOP=90
+
+RTC_DEV=/dev/rtc0
+HWCLOCK=/sbin/hwclock
+
+boot() {
+	start && exit 0
+	
+	#set time:2020/01/01
+	#date -s @1577808000
+	date -s @946656000
+    exit
+
+	local maxtime="$(maxtime)"
+	local curtime="$(date +%s)"
+	local fast="$(uci get system.safety.fast)"
+	[ "1" = "$fast" ]&&{
+		date -s @946713600
+	}||{
+		[ $curtime -lt $maxtime ] && date -s @$maxtime
+	}
+	
+}
+
+start() {
+	[ -e "$RTC_DEV" ] && [ -e "$HWCLOCK" ] && $HWCLOCK -s -u -f $RTC_DEV
+}
+
+stop() {
+	[ -e "$RTC_DEV" ] && [ -e "$HWCLOCK" ] && $HWCLOCK -w -u -f $RTC_DEV && \
+		logger -t sysfixtime "saved '$(date)' to $RTC_DEV"
+}
+
+maxtime() {
+	local file newest
+
+	for file in $( find /etc -type f ) ; do
+		[ -z "$newest" -o "$newest" -ot "$file" ] && newest=$file
+	done
+	[ "$newest" ] && date -r "$newest" +%s
+}

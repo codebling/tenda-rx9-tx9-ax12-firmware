@@ -1,0 +1,8 @@
+
+config param 'param'
+        option wan_reserved_down_percent '5'
+        option wan_rate_down '1000'
+        option wan_rate_up '1000'
+        option enable '0'
+		option guest_enable '0'
+        option guest_rate_down '128000'

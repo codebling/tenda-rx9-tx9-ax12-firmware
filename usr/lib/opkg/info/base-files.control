@@ -1,0 +1,10 @@
+Package: base-files
+Version: 204.2-v19.07.1_intel
+Depends: libc, netifd, procd, jsonfilter, ubi-utils, fstools, fwtool
+Source: package/base-files
+SourceName: base-files
+License: GPL-2.0
+Section: base
+Architecture: mips_24kc_nomips16
+Installed-Size: 56119
+Description:  This package contains a base filesystem and system scripts for OpenWrt.

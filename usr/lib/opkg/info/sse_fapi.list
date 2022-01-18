@@ -1,0 +1,4 @@
+/opt/intel/usr/lib/libsecurefapi.so
+/opt/intel/etc/upgrade/.upg_state_file
+/usr/share/pseudofs_acl/ss_pseudofs_acl.json
+/opt/intel/etc/sse/sse_lock

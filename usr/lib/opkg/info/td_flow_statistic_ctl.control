@@ -1,0 +1,9 @@
+Package: td_flow_statistic_ctl
+Version: 1
+Depends: libc, libsqlite3-0, libuci20130104, libubox20191228, libubus20191227, td_serverd, td_bm_utils, libcommon, qos_nl
+Source: package/tenda_property/td_flow_statistic_ctl
+SourceName: td_flow_statistic_ctl
+Section: Tenda Property
+Architecture: mips_24kc_nomips16
+Installed-Size: 2533
+Description:  td_flow_statistic_ctl

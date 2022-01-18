@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html><head>
+    <meta charset="utf-8">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link href="css/reasy-ui.css" rel="stylesheet">
+    <title></title>
+  <script src="lang/b28n_async.js"></script>
+<script>
+B.setTextDomain(["translate"]);
+</script>
+</head>
+  <body>
+    <fieldset>
+    	<div class="legend-main">
+            <div class="tabs-group">
+              <div class="tabs-group-title clearfix">
+                <div class="tabs-title active" data-id="addTips">添加子节点</div>
+                <div class="tabs-title" data-id="delTips">删除子节点</div>
+              </div>
+
+            </div>
+            <div id="addTips" class="add-mesh-content">
+              <div class="add-mesh-node">
+                <div class="step-list">
+                  <span class="step-title">1</span>
+                  <div>
+                    <img src="img/add_1.png">
+                  </div>
+                  <div class="step-tips">
+                    Please ensure that the primary node is connected to the network normally, and the node to be added is started and in the factory setting state. Keep a close distance between the two nodes.
+                  </div>
+                </div>
+                <div class="step-list">
+                  <span class="step-title">2</span>
+                  <div>
+                    <img src="img/add_2.png">
+                  </div>
+                  <div class="step-tips">
+                    Press the WPS button of the master node (1 ~ 3 seconds), and the indicator light will flash. Please press the WPS button of the node to be added within 2 minutes (1-3 seconds), and the indicator will flash quickly.
+                  </div>
+                </div>
+                <div class="step-list">
+                  <span class="step-title">3</span>
+                  <div>
+                    <img src="img/add_3.png">
+                  </div>
+                  <div class="step-tips">
+                    The equipment is networking automatically, and the time is less than 2 minutes.
+                  </div>
+                </div>
+                <div class="step-list">
+                  <span class="step-title">4</span>
+                  <div>
+                    <img src="img/add_4.png">
+                  </div>
+                  <div class="step-tips">
+                    When the indicator of the secondary node lights solid on, the networking is successful.
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <div id="delTips" class="add-mesh-content none">
+              <div class="add-mesh-node">
+                <div class="step-list">
+
+                  <div>
+                    <img src="img/del_1.png">
+                  </div>
+                  <div class="step-tips">
+                    <div>Restore the node to factory settings.</div>
+                    <div>Methods: when the node is started, press and hold the reset button for about 8 seconds. When the indicator light flashes quickly, release it, and the router will return to the factory settings.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="control-group">
+                <div class="red page-err" id="msg-err">&nbsp;</div>
+            </div>
+
+            <div class="btn-group">
+            	<span type="button" class="btn-mesh" id="submit">I got it!</span>
+            </div>
+        </div>
+    </fieldset>
+
+    <script src="js/libs/j.js"></script>
+    <script src="js/libs/reasy-ui-1.0.3.js"></script>
+    <script src="js/libs/public.js"></script>
+    <script>
+      window.onload = function() {
+        $(".tabs-title").on("click", function() {
+          var targetId = $(this).attr("data-id");
+          $(".tabs-title").removeClass("active");
+          $(".add-mesh-content").addClass("none");
+
+          $(this).addClass("active");
+          $("#"+targetId).removeClass("none");
+        });
+
+        $("#submit").on("click", top.closeIframe);
+      }
+    </script>
+</body></html>

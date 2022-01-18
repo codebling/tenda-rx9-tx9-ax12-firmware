@@ -1,0 +1,9 @@
+/usr/share/acl.d/upgrade_acl.json
+/usr/sbin/uboot_env
+/sbin/uboot_img_vars.sh
+/sbin/secure_upgrade.sh
+/usr/sbin/upgrade
+/usr/sbin/read_img
+/opt/intel/usr/sbin/secupg
+/usr/share/capabilities/upgrade_cap.json
+/usr/sbin/vol_mgmt

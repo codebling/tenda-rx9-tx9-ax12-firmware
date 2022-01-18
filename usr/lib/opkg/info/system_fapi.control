@@ -1,0 +1,11 @@
+Package: system_fapi
+Version: 1.1.8.60
+Depends: libc, libugwhelper, servd, libscapi, safeclibs3, kmod-bonding
+Source: intel_source/feeds/ugw/net/system_service/fapi_system
+SourceName: system_fapi
+License: Intel
+Section: libs
+Maintainer: Intel Corporation
+Architecture: mips_24kc_nomips16
+Installed-Size: 39474
+Description:  Intel UGW FAPI for System Configuration

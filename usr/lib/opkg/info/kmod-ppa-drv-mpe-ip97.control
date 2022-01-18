@@ -1,0 +1,11 @@
+Package: kmod-ppa-drv-mpe-ip97
+Version: 4.9.206+1.0-1
+Depends: kernel (=4.9.206-1-73b4078bb8acdc578ded46d0b302884e), kmod-eip97
+Source: intel_source/feeds/ugw/net/ppa/ppa-drv
+SourceName: kmod-ppa-drv-mpe-ip97
+License: GPL-2.0
+Section: kernel
+Maintainer: Intel
+Architecture: mips_24kc_nomips16
+Installed-Size: 105
+Description:  PPA GRX500 MPE IP97 Support

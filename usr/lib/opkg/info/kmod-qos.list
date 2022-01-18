@@ -1,0 +1,2 @@
+/etc/modules.d/13-qos
+/lib/modules/4.9.206/qos.ko

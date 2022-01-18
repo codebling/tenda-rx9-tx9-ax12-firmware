@@ -1,0 +1,12 @@
+Package: kmod-mac-violation-mirror
+Version: 4.9.206+1.0-1
+Depends: kernel (=4.9.206-1-73b4078bb8acdc578ded46d0b302884e), kmod-ppa-drv
+Source: intel_source/feeds/ugw/net/ppa/ppa-drv
+SourceName: kmod-mac-violation-mirror
+License: GPL-2.0
+Section: kernel
+Maintainer: Intel
+Architecture: mips_24kc_nomips16
+Installed-Size: 4224
+Description:  Kernel support for handling Source Mac Violated Packets by Mirroring to PAE
+ port for connectivity continuation

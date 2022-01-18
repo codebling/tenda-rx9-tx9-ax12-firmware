@@ -1,0 +1,20 @@
+{
+  "name": "11ac",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-load-plugins": "^2.0.1",
+    "gulp-replace": "^1.0.0",
+    "gulp.spritesmith": "^6.11.0"
+  },
+  "description": "",
+  "dependencies": {
+    "gulp-custom-callback": "^1.0.1"
+  }
+}

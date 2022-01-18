@@ -1,0 +1,61 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2010-2012 OpenWrt.org
+
+START=99
+
+start() {
+    ddos_enable=0
+    atk_opt=0
+    icmp=$((`uci get advance.safety.icmp`<<2))
+    udp=$((`uci get advance.safety.udp`<<1))
+    tcp=`uci get advance.safety.tcp`
+    ipaddr=`uci get network.lan.ipaddr`
+    netmask=`uci get network.lan.netmask`
+    atk_opt=$(($atk_opt|$icmp))
+    atk_opt=$(($atk_opt|$udp))
+    atk_opt=$(($atk_opt|$tcp))
+    ddosdefenctl -t del -i $ipaddr  -s $netmask -I br-lan -p 0
+    ddosdefenctl -t add -i $ipaddr  -s $netmask -I br-lan -p 0
+#判断是否需要开启ddos防御
+    if [ $atk_opt -ne 0 ]
+    then
+        ddos_enable=1
+    fi
+    ddosdefenctl -g $atk_opt
+}
+
+stop() {
+    ipaddr=`uci get network.lan.ipaddr`
+    netmask=`uci get network.lan.netmask`
+    ddosdefenctl -t del -i $ipaddr  -s $netmask -I br-lan -p 0
+    ddosdefenctl -g 0
+}
+
+restart() {
+    start
+    stop
+}
+
+reload() {
+    ddos_enable=0
+    atk_opt=0
+    icmp=$((`uci get advance.safety.icmp`<<2))
+    udp=$((`uci get advance.safety.udp`<<1))
+    tcp=`uci get advance.safety.tcp`
+    ipaddr=`uci get network.lan.ipaddr`
+    netmask=`uci get network.lan.netmask`
+    atk_opt=$(($atk_opt|$icmp))
+    atk_opt=$(($atk_opt|$udp))
+    atk_opt=$(($atk_opt|$tcp))
+#判断是否需要开启ddos防御
+    if [ $atk_opt -ne 0 ]
+    then
+        ddos_enable=1
+    fi
+    ddosdefenctl -g $atk_opt
+}
+
+boot() {
+    start
+}
+

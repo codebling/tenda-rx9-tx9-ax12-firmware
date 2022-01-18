@@ -1,0 +1,13 @@
+Package: libpcap1
+Version: 1.9.1-1
+Depends: libc
+Provides: libpcap
+Source: package/libs/libpcap
+SourceName: libpcap
+License: BSD-3-Clause
+Section: libs
+Maintainer: Felix Fietkau <nbd@nbd.name>
+Architecture: mips_24kc_nomips16
+Installed-Size: 102550
+Description:  This package contains a system-independent library for user-level network packet
+ capture.

@@ -1,0 +1,7 @@
+		option network 'lan'
+		option mode 'ap'
+		option ssid '11N'
+		option key '12345678'
+		option disabled '0'
+		option encryption 'psk2'
+		option wav_bridge 'brlan0'

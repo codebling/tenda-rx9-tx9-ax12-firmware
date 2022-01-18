@@ -1,0 +1,10 @@
+Package: swpal_6x-uci
+Version: 1.0.0.1-7ca7e0c3891799b6b3164582b846597a2b14bd1e
+Depends: libc, libugwhelper, libcal, csd, servd, uci, libsafec3
+Source: intel_source/feeds/ugw/wlan/feed_wlan_6x_uci/wlan_wave_feed/swpal_6x-uci
+SourceName: swpal_6x-uci
+Section: utils
+Maintainer: Intel Corporation
+Architecture: mips_24kc_nomips16
+Installed-Size: 103938
+Description:  Intel SWPAL for WLAN Support

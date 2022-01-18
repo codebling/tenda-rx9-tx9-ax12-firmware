@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link href="css/reasy-ui.css" rel="stylesheet">
+    <title></title>
+    <script src="lang/b28n_async.js"></script>
+    <script>
+        B.setTextDomain(["translate"]);
+</script>
+</head>
+
+<body>
+    <fieldset class="ifmwrap-tr069">
+        <div class="legend-main">
+            <div class="control-group">
+                <label class="control-label">Enable TR069</label>
+                <div class="controls">
+                    <div id="tr069En" class="btn-off"></div>
+                </div>
+            </div>
+            <div id="tr069Cfg" class="none">
+                <h2 class="legend">ACS</h2>
+                <div class="control-group">
+                    <label class="control-label">URL</label>
+                    <div class="controls">
+                        <input type="text" required="required" name="tr069Addr" id="tr069Addr" class="validatebox" maxlength="256" data-options='{"type":"url"}'>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">ACS Username</label>
+                    <div class="controls">
+                        <input type="text" required="required" name="plateUser" id="plateUser" class="validatebox" maxlength="256" data-options='{"type":"ascii"}'>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">ACS Password</label>
+                    <div class="controls">
+                        <input type="text" required="required" name="platePassword" id="platePassword" class="validatebox" maxlength="256" data-options='{"type":"ascii"}'>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Enable Scheduled Notification</label>
+                    <div class="controls">
+                        <div id="noticeEn" class="btn-off"></div>
+                    </div>
+                </div>
+                <div class="control-group none" id="noticeCfg">
+                    <label class="control-label">Scheduled Notification Interval</label>
+                    <div class="controls">
+                        <input type="text" required="required" name="noticeTime" id="noticeTime" class="validatebox" data-options='{"type":"num","args":[60,65535]}'>
+                        <span>Unit: Second</span>
+                    </div>
+                </div>
+
+                <h2 class="legend">Connection Request</h2>
+                <div class="control-group">
+                    <label class="control-label">Connection Request Username</label>
+                    <div class="controls">
+                        <input type="text" required="required" name="terminalUser" id="terminalUser" class="validatebox" maxlength="256" data-options='{"type":"ascii"}'>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Connection Request Password</label>
+                    <div class="controls">
+                        <input type="text" required="required" name="terminalPwd" id="terminalPwd" class="validatebox" maxlength="256" data-options='{"type":"ascii"}'>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" data-lang="w#Zly#Port"">Port</label>
+                    <div class="controls">
+                        <input type="text" required="required" name="port" id="port" class="validatebox" data-options='{"type":"num","args":[1,65535]}'>
+                    </div>
+                </div>
+                
+
+                <h2 class="legend">STUN Connection</h2>
+                <div class="control-group">
+                    <label class="control-label">Enable STUN</label>
+                    <div class="controls">
+                        <div id="stunEn" class="btn-off"></div>
+                    </div>
+                </div>
+                <div id="stunCfg" class="none">
+                    <div class="control-group">
+                        <label class="control-label">STUN Server Address</label>
+                        <div class="controls">
+                            <input type="text" required="required" name="stunAddr" id="stunAddr" class="validatebox" maxlength="256" data-options='{"type":"ip"}'>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">STUN Server Port</label>
+                        <div class="controls">
+                            <input type="text" required="required" name="stunPort" id="stunPort"  class="validatebox" data-options='{"type":"num","args":[1,65535]}'>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="auth none">
+                    <h2 class="legend">Authentication</h2>
+                    <div class="control-group">
+                        <label class="control-label">CA Certificate</label>
+                        <div class="controls chooseFile">
+                            <div class="uploadFile">
+                                <div class="CA-file-img">
+                                    <img src="/img/openFile.png" alt="Select a file" class="openFileImg">
+                                    <span id="fileName">No file selected</span>
+                                </div>
+                                <form method="POST" action="cgi-bin/TR069CACert" enctype="multipart/form-data">
+                                    <input type="file" name="CAFile" id="CAFile" class="CA-file">
+                                </form>
+                            </div>
+                            <input type="button" class="btn btn-upload" value="Upload" id="uploadCA">
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="control-group">
+                <div class="red page-err" id="msg-err"></div>
+            </div>
+            <div class="btn-group">
+                <input type="button" class="btn btn-normal" id="submit" value="Save">
+            </div>
+        </div>
+    </fieldset>
+
+    <script src="js/libs/j.js"></script>
+    <script src="js/libs/reasy-ui-1.0.3.js"></script>
+    <script src="js/libs/public.js"></script>
+    <script src="js/libs/ajaxfileupload.js"></script>
+    <script src="js/tr069_config.js"></script>
+</body>
+
+</html>

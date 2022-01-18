@@ -1,0 +1,11 @@
+Package: libnl-route200
+Version: 3.4.0-2
+Depends: libc, libnl-core200
+Provides: libnl-route
+Source: package/libs/libnl
+SourceName: libnl-route
+License: LGPL-2.1
+Section: libs
+Architecture: mips_24kc_nomips16
+Installed-Size: 147786
+Description:  Routing Netlink Library Functions

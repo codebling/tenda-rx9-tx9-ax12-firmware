@@ -1,0 +1,11 @@
+Package: qoscli
+Version: 1.0.3.4
+Depends: libc, fapi_qos, libhelper, safeclibs
+Source: intel_source/feeds/ugw/net/qos_service/cli_qos
+SourceName: qoscli
+License: Intel
+Section: utils
+Maintainer: Intel Corporation
+Architecture: mips_24kc_nomips16
+Installed-Size: 21509
+Description:  Intel UGW QoS FAPI CLI

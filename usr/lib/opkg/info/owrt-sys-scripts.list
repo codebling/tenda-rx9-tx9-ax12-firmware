@@ -1,0 +1,14 @@
+/usr/sbin/l2tp.sh
+/etc/ipsec_sec_config.sh
+/etc/hotplug.d/iface/10-internet-led
+/usr/sbin/version.sh
+/etc/uci-defaults/firewall
+/etc/uci-defaults/users
+/sbin/sysupgrade
+/etc/uci-defaults/ethernet
+/etc/uci-defaults/uhttpd
+/etc/init.d/swconfig.sh
+/etc/config/ipsec
+/etc/uci_to_ipsec_config_owrt.sh
+/usr/sbin/gre.sh
+/etc/hotplug.d/iface/30-tunnels

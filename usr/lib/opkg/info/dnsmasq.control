@@ -1,0 +1,12 @@
+Package: dnsmasq
+Version: 2.80-15
+Depends: libc, libubus20191227
+Source: package/network/services/dnsmasq
+SourceName: dnsmasq
+License: GPL-2.0
+LicenseFiles: COPYING
+Section: net
+Require-User: dnsmasq=453:dnsmasq=453
+Architecture: mips_24kc_nomips16
+Installed-Size: 118746
+Description:  It is intended to provide coupled DNS and DHCP service to a LAN.

@@ -1,0 +1,11 @@
+Package: td_miniupnpd
+Version: 1.9.20150609-1
+Depends: libc, iptables, libip4tc2, libip6tc2, ip6tables, libopenssl1.0.2t
+Source: package/tenda_property/td_miniupnpd
+SourceName: td_miniupnpd
+License: BSD-3-Clause
+Section: net
+Maintainer: Markus Stenberg <fingon@iki.fi>
+Architecture: mips_24kc_nomips16
+Installed-Size: 64809
+Description:  Tenda Lightweight UPnP IGD, NAT-PMP & PCP daemon

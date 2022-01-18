@@ -1,0 +1,11 @@
+Package: libupgfapi
+Version: 1.0.0.7
+Depends: libc, libscapi, safeclibs3
+Source: intel_source/feeds/ugw/net/system_service/fapi_upgrade
+SourceName: libupgfapi
+License: Intel
+Section: libs
+Maintainer: Intel Corporation
+Architecture: mips_24kc_nomips16
+Installed-Size: 4323
+Description:  Intel UGW FAPI for System Upgrade Functionality

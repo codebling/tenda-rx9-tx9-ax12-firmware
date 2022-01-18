@@ -1,0 +1,6 @@
+#/bin/sh
+
+[ "$(uci get ipv6UserCfg.ipv6.enable)" = "1" ] || exit 0
+if [ "$ACTION" = ifup -a "$(uci get ipv6UserCfg.ipv6.reqiapd)" = "0" ];then
+	/usr/sbin/conntrack -D -f ipv6
+fi

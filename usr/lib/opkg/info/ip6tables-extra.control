@@ -1,0 +1,10 @@
+Package: ip6tables-extra
+Version: 1.8.3-1
+Depends: libc, ip6tables, kmod-ip6tables-extra
+Source: package/network/utils/iptables
+SourceName: ip6tables-extra
+License: GPL-2.0
+Section: net
+Architecture: mips_24kc_nomips16
+Installed-Size: 10861
+Description:  IPv6 header matching modules

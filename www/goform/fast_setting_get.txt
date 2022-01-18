@@ -1,0 +1,20 @@
+{
+    "line":1,
+"wanType":0,
+"net":1,
+"outType":1,
+"timeout":"0",
+"lanIp":"192.168.0.1",
+"lanMask":"255.255.255.0",
+"adslUser":"",
+"adslPwd":"",
+"doubleBand":"0",
+"ssid":"Tenda_F7E808",
+"wrlPassword":"",
+"countryCode":"RU",
+"power":"high",
+"cloneType":"0",
+"mac":"50:2b:73:f7:e8:08",
+"deviceMac":"6c:4b:90:6f:a6:aa",
+"defMac":"50:2b:73:f7:e8:09"
+}

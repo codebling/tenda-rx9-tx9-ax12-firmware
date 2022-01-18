@@ -1,0 +1,10 @@
+Package: uclibcxx
+Version: 0.2.5-3
+Depends: libc
+Source: package/libs/uclibc++
+SourceName: uclibcxx
+License: LGPL-2.1-or-later
+Section: libs
+Architecture: mips_24kc_nomips16
+Installed-Size: 69148
+Description:  C++ library for embedded systems

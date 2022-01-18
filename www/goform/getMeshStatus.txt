@@ -1,0 +1,56 @@
+{
+  "apStatus": "2303002",
+  "clientNum": "12",
+  "countryCode": "RO",
+  "deviceName": "Controller-AA22",
+  "wanInfo": [{
+    "wanStatus": "2311004",
+    "wanDownloadSpeed": "798",
+    "wanUploadSpeed": "92"
+  }],
+  "wrlEn": "1",
+  "ssid": "ChinaNet-2.4G",
+  "wrlEn_5g": "1",
+  "ssid_5g": "ChinaNet-5G",
+  "doubleBand": "0",
+  "workMode": "router",
+  "meshList": [
+    {
+      "deviceName": "Agent-67DB",
+      "sn": "in",
+      "ip": "192.168.0.100",
+      "color": "red"
+    },
+    {
+      "deviceName": "Agent-34AC",
+      "sn": "consectetur et laborum Excepteur sunt",
+      "ip": "192.168.0.101",
+      "color": "yellow"
+    },
+    {
+      "deviceName": "Agent-EA89",
+      "sn": "in",
+      "ip": "192.168.0.102",
+      "color": "green"
+    },
+    {
+      "deviceName": "Agent-87AE",
+      "sn": "consectetur et laborum Excepteur sunt",
+      "ip": "192.168.0.103",
+      "color": "green"
+    },
+    {
+      "deviceName": "Agent-AD13",
+      "sn": "sit mollit labore",
+      "ip": "192.168.0.104",
+      "color": "red"
+    },
+    {
+      "deviceName": "Agent-56AB",
+      "sn": "aliquip consectetur cupidatat nostrud",
+      "ip": "192.168.0.105",
+      "color": "yellow"
+    }
+  ],
+  "nodeType": "controller"
+}

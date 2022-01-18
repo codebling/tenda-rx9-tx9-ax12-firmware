@@ -1,0 +1,11 @@
+/lib/modules/4.9.206/mtlk.ko
+/lib/modules/4.9.206/mac80211.ko
+/lib/modules/4.9.206/mtlkroot.ko
+/lib/modules/4.9.206/compat.ko
+/lib/firmware/cal_wlan0.bin.bk
+/lib/firmware/cal_wlan0.bin
+/etc/iwlwav_driver.ver
+/etc/modules.d/iwlwav-driver-uci
+/lib/modules/4.9.206/cfg80211.ko
+/lib/preinit/91_wireless_calib
+/lib/firmware/cal_wlan2.bin

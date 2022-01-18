@@ -1,0 +1,3 @@
+/lib/modules/4.9.206/nf_nat_masquerade_ipv6.ko
+/etc/modules.d/nf-nat6
+/lib/modules/4.9.206/nf_nat_ipv6.ko

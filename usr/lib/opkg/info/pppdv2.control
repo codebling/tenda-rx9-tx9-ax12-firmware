@@ -1,0 +1,9 @@
+Package: pppdv2
+Version: 12
+Depends: libc, libsqlite3-0, libuci20130104, libubox20191228, libubus20191227, td_serverd, td_bm_utils, libcommon, qos_nl
+Source: package/tenda_property/pppoes
+SourceName: pppdv2
+Section: Tenda Property
+Architecture: mips_24kc_nomips16
+Installed-Size: 60194
+Description:  Tenda pppdv2 

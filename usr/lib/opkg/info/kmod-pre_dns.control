@@ -1,0 +1,9 @@
+Package: kmod-pre_dns
+Version: 4.9.206-1
+Depends: kernel (=4.9.206-1-73b4078bb8acdc578ded46d0b302884e)
+Source: package/tenda_property/kmod-pre_dns
+SourceName: kmod-pre_dns
+Section: kernel
+Architecture: mips_24kc_nomips16
+Installed-Size: 2596
+Description:  Tenda dns hook for special dns pre-resolving

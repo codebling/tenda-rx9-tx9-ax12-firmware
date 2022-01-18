@@ -1,0 +1,30 @@
+#!/bin/bash
+guestip=`uci get network.guest.ipaddr`
+gusetmask=`uci get network.guest.netmask`
+lanip=`uci get network.lan.ipaddr`
+lanmask=`uci get network.lan.netmask`
+
+a=$(echo "$gusetmask" | awk -F "." '{print $1" "$2" "$3" "$4}')
+for num in $a;
+do
+while [ $num != 0 ];do
+  echo -n $(($num%2)) >> /tmp/num;
+  num=$(($num/2));
+done
+done
+prefix=`echo $(grep -o "1" /tmp/num | wc -l)`
+rm /tmp/num
+
+varguest=$guestip"/"$prefix
+varlan=$lanip"/"$lanmask
+iptables -t filter -I INPUT -i br-guest -s $varguest -d $lanip -p tcp --dport 80 -j DROP
+
+iptables -t filter -D FORWARD -i br-lan -o br-guest -j DROP
+iptables -t filter -D FORWARD -i br-guest -o br-lan -j DROP
+iptables -t filter -D INPUT -i br-guest -d $varlan -j DROP
+iptables -t filter -D INPUT -i br-lan -d $varguest -j DROP
+
+iptables -t filter -I FORWARD -i br-lan -o br-guest -j DROP
+iptables -t filter -I FORWARD -i br-guest -o br-lan -j DROP
+iptables -t filter -I INPUT -i br-guest -d $varlan -j DROP
+iptables -t filter -I INPUT -i br-lan -d $varguest -j DROP

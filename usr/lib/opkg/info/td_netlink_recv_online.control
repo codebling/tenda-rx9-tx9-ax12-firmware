@@ -1,0 +1,9 @@
+Package: td_netlink_recv_online
+Version: 1
+Depends: libc, libuci20130104, libubox20191228, libubus20191227, libcommon, td_serverd, libsqlite3-0, ucloud, qos_nl
+Source: package/tenda_property/td_netlink_recv_online
+SourceName: td_netlink_recv_online
+Section: Tenda Property
+Architecture: mips_24kc_nomips16
+Installed-Size: 2732
+Description:  td_netlink_recv_online

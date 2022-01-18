@@ -1,0 +1,15 @@
+{
+    "tr069En":"1",
+    "tr069Addr":"111",
+    "plateUser":"111111",
+    "platePassword":"1111111",
+    "noticeEn":"0",
+    "noticeTime":"1111111",
+    "terminalUser":"1111111",
+    "terminalPwd":"111111",
+    "path":"11111",
+    "port":"1111111",
+    "stunEn":"1",
+    "stunAddr":"1111111111",
+    "stunPort":"11111111111"
+}

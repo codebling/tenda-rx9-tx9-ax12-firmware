@@ -1,0 +1,13 @@
+#!/bin/sh
+
+. /lib/functions/service.sh
+# If miniupnpd is not running:
+# - check on _any_ event (even updates may contribute to network_find_wan*)
+
+# If miniupnpd _is_ running:
+# - check only on ifup (otherwise lease updates etc would cause
+#   miniupnpd state loss)
+
+[ "$ACTION" = "ifup" -a "$INTERFACE" != "wan" ] && {
+    /etc/init.d/ucloud restart
+}

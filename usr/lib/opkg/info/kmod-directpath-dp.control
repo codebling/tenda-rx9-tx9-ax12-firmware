@@ -1,0 +1,9 @@
+Package: kmod-directpath-dp
+Version: 4.9.206+1.0.0-1
+Depends: kernel (=4.9.206-1-73b4078bb8acdc578ded46d0b302884e)
+Source: intel_source/feeds/ugw/net/directpath_dp/directpath_dp
+SourceName: kmod-directpath-dp
+Section: kernel
+Architecture: mips_24kc_nomips16
+Installed-Size: 13734
+Description:  DirectPath datapath driver

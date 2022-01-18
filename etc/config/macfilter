@@ -1,0 +1,4 @@
+config interface 'macfilter'
+	option size '0'
+	option enable '1'
+	option type 'black'

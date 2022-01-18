@@ -1,0 +1,5 @@
+/usr/sbin/scapiutil
+/usr/sbin/mem
+/opt/intel/etc/interfaces.cfg
+/usr/sbin/scapi_utils.sh
+/usr/lib/libscapi.so

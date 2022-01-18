@@ -1,0 +1,21 @@
+{
+	"devfs": {
+		"secure_service_driver": { "user": "csd", "group": "ssgrp", "mask": "660" },
+		"secure_service_driver": { "user": "secupg", "group": "ssgrp", "mask": "660" },
+		"mtd1": { "user": "secupg", "group": "sysdone", "mask": "660" },
+		"mtd2": { "user": "secupg", "group": "sysdone", "mask": "660" },
+		"mtd3": { "user": "secupg", "group": "ssgrp", "mask": "640" },
+		"mtd4": { "user": "secupg", "group": "ssgrp", "mask": "640" },
+		"mtd5": { "user": "secupg", "group": "ssgrp", "mask": "640" },
+		"mtd6": { "user": "secupg", "group": "ssgrp", "mask": "640" },
+		"ubi0": { "user": "secupg", "group": "ssgrp", "mask": "640" },
+		"ubi0_0": { "user": "secupg", "group": "ssgrp", "mask": "640" },
+		"ubi0_1": { "user": "secupg", "group": "ssgrp", "mask": "640" },
+		"ubi0_2": { "user": "secupg", "group": "ssgrp", "mask": "640" },
+		"ubi0_3": { "user": "secupg", "group": "ssgrp", "mask": "640" },
+		"ubi0_4": { "user": "secupg", "group": "ssgrp", "mask": "640" },
+		"ubi0_5": { "user": "secupg", "group": "ssgrp", "mask": "640" },
+		"ubi0_6": { "user": "secupg", "group": "ssgrp", "mask": "640" },
+		"ubi0_ctrl": { "user": "secupg", "group": "ssgrp", "mask": "600" },
+	}
+}

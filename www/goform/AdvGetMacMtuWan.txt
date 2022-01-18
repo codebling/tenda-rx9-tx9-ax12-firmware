@@ -1,0 +1,1 @@
+{"wanInfo":[{"wanType":"0","wanMTU":"1500","wanSpeed":"0","cloneType":"0","mac":"50:2b:73:f7:e8:09","defMac":"50:2b:73:f7:e8:09","deviceMac":"6c:4b:90:6f:a6:aa","typeInfo":"3"}]}

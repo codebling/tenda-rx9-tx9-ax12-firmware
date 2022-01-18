@@ -1,0 +1,39 @@
+#!/bin/sh
+
+. /lib/functions.sh
+
+OVERLAY="$( grep ' /overlay ' /proc/mounts )"
+
+ps | grep ate | awk '{print $5}' | grep ^ate > /dev/null
+[ "$?" = "0" ] && {
+        echo "- ATE MODE BUTTON : $ACTION -" > /dev/console
+        exit
+}
+
+case "$ACTION" in
+pressed)
+	[ -z "$OVERLAY" ] && return 0
+
+	return 8
+;;
+timeout)
+	#. /etc/diag.sh
+	#set_state failsafe
+	if [ -n "$OVERLAY" ]
+	then
+		echo "FACTORY RESET" > /dev/console
+		echo timer > /sys/class/leds/green_led/trigger
+		echo 200 > /sys/class/leds/green_led/delay_off
+		echo 200 > /sys/class/leds/green_led/delay_on
+		system reset&
+	fi
+;;
+released)
+	echo "RESET BUTTON Released" > /dev/console
+	[ "$SEEN" -le 1 ] && {
+		/sbin/wps_pbc_led.sh &
+	}
+;;
+esac
+
+return 0

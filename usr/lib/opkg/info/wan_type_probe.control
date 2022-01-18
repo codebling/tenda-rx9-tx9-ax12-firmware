@@ -1,0 +1,9 @@
+Package: wan_type_probe
+Version: 1
+Depends: libc
+Source: package/tenda_property/wan_type_probe
+SourceName: wan_type_probe
+Section: Tenda Property
+Architecture: mips_24kc_nomips16
+Installed-Size: 16842
+Description:  wan_type_probe

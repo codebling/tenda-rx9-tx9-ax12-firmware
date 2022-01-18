@@ -1,0 +1,12 @@
+Package: procd
+Version: 2020-01-24-31e4b2df-1
+Depends: libc, ubusd, ubus, libjson-script, ubox, libubox20191228, libubus20191227, libblobmsg-json, libjson-c2
+Source: package/system/procd
+SourceName: procd
+License: GPL-2.0
+Section: base
+Require-User: :dialout=20 :audio=29
+Maintainer: John Crispin <john@phrozen.org>
+Architecture: mips_24kc_nomips16
+Installed-Size: 49564
+Description:  OpenWrt system process manager

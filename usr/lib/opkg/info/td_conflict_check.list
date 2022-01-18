@@ -1,0 +1,2 @@
+/etc/hotplug.d/iface/10-conflict-check
+/usr/bin/td_conflict_check

@@ -1,0 +1,4 @@
+/lib/modules/4.9.206/ip6t_MASQUERADE.ko
+/etc/modules.d/43-ipt-nat6
+/lib/modules/4.9.206/ip6t_NPT.ko
+/lib/modules/4.9.206/ip6table_nat.ko

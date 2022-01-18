@@ -1,0 +1,61 @@
+#!/bin/sh
+# Hotplug script to auto configure Internet LED based on primary WAN
+#
+
+. /lib/functions.sh
+
+ucidef_set_led_netdev() {
+        local cfg="led_$1"
+        local name=$2
+        local sysfs=$3
+        local dev=$4
+
+        uci -q get system.$cfg && return 0
+
+        uci batch <<EOF
+set system.$cfg='led'
+set system.$cfg.name='$name'
+set system.$cfg.sysfs='$sysfs'
+set system.$cfg.trigger='netdev'
+set system.$cfg.dev='$dev'
+set system.$cfg.mode='link tx rx'
+EOF
+}
+
+
+[ "$ACTION" = "ifup" -a -n "$INTERFACE" ] && {
+	interface=`head -2 /proc/net/route|tail -1|awk '{ print $1 }'`
+	value=`head -2 /proc/net/route|tail -1|awk '{ print $2 }'`
+	config_load network
+	config_get if_name $INTERFACE ifname
+	[ "$if_name" = "$interface" ] && [ "$value" = "00000000" ] && {
+		uci -q get system.led_internet && {
+			device=`uci get system.led_internet.dev`
+			[ "$device" != "$interface" ] && {
+				uci set system.led_internet.dev="$interface"
+				uci set system.led_internet.conn="$INTERFACE"
+				uci commit system
+				/etc/init.d/led reload
+			} || {
+				intf=`uci get system.led_internet.conn`
+				[ "$intf" != "$INTERFACE" ] && uci set system.led_internet.conn="$INTERFACE" && uci commit system
+				led=`ls /sys/class/leds/*:green:Internet/brightness`
+				echo 255 > "$led"
+			}
+		} || {
+			ucidef_set_led_netdev "internet" "internet" "internet_led" "$interface"
+			uci set system.led_internet.conn="$INTERFACE"
+			uci commit system
+			led=`ls /sys/class/leds/*:green:Internet/brightness`
+			echo 255 > "$led"
+		}
+	}
+}
+
+[ "$ACTION" = "ifdown" -a -n "$INTERFACE" ] && {
+	value=`head -2 /proc/net/route|tail -1|awk '{ print $2 }'`
+	[ "$value" != "00000000" ] && {
+		led=`ls /sys/class/leds/*:green:Internet/brightness`
+		echo 0 > "$led"
+	}
+}

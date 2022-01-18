@@ -1,0 +1,12 @@
+#!/bin/sh
+
+flag=`uci -P /var/state/ get tdsch.wlan.down`
+
+
+if [ "$flag" = "1" ];then
+	/etc/init.d/network restart
+else
+	wifi reload
+fi
+
+uci -P /var/state/ set tdsch.wlan.down=0

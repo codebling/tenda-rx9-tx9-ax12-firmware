@@ -1,0 +1,63 @@
+#!/bin/sh
+#
+# Copyright (C) 2011-2015 OpenWrt.org
+#
+
+. /lib/functions/uci-defaults.sh
+. /lib/functions/system.sh
+. /lib/functions/lantiq.sh
+
+board_config_update
+
+vpi=1
+vci=32
+annex="a"
+encaps="llc"
+payload="bridged"
+lan_mac=""
+wan_mac=""
+interface_wan=""
+
+board=$(lantiq_board_name)
+
+case "$board" in
+EASY350*|EASY550*)
+	lan_mac=$(mtd_get_mac_ascii ubootconfigA ethaddr)
+	wan_mac=$(macaddr_add "$lan_mac" 1)
+	ucidef_set_interface_lan 'eth0_1 eth0_2 eth0_3 eth0_4 eth0_5'
+	ucidef_set_interface_wan "eth1"
+	ucidef_set_interface "iptv" disabled "1"
+	;;
+
+EASY98000*)
+	# avoid adding eth0 to uci (only on these eval boards)
+	ucidef_set_interface_lan 'ethX'
+	;;
+
+*)
+	grep -q "nfs" /proc/mounts || ucidef_set_interface_lan 'eth0'
+	;;
+
+esac
+
+if [ -n "$(ls /lib/modules/`uname -r`/ltq_atm*)" ]; then
+	ucidef_add_atm_bridge "$vpi" "$vci" "$encaps" "$payload"
+fi
+
+if lantiq_is_vdsl_system; then
+	interface_wan="ptm0"
+	ucidef_add_vdsl_modem "$annex" "av" "ptm"
+	ucidef_set_interface_wan "$interface_wan" "pppoe"
+elif [ -f "/lib/firmware/adsl.bin" ]; then
+	interface_wan="nas0"
+	ucidef_add_adsl_modem "$annex" "/lib/firmware/adsl.bin"
+	ucidef_set_interface_wan "$interface_wan" "pppoe"
+fi
+
+[ -n "$lan_mac" ] && ucidef_set_interface_macaddr "lan" "$lan_mac"
+[ -n "$wan_mac" ] && ucidef_set_interface_macaddr "wan" "$wan_mac"
+ucidef_set_interface "guest" protocol "static"
+board_config_flush
+
+exit 0
+

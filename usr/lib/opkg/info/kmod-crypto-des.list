@@ -1,0 +1,2 @@
+/etc/modules.d/09-crypto-des
+/lib/modules/4.9.206/des_generic.ko
