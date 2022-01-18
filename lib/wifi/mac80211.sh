@@ -199,6 +199,7 @@ detect_mac80211() {
 			${obbs_interval}
 			${ignore_40mhz}
 			set wireless.radio${devidx}.sDisableMasterVap=1
+			set wireless.radio${devidx}.current_rssi=-100
 			
 
 			set wireless.default_radio${band:-24}G=wifi-iface
@@ -237,6 +238,7 @@ detect_mac80211() {
 			set wireless.radio${devidx}_0.disabled=0
 			set wireless.radio${devidx}_0.acs_bg_scan_do_switch=1
 			set wireless.radio${devidx}_0.dtim_period=1
+			set wireless.radio${devidx}_0.s11nProtection=1
 			${set_key}
 			
 			set wireless.radio${devidx}_1=wifi-iface
@@ -260,6 +262,7 @@ detect_mac80211() {
 			set wireless.radio${devidx}_1.disabled=1
 			set wireless.radio${devidx}_1.expire=480
 			set wireless.radio${devidx}_1.dtim_period=1
+			set wireless.radio${devidx}_1.s11nProtection=1
 EOF
 		uci -q commit wireless
 

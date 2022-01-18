@@ -6,5 +6,5 @@ SourceName: kmod-iptunnel4
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 1812
+Installed-Size: 1806
 Description:  Kernel modules for IPv4 tunneling

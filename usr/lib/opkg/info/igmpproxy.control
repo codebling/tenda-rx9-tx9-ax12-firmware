@@ -7,6 +7,6 @@ License: GPL-2.0+
 Section: net
 Maintainer: Felix Fietkau <nbd@nbd.name>
 Architecture: mips_24kc_nomips16
-Installed-Size: 17199
+Installed-Size: 17193
 Description:  IGMPproxy is a simple dynamic Multicast Routing Daemon using
  only IGMP signalling (Internet Group Management Protocol).

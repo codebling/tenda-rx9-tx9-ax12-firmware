@@ -6,7 +6,7 @@ SourceName: kmod-nfnetlink-queue
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 7375
+Installed-Size: 7370
 Description:  Kernel modules support for queueing packets via NFNETLINK
  Includes:
  - NFQUEUE

@@ -9,5 +9,5 @@ Status: unknown hold not-installed
 Essential: yes
 Maintainer: Felix Fietkau <nbd@nbd.name>
 Architecture: mips_24kc_nomips16
-Installed-Size: 298510
+Installed-Size: 298503
 Description:  C library

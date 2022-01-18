@@ -8,6 +8,6 @@ License: GPL-2.0
 Section: libs
 Maintainer: Jo-Philipp Wich <jo@mein.io>
 Architecture: mips_24kc_nomips16
-Installed-Size: 14719
+Installed-Size: 14717
 Description:  Wireless information library with consistent interface for proprietary Broadcom,
  nl80211 and wext driver interfaces.

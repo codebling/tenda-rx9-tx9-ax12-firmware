@@ -6,5 +6,5 @@ SourceName: kmod-ip6tables-extra
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 9711
+Installed-Size: 9706
 Description:  Netfilter IPv6 extra header matching modules

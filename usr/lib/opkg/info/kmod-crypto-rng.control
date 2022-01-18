@@ -6,5 +6,5 @@ SourceName: kmod-crypto-rng
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 209
+Installed-Size: 207
 Description:  CryptoAPI random number generation

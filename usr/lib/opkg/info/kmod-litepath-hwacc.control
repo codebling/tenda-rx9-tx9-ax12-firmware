@@ -7,5 +7,5 @@ License: GPL-2.0
 Section: kernel
 Maintainer: Intel
 Architecture: mips_24kc_nomips16
-Installed-Size: 4624
+Installed-Size: 4615
 Description:  Kernel support for tcp litepath hw acceleration

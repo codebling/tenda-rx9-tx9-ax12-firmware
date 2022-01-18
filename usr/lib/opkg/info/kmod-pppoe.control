@@ -6,5 +6,5 @@ SourceName: kmod-pppoe
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 7038
+Installed-Size: 7028
 Description:  Kernel module for PPPoE (PPP over Ethernet) support

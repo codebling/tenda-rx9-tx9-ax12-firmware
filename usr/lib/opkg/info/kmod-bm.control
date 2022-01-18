@@ -5,5 +5,5 @@ Source: package/tenda_property/kmod-behavior_manager
 SourceName: kmod-bm
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 8374
+Installed-Size: 8353
 Description:  Tenda's behavior manager Component bm.

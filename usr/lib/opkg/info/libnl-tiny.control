@@ -7,5 +7,5 @@ License: LGPL-2.1
 Section: libs
 Maintainer: Felix Fietkau <nbd@nbd.name>
 Architecture: mips_24kc_nomips16
-Installed-Size: 14375
+Installed-Size: 14371
 Description:  This package contains a stripped down version of libnl

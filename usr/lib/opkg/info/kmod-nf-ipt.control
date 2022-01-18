@@ -6,5 +6,5 @@ SourceName: kmod-nf-ipt
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 8735
+Installed-Size: 8729
 Description:  Iptables core

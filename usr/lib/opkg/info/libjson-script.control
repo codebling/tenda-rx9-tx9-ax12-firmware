@@ -7,5 +7,5 @@ License: ISC
 Section: utils
 Maintainer: Felix Fietkau <nbd@nbd.name>
 Architecture: mips_24kc_nomips16
-Installed-Size: 5689
+Installed-Size: 5692
 Description:  Minimalistic JSON based scripting engine

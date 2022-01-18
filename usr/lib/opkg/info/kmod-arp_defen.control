@@ -5,5 +5,5 @@ Source: package/tenda_property/kmod-defen/arp_defen
 SourceName: kmod-arp_defen
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 6183
+Installed-Size: 6178
 Description:  Tenda's arp_defen Component

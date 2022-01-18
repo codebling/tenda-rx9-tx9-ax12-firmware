@@ -8,5 +8,5 @@ LicenseFiles: License
 Section: libs
 Maintainer: Paul Wassi <p.wassi@gmx.at>
 Architecture: mips_24kc_nomips16
-Installed-Size: 6890
+Installed-Size: 6887
 Description:  Linux capabilities library

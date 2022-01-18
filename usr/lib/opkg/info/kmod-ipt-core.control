@@ -6,7 +6,7 @@ SourceName: kmod-ipt-core
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 14799
+Installed-Size: 14789
 Description:  Netfilter core kernel modules
  Includes:
  - comment

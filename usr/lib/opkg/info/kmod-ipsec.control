@@ -6,7 +6,7 @@ SourceName: kmod-ipsec
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 33777
+Installed-Size: 33763
 Description:  Kernel modules for IPsec support in both IPv4 and IPv6.
  Includes:
  - af_key

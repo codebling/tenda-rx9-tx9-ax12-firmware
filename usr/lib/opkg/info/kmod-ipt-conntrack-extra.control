@@ -6,7 +6,7 @@ SourceName: kmod-ipt-conntrack-extra
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 11434
+Installed-Size: 11425
 Description:  Netfilter (IPv4) extra kernel modules for connection tracking
  Includes:
  - connbytes

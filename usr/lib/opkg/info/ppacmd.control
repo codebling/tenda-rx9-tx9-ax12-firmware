@@ -7,5 +7,5 @@ License: GPL-2.0
 Section: utils
 Maintainer: Intel
 Architecture: mips_24kc_nomips16
-Installed-Size: 36268
+Installed-Size: 36263
 Description:  Command line tool for PPA acceleration

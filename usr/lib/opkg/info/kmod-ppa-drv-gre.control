@@ -7,5 +7,5 @@ License: GPL-2.0
 Section: kernel
 Maintainer: Intel
 Architecture: mips_24kc_nomips16
-Installed-Size: 105
+Installed-Size: 103
 Description:  GRE/EoGRE Acceleration in PPA - Enable this to support GRE/EoGRE in PPA

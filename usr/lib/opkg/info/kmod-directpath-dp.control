@@ -5,5 +5,5 @@ Source: intel_source/feeds/ugw/net/directpath_dp/directpath_dp
 SourceName: kmod-directpath-dp
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 13734
+Installed-Size: 13727
 Description:  DirectPath datapath driver

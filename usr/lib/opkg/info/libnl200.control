@@ -7,6 +7,6 @@ SourceName: libnl
 License: LGPL-2.1
 Section: libs
 Architecture: mips_24kc_nomips16
-Installed-Size: 105
+Installed-Size: 104
 Description:  Socket handling, connection management, sending and receiving of data,
  message construction and parsing, object caching system, etc.

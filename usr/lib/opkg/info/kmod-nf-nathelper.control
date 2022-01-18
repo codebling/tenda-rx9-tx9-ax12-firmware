@@ -6,7 +6,7 @@ SourceName: kmod-nf-nathelper
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 7254
+Installed-Size: 7246
 Description:  Default Netfilter (IPv4) Conntrack and NAT helpers
  Includes:
  - ftp

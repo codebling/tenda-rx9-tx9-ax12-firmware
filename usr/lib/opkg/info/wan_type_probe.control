@@ -5,5 +5,5 @@ Source: package/tenda_property/wan_type_probe
 SourceName: wan_type_probe
 Section: Tenda Property
 Architecture: mips_24kc_nomips16
-Installed-Size: 16842
+Installed-Size: 16834
 Description:  wan_type_probe

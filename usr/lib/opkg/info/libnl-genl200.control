@@ -7,5 +7,5 @@ SourceName: libnl-genl
 License: LGPL-2.1
 Section: libs
 Architecture: mips_24kc_nomips16
-Installed-Size: 7536
+Installed-Size: 7537
 Description:  Generic Netlink Library Functions

@@ -6,5 +6,5 @@ SourceName: kmod-crypto-hash
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 240
+Installed-Size: 238
 Description:  CryptoAPI hash support

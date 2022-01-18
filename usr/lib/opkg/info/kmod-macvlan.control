@@ -6,6 +6,6 @@ SourceName: kmod-macvlan
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 9233
+Installed-Size: 9225
 Description:  A kernel module which allows one to create virtual interfaces that
  map packets to or from specific MAC addresses to a particular interface

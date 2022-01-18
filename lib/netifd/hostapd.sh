@@ -160,6 +160,7 @@ hostapd_common_add_device_config() {
 	config_add_string colocated_6g_radio_info
 	config_add_string colocated_6g_vap_info
     	config_add_int acs_bg_scan_do_switch
+	config_add_int current_rssi
 
 	if [ -f /lib/netifd/debug_infrastructure.sh ]; then
 		debug_infrastructure_config_add_string debug_hostap_conf_
@@ -179,12 +180,10 @@ hostapd_prepare_device_config() {
 					dfs_debug_chan externally_managed testbed_mode \
 					sub_band_dfs sCoCPower sCoCAutoCfg sErpSet sFWRecovery sFixedRateCfg \
 					sRadarRssiTh band num_antennas owl \
-					sta_statistics notify_action_frame rts_threshold
-					sRadarRssiTh band num_antennas owl \
 					sta_statistics notify_action_frame rts_threshold \
 					allow_scan_during_cac dfs_ch_state_file \
 					colocated_6g_radio_info colocated_6g_vap_info \
-					dfs_ch_state_file  acs_bg_scan_do_switch
+					dfs_ch_state_file  acs_bg_scan_do_switch current_rssi
 
         json_get_var sPowerSelection txpower
 
@@ -196,6 +195,7 @@ hostapd_prepare_device_config() {
 	set_default testbed_mode 0
 	set_default sPowerSelection "$txpower"
 	set_default acs_bg_scan_do_switch 1
+	set_default current_rssi -100
 
 	case "$sPowerSelection" in
 		"12") sPowerSelection=15 ;;
@@ -220,6 +220,7 @@ hostapd_prepare_device_config() {
 	[ -n "$colocated_6g_vap_info" ] && append base_cfg "colocated_6g_vap_info=$colocated_6g_vap_info" "$N"
 	[ -n "$dfs_ch_state_file" ] && append base_cfg "dfs_channels_state_file_location=$dfs_ch_state_file" "$N"
 	[ -n "$acs_bg_scan_do_switch" ] && append base_cfg "acs_bg_scan_do_switch=$acs_bg_scan_do_switch" "$N"
+	[ -n "$current_rssi" ] && append base_cfg "rssi_reject_assoc_rssi=$current_rssi" "$N"
 
 	[ "$testbed_mode" -gt 0 ] && append base_cfg "testbed_mode=1" "$N"
 
@@ -483,6 +484,7 @@ hostapd_set_bss_options() {
 	set_default vendor_vht 1
 
 	append bss_conf "ctrl_interface=/var/run/hostapd" "$N"
+	append bss_conf "twt_responder_support=0" "$N"
 	[ -n "$ctrl_interface_group" ] && {
 		append bss_conf "ctrl_interface_group=$ctrl_interface_group" "$N"
 	}

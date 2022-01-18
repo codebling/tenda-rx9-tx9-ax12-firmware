@@ -5,5 +5,5 @@ Source: package/tenda_property/kmod-td_filter/url_filter
 SourceName: kmod-url_filter
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 18466
+Installed-Size: 18422
 Description:  Tenda's url_filter Component

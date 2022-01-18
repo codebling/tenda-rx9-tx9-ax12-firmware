@@ -5,5 +5,5 @@ Source: package/tenda_property/kmod-defen/ddos_defen
 SourceName: kmod-ddos_defen
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 9220
+Installed-Size: 9214
 Description:  Tenda's ddos_defen Component

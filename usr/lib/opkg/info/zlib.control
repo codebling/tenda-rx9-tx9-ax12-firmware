@@ -7,6 +7,6 @@ License: Zlib
 LicenseFiles: README
 Section: libs
 Architecture: mips_24kc_nomips16
-Installed-Size: 42913
+Installed-Size: 42911
 Description:  zlib is a lossless data-compression library.
  This package includes the shared library.

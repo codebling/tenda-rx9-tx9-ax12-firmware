@@ -6,5 +6,5 @@ SourceName: kmod-pppox
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 1584
+Installed-Size: 1579
 Description:  Kernel helper module for PPPoE and PPTP support

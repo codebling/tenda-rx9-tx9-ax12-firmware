@@ -6,7 +6,7 @@ SourceName: ltq-pm-util
 Section: power
 Maintainer: Intel Corporation
 Architecture: mips_24kc_nomips16
-Installed-Size: 17804
+Installed-Size: 17797
 Description:  Power Management Utility supporting UGW8
  This application offers access to system power info's.
  Features:

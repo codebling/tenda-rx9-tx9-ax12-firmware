@@ -6,6 +6,6 @@ SourceName: kmod-nf-conntrack-netlink
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 14396
+Installed-Size: 14386
 Description:  Kernel modules support for a netlink-based connection tracking
  userspace interface

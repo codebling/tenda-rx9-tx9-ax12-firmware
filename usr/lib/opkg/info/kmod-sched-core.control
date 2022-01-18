@@ -6,5 +6,5 @@ SourceName: kmod-sched-core
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 49103
+Installed-Size: 49099
 Description:  Core kernel scheduler support for IP traffic

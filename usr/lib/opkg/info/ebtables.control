@@ -6,7 +6,7 @@ SourceName: ebtables
 License: GPL-2.0
 Section: net
 Architecture: mips_24kc_nomips16
-Installed-Size: 69266
+Installed-Size: 69259
 Description:  The ebtables program is a filtering tool for a bridging firewall. The
  filtering is focussed on the Link Layer Ethernet frame fields. Apart
  from filtering, it also gives the ability to alter the Ethernet MAC

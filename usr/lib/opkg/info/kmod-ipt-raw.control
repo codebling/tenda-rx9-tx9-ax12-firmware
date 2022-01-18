@@ -6,5 +6,5 @@ SourceName: kmod-ipt-raw
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 1315
+Installed-Size: 1307
 Description:  Netfilter IPv4 raw table support

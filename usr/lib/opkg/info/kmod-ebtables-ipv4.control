@@ -6,6 +6,6 @@ SourceName: kmod-ebtables-ipv4
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 3992
+Installed-Size: 3985
 Description:  This option adds the IPv4 support to ebtables, which allows basic
  IPv4 header field filtering, ARP filtering as well as SNAT, DNAT targets.

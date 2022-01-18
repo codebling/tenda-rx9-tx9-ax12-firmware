@@ -6,5 +6,5 @@ SourceName: td_defen_ctrl
 Section: Tenda Property
 Maintainer: <wuhongxing@tenda.cn>
 Architecture: mips_24kc_nomips16
-Installed-Size: 3783
+Installed-Size: 3778
 Description:  Tenda behavor manager utils for lua.

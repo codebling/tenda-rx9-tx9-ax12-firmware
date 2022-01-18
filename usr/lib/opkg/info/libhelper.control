@@ -7,6 +7,6 @@ License: LGPL2.1
 Section: utils
 Maintainer: Intel Corporation
 Architecture: mips_24kc_nomips16
-Installed-Size: 13835
+Installed-Size: 13831
 Description:  UGW SDK Helper Library to define function,prototypes,structs,enums which are
  used for list manipulation and debug purposes.

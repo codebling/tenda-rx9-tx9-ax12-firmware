@@ -6,5 +6,5 @@ SourceName: kmod-intel_eth_xrx500_fw
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 4931
+Installed-Size: 4925
 Description:  Intel Ethernet Driver FW loading (Module Support)

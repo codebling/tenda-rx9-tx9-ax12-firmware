@@ -6,5 +6,5 @@ SourceName: kmod-crypto-cbc
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 2029
+Installed-Size: 2024
 Description:  Cipher Block Chaining CryptoAPI module

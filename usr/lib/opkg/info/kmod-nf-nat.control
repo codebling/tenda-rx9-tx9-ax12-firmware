@@ -6,5 +6,5 @@ SourceName: kmod-nf-nat
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 13024
+Installed-Size: 13019
 Description:  Netfilter NAT

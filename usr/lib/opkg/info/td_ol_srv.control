@@ -5,5 +5,5 @@ Source: package/tenda_property/td_ol_srv
 SourceName: td_ol_srv
 Section: Tenda Property
 Architecture: mips_24kc_nomips16
-Installed-Size: 38316
+Installed-Size: 38395
 Description:  td_ol_srv

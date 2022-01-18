@@ -6,5 +6,5 @@ SourceName: kmod-gre
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 9324
+Installed-Size: 9316
 Description:  Generic Routing Encapsulation support

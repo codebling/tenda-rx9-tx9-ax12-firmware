@@ -6,5 +6,5 @@ SourceName: kmod-nf-reject
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 2108
+Installed-Size: 2101
 Description:  Netfilter IPv4 reject support

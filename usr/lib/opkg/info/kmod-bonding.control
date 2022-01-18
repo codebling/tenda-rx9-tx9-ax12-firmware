@@ -6,5 +6,5 @@ SourceName: kmod-bonding
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 65474
+Installed-Size: 65466
 Description:  Kernel module for NIC bonding.

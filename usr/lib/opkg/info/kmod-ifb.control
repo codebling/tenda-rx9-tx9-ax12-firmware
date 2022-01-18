@@ -6,5 +6,5 @@ SourceName: kmod-ifb
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 3110
+Installed-Size: 3102
 Description:  The Intermediate Functional Block

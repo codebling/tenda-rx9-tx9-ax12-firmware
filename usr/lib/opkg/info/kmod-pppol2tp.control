@@ -6,5 +6,5 @@ SourceName: kmod-pppol2tp
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 10816
+Installed-Size: 10808
 Description:  Kernel modules for PPPoL2TP (PPP over L2TP) support

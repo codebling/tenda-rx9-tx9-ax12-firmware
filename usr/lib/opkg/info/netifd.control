@@ -7,5 +7,5 @@ License: GPL-2.0
 Section: base
 Maintainer: Felix Fietkau <nbd@nbd.name>
 Architecture: mips_24kc_nomips16
-Installed-Size: 72314
+Installed-Size: 72308
 Description:  OpenWrt Network Interface Configuration Daemon

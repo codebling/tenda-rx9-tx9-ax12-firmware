@@ -7,5 +7,5 @@ License: GPLv2
 Section: utils
 Maintainer: John Crispin <john@phrozen.org>
 Architecture: mips_24kc_nomips16
-Installed-Size: 78453
+Installed-Size: 78445
 Description:  Utilities for manipulating memory technology devices.

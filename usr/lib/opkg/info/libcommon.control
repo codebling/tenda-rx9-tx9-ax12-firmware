@@ -6,5 +6,5 @@ SourceName: libcommon
 Section: libs
 Maintainer: chendaoying<chendaoying@tenda.cn>
 Architecture: mips_24kc_nomips16
-Installed-Size: 39350
+Installed-Size: 39343
 Description:  this is public common library,if you need it ,you should select it 

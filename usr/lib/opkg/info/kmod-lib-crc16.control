@@ -6,5 +6,5 @@ SourceName: kmod-lib-crc16
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 230
+Installed-Size: 229
 Description:  Kernel module for CRC16 support

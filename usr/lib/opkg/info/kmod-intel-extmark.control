@@ -6,5 +6,5 @@ SourceName: kmod-intel-extmark
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 105
+Installed-Size: 103
 Description:  Add extension mark(extmark) param in sk_buff

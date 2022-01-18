@@ -9,5 +9,5 @@ License: ISC
 Section: net
 Maintainer: Felix Fietkau <nbd@nbd.name>
 Architecture: mips_24kc_nomips16
-Installed-Size: 7239
+Installed-Size: 7233
 Description:  Tiny wget replacement using libuclient

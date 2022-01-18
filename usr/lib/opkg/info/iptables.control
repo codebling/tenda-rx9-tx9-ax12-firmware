@@ -6,7 +6,7 @@ SourceName: iptables
 License: GPL-2.0
 Section: net
 Architecture: mips_24kc_nomips16
-Installed-Size: 23807
+Installed-Size: 23806
 Description:  IP firewall administration tool.
  
  Matches:

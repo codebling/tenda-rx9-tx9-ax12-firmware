@@ -6,5 +6,5 @@ SourceName: kmod-udptunnel6
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 1681
+Installed-Size: 1674
 Description:  IPv6 UDP tunneling support

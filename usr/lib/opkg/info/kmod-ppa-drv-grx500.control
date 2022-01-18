@@ -7,5 +7,5 @@ License: GPL-2.0
 Section: kernel
 Maintainer: Intel
 Architecture: mips_24kc_nomips16
-Installed-Size: 135524
+Installed-Size: 135516
 Description:  PPA GRX500 Acceleration Support

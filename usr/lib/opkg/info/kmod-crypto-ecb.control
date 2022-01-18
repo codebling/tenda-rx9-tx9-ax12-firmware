@@ -6,5 +6,5 @@ SourceName: kmod-crypto-ecb
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 1629
+Installed-Size: 1622
 Description:  Electronic CodeBook CryptoAPI module

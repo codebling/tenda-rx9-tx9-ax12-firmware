@@ -6,5 +6,5 @@ SourceName: kmod-crypto-xcbc
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 2039
+Installed-Size: 2031
 Description:  XCBC CryptoAPI module

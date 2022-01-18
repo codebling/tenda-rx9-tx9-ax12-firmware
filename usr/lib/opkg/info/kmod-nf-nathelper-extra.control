@@ -6,7 +6,7 @@ SourceName: kmod-nf-nathelper-extra
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 48005
+Installed-Size: 47995
 Description:  Extra Netfilter (IPv4) Conntrack and NAT helpers
  Includes:
  - amanda

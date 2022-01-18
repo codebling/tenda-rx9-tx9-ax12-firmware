@@ -6,5 +6,5 @@ SourceName: kmod-sit
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 10891
+Installed-Size: 10881
 Description:  Kernel modules for IPv6-in-IPv4 tunnelling

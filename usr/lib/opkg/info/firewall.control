@@ -7,5 +7,5 @@ License: ISC
 Section: net
 Maintainer: Jo-Philipp Wich <jo@mein.io>
 Architecture: mips_24kc_nomips16
-Installed-Size: 50127
+Installed-Size: 50126
 Description:  This package provides a config-compatible C implementation of the UCI firewall.

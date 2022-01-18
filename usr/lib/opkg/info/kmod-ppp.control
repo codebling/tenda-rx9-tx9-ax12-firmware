@@ -6,5 +6,5 @@ SourceName: kmod-ppp
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 22502
+Installed-Size: 22496
 Description:  Kernel modules for PPP support

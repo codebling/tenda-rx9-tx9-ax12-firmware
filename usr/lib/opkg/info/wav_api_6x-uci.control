@@ -6,5 +6,5 @@ SourceName: wav_api_6x-uci
 Section: net
 Maintainer: Intel Corporation
 Architecture: mips_24kc_nomips16
-Installed-Size: 15715
+Installed-Size: 15712
 Description:  WAV-API: WAV API Layer. Includes: band steering lite application.

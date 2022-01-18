@@ -5,5 +5,5 @@ Source: package/tenda_property/kmod-pre_dns
 SourceName: kmod-pre_dns
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 2596
+Installed-Size: 2589
 Description:  Tenda dns hook for special dns pre-resolving

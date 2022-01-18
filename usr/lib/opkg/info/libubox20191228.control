@@ -8,5 +8,5 @@ License: ISC
 Section: libs
 Maintainer: Felix Fietkau <nbd@nbd.name>
 Architecture: mips_24kc_nomips16
-Installed-Size: 22109
+Installed-Size: 22103
 Description:  Basic utility library

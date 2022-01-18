@@ -5,5 +5,5 @@ Source: intel_source/feeds/ugw/wlan/feed_wlan_6x_uci/wlan_wave_feed/iwlwav-drive
 SourceName: kmod-iwlwav-driver-uci
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 1059431
+Installed-Size: 1059344
 Description:  iwlwav WLAN Driver

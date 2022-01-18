@@ -6,5 +6,5 @@ SourceName: switch_cli_ugw8
 Section: driver
 Maintainer: Lantiq GmbH
 Architecture: mips_24kc_nomips16
-Installed-Size: 107077
+Installed-Size: 107071
 Description:  Advanced Utility for Ethernet Switch driver with ioctl support

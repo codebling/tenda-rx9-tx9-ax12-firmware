@@ -6,7 +6,7 @@ SourceName: kmod-ipt-nfqueue
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 2575
+Installed-Size: 2569
 Description:  Netfilter module for user-space packet queuing
  Includes:
  - NFQUEUE

@@ -6,7 +6,7 @@ SourceName: kmod-ipt-ipsec
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 3318
+Installed-Size: 3311
 Description:  Netfilter (IPv4) modules for matching IPSec packets
  Includes:
  - ah

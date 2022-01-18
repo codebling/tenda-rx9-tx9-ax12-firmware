@@ -6,5 +6,5 @@ SourceName: kmod-crypto-sha256
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 202
+Installed-Size: 199
 Description:  SHA224 SHA256 digest CryptoAPI module

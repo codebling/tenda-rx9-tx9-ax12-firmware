@@ -6,7 +6,7 @@ SourceName: kmod-ipt-nat-extra
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 1718
+Installed-Size: 1712
 Description:  Netfilter (IPv4) kernel modules for extra NAT targets
  Includes:
  - NETMAP

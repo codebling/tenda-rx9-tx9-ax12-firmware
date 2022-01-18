@@ -6,5 +6,5 @@ SourceName: dwpal_6x-uci
 Section: net
 Maintainer: Intel Corporation
 Architecture: mips_24kc_nomips16
-Installed-Size: 41572
+Installed-Size: 41562
 Description:  D-WPAL: Dynamic Wireless Platform Abstraction Layer

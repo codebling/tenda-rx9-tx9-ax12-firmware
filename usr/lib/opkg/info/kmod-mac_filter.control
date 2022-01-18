@@ -5,5 +5,5 @@ Source: package/tenda_property/kmod-td_filter/mac_filter
 SourceName: kmod-mac_filter
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 4332
+Installed-Size: 4311
 Description:  Tenda's mac_filter Component

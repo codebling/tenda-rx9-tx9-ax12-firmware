@@ -5,5 +5,5 @@ Source: package/tenda_property/kmod-qos
 SourceName: kmod-qos
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 16340
+Installed-Size: 16304
 Description:  Tenda behaver manager basic modules

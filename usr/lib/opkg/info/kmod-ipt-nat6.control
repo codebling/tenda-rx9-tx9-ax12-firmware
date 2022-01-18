@@ -6,5 +6,5 @@ SourceName: kmod-ipt-nat6
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 2753
+Installed-Size: 2746
 Description:  Netfilter (IPv6) kernel modules for NAT targets

@@ -6,5 +6,5 @@ SourceName: kmod-ip6-tunnel
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 16356
+Installed-Size: 16348
 Description:  Kernel modules for IPv6-in-IPv6 and IPv4-in-IPv6 tunnelling

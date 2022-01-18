@@ -6,5 +6,5 @@ SourceName: td_bm_utils
 Section: Tenda Property
 Maintainer: Cheung<zhanglingyun@tenda.cn>
 Architecture: mips_24kc_nomips16
-Installed-Size: 6301
+Installed-Size: 6293
 Description:  Tenda behavor manager utils for lua.

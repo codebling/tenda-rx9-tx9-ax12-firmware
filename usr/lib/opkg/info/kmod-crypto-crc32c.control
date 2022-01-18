@@ -6,5 +6,5 @@ SourceName: kmod-crypto-crc32c
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 1012
+Installed-Size: 1008
 Description:  CRC32c CRC module

@@ -6,5 +6,5 @@ SourceName: kmod-intel-iptables
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 1005
+Installed-Size: 995
 Description:  Extension mark support in iptables

@@ -5,5 +5,5 @@ Source: intel_source/feeds/ugw/net/directpath_dp/directconnect_dp
 SourceName: kmod-directconnect-dp
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 31187
+Installed-Size: 31183
 Description:  DirectConnect datapath driver

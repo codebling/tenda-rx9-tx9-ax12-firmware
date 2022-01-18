@@ -6,5 +6,5 @@ SourceName: kmod-eip97
 Section: kernel
 Maintainer: Intel
 Architecture: mips_24kc_nomips16
-Installed-Size: 75979
+Installed-Size: 75981
 Description:  Kernel module to EIP-97 crypto library

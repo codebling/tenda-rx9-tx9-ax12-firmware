@@ -6,5 +6,5 @@ SourceName: kmod-crypto-cmac
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 191
+Installed-Size: 187
 Description:  Support for Cipher-based Message Authentication Code (CMAC)

@@ -6,5 +6,5 @@ SourceName: kmod-crypto-authenc
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 3343
+Installed-Size: 3336
 Description:  Combined mode wrapper for IPsec

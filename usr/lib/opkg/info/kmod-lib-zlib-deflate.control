@@ -6,5 +6,5 @@ SourceName: kmod-lib-zlib-deflate
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 196
+Installed-Size: 193
 Description:  Zlib support

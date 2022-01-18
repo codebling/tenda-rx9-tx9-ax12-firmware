@@ -7,5 +7,5 @@ License: BSD-3-Clause
 Section: net
 Maintainer: Felix Fietkau <nbd@nbd.name>
 Architecture: mips_24kc_nomips16
-Installed-Size: 144765
+Installed-Size: 144759
 Description:  Network monitoring and data acquisition tool (minimal version)

@@ -7,5 +7,5 @@ License: GPL-2.0
 Section: kernel
 Maintainer: Intel
 Architecture: mips_24kc_nomips16
-Installed-Size: 108331
+Installed-Size: 108320
 Description:  PPA GRX500 Packet Protocol Acceleration Multi-Protocol Engine module

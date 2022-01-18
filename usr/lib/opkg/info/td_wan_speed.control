@@ -5,5 +5,5 @@ Source: package/tenda_property/td_wan_speed
 SourceName: td_wan_speed
 Section: Tenda Property
 Architecture: mips_24kc_nomips16
-Installed-Size: 3624
+Installed-Size: 3617
 Description:  td_wan_speed

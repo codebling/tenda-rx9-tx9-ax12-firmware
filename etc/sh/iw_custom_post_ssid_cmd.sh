@@ -13,7 +13,6 @@ wireless_iptv_cmd () {
 
 	if [ "$2" = "$ifname" ];then
 			iw $ifname iwlwav sReliableMcast $sreliablemcast
-			iw dev $ifname iwlwav s11nProtection 2
 	fi
 }
 

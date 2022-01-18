@@ -6,5 +6,5 @@ SourceName: kmod-nf-conntrack6
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 10874
+Installed-Size: 10867
 Description:  Netfilter IPv6 connection tracking

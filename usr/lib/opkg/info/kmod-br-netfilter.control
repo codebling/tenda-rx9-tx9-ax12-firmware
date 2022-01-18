@@ -6,5 +6,5 @@ SourceName: kmod-br-netfilter
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 386
+Installed-Size: 383
 Description:  Bridge netfilter support modules

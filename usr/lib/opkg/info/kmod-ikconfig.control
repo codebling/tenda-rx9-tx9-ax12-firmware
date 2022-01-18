@@ -6,5 +6,5 @@ SourceName: kmod-ikconfig
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 20163
+Installed-Size: 20156
 Description:  Kernel configuration via /proc/config.gz

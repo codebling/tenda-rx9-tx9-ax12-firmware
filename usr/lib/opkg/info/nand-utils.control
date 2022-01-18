@@ -7,5 +7,5 @@ License: GPLv2
 Section: utils
 Maintainer: John Crispin <john@phrozen.org>
 Architecture: mips_24kc_nomips16
-Installed-Size: 43487
+Installed-Size: 43486
 Description:  Utilities for NAND devices.

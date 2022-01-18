@@ -6,7 +6,7 @@ SourceName: iptables-mod-conntrack-extra
 License: GPL-2.0
 Section: net
 Architecture: mips_24kc_nomips16
-Installed-Size: 10380
+Installed-Size: 10374
 Description:  Extra iptables extensions for connection tracking.
  
  Matches:

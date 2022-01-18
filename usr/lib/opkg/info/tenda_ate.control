@@ -5,5 +5,5 @@ Source: package/tenda_property/tenda_ate
 SourceName: tenda_ate
 Section: Tenda Property
 Architecture: mips_24kc_nomips16
-Installed-Size: 16092
+Installed-Size: 16085
 Description:  tenda_ate

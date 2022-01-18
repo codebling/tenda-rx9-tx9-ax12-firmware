@@ -7,5 +7,5 @@ License: ISC
 Section: base
 Maintainer: Jo-Philipp Wich <jo@mein.io>
 Architecture: mips_24kc_nomips16
-Installed-Size: 10108
+Installed-Size: 10104
 Description:  OpenWrt JSON filter utility

@@ -6,5 +6,5 @@ SourceName: kmod-slhc
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 3292
+Installed-Size: 3288
 Description:  Serial Line Header Compression

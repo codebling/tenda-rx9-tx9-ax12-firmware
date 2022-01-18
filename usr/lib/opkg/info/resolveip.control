@@ -7,7 +7,7 @@ License: GPL-2.0
 Section: utils
 Maintainer: Jo-Philipp Wich <jo@mein.io>
 Architecture: mips_24kc_nomips16
-Installed-Size: 1852
+Installed-Size: 1845
 Description:  This package contains the small resolveip utility which
  can be used by scripts to turn host names into numeric
  IP addresses. It supports IPv4 and IPv6 resolving and

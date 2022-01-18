@@ -5,5 +5,5 @@ Source: package/tenda_property/td_flow_statistic_ctl
 SourceName: td_flow_statistic_ctl
 Section: Tenda Property
 Architecture: mips_24kc_nomips16
-Installed-Size: 2533
+Installed-Size: 2528
 Description:  td_flow_statistic_ctl

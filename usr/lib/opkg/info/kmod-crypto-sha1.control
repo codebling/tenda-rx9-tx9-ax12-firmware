@@ -6,5 +6,5 @@ SourceName: kmod-crypto-sha1
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 1809
+Installed-Size: 1807
 Description:  SHA1 digest CryptoAPI module

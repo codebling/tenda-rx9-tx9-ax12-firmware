@@ -7,5 +7,5 @@ License: LGPL-2.1
 Section: base
 Maintainer: Felix Fietkau <nbd@nbd.name>
 Architecture: mips_24kc_nomips16
-Installed-Size: 7198
+Installed-Size: 7195
 Description:  Utility for the Unified Configuration Interface (UCI)

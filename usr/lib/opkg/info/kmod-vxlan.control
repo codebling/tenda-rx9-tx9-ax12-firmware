@@ -6,6 +6,6 @@ SourceName: kmod-vxlan
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 21851
+Installed-Size: 21846
 Description:  Kernel module for supporting VXLAN in the Kernel.
  Requires Kernel 3.12 or newer.

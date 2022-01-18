@@ -6,5 +6,5 @@ SourceName: kmod-crypto-deflate
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 194
+Installed-Size: 191
 Description:  Deflate compression CryptoAPI module

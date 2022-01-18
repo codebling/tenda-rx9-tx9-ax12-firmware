@@ -7,5 +7,5 @@ License: Intel
 Section: kernel
 Maintainer: Intel
 Architecture: mips_24kc_nomips16
-Installed-Size: 105
+Installed-Size: 104
 Description:  Kernel Support for QoS.

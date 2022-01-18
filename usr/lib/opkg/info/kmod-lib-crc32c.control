@@ -6,5 +6,5 @@ SourceName: kmod-lib-crc32c
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 1085
+Installed-Size: 1078
 Description:  Kernel module for CRC32 support

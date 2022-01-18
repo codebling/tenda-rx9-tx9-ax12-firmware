@@ -7,5 +7,5 @@ License: BSD-4-Clause
 Section: net
 Maintainer: Felix Fietkau <nbd@nbd.name>
 Architecture: mips_24kc_nomips16
-Installed-Size: 4594
+Installed-Size: 4593
 Description:  This package contains a PPPoL2TP (PPP over L2TP) plugin for ppp.
