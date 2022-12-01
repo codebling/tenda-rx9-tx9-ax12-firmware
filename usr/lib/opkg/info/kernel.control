@@ -1,10 +1,10 @@
 Package: kernel
-Version: 4.9.206-1-73b4078bb8acdc578ded46d0b302884e
+Version: 4.9.206-1-6ceae50cbd3fbb1b6331d5aa1f7b9cea
 Depends: libc
 Source: package/kernel/linux
 SourceName: kernel
 License: GPL-2.0
 Section: sys
 Architecture: mips_24kc_nomips16
-Installed-Size: 103
+Installed-Size: 104
 Description:  Virtual kernel package

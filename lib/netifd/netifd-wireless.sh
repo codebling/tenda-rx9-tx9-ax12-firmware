@@ -190,23 +190,37 @@ _wdev_wrapper \
 	wireless_set_retry \
 
 wireless_vif_parse_encryption() {
-	json_get_vars encryption
+	json_get_vars encryption dpp_support
 	set_default encryption none
+	set_default dpp_support 0
 
+	dpp_auth_enabled=$dpp_support
 	auth_mode_open=1
 	auth_mode_shared=0
 	auth_type=none
 	wpa_cipher=CCMP
 	rsn_cipher=
+
+	local dpp_incompatible=0
+
+	# Check if DPP auth is requested
+	case "$encryption" in
+		*dpp*)
+			dpp_auth_enabled=1
+		;;
+	esac
+
 	case "$encryption" in
 		*tkip+aes|*tkip+ccmp|*aes+tkip|*ccmp+tkip)
 			wpa_cipher="CCMP TKIP"
+			dpp_incompatible=1
 		;;
 		*aes|*ccmp)
 			wpa_cipher="CCMP"
 		;;
 		*tkip)
 			wpa_cipher="TKIP"
+			dpp_incompatible=1
 		;;
 		*gcmp)
 			wpa_cipher="CCMP GCMP"
@@ -223,7 +237,7 @@ wireless_vif_parse_encryption() {
 	# wpa2/tkip+aes     => WPA2 RADIUS, CCMP+TKIP
 
 	case "$encryption" in
-		wpa2*|wpa3*|*psk2*|psk3*|sae*|owe*)
+		wpa2*|wpa3*|*psk2*|psk3*|sae*|owe*|*dpp*)
 			wpa=2
 		;;
 		wpa*mixed*|*psk*mixed*)
@@ -233,12 +247,16 @@ wireless_vif_parse_encryption() {
 			wpa=1
 		;;
 		*)
-			wpa=0
-			wpa_cipher=
+			if [[ "$dpp_auth_enabled" -eq 1 ]]; then
+				echo "Encryption is not specified, but DPP is enabled. Change encryption to wpa=2"
+				wpa=2
+			else
+				wpa=0
+				wpa_cipher=
+				dpp_incompatible=1
+			fi
 		;;
 	esac
-	wpa_pairwise="$wpa_cipher"
-	rsn_pairwise="$rsn_cipher"
 
 	case "$encryption" in
 		owe*)
@@ -264,6 +282,7 @@ wireless_vif_parse_encryption() {
 		;;
 		*wep*)
 			auth_type=wep
+			dpp_incompatible=1
 			case "$encryption" in
 				*shared*)
 					auth_mode_open=0
@@ -275,6 +294,19 @@ wireless_vif_parse_encryption() {
 			esac
 		;;
 	esac
+
+	# Check if DPP was configured with incompatible auth types
+	if [[ "$dpp_auth_enabled" -eq 1 && "$dpp_incompatible" -eq 1 ]]; then
+		echo "Warning: DPP isn't compatible with auth='$auth_type' or wpa_cipher='$wpa_cipher'. DPP has been disabled."
+		dpp_auth_enabled=0
+	fi
+
+	if [[ "$dpp_auth_enabled" -eq 1 && -z "$rsn_cipher" ]]; then
+		rsn_cipher=CCMP
+	fi
+
+	wpa_pairwise="$wpa_cipher"
+	rsn_pairwise="$rsn_cipher"
 }
 
 _wireless_set_brsnoop_isolation() {
@@ -323,7 +355,7 @@ _wdev_common_device_config() {
 }
 
 _wdev_common_iface_config() {
-	config_add_string mode ssid encryption 'key:wpakey'
+	config_add_string mode ssid encryption dpp_support 'key:wpakey'
 }
 
 init_wireless_driver() {

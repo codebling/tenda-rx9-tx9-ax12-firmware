@@ -2,8 +2,6 @@
 var G_current_operate; //"1":add   "0":edit
 var submitData = {}; //提交数据
 var parentCtrl;
-var savePendding = false;
-var setTimes = null;
 var pageview = R.pageView({ //页面初始化
     init: function () {
         top.loginOut();
@@ -227,7 +225,7 @@ function getParentControl() {
     var deviceName = top.parentInfo.editObj.deviceName;
 
     initHtml();
-    $("#device_name").html(deviceName).attr("title", deviceName);
+    $("#device_name").html(toHtmlCode(deviceName)).attr("title", deviceName);
     $("#device_mac").html(deviceId.toUpperCase());
     //显示大写，传输数据小写
     var data = "mac=" + deviceId + "&random=" + Math.random();
@@ -471,9 +469,7 @@ function editDevice(action) {
         // clearDevNameForbidCode($("#devName")[0]);
 
     } else {
-        if (savePendding) {
-            return
-        }
+
         data = "devName=" + encodeURIComponent($("#devName").val()) + "&mac=" + $("#device_mac").html().toLowerCase();
 
         deviceName = $("#devName").val();
@@ -485,16 +481,11 @@ function editDevice(action) {
             showErrMsg("msg-err", msg);
             return false;
         }
-        $("#device_save").css('par');
-        /**by xm 5s后，如果还没有返回，手动变成可点击，可再次发送请求，避免卡死一直不能再次发送 */
-        setTimes = setTimeout(function() {
-            savePendding=false;
-        }, 5000);
-        savePendding = true;
-       
-        $.post("goform/SetOnlineDevName", data, handDeviceName);
-      
 
+        $.post("goform/SetOnlineDevName", data, handDeviceName);
+
+        $("#device_edit").removeClass("none");
+        $("#device_save").addClass("none");
     }
 }
 
@@ -502,19 +493,13 @@ function editDevice(action) {
 
 function handDeviceName(data) {
 
-    /**数据返回后再切换按钮，防止数据未返回再次点击出现数据为空的情况 by xm*/
-    $("#device_edit").removeClass("none");
-    $("#device_save").addClass("none");
-    savePendding=false;
-    clearTimeout(setTimes);
 
     var num = $.parseJSON(data).errCode;
 
     //top.$("#iframe-msg").removeClass("none");
     top.$("#iframe-msg").removeClass("text-success red");
     if (num == 0) {
-        var deviceName = $("#devName").val();
-        $("#device_name").text(deviceName).attr("title", deviceName);
+        $("#device_name").text($("#devName").val());
         top.$("#iframe-msg").addClass("text-success").html(_("Configuration succeeded."));
 
     } else {

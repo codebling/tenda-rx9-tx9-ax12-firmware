@@ -60,7 +60,7 @@ do
                         if [ "$ssid" = "dummy_ssid_6G" ]; then
                             continue
                         fi
-                        bw=`hostapd_cli -i$radio_6GHz radio_info | grep OperatingChannelBandwidt | cut -d"=" -f2`
+                        bw=`hostapd_cli -i$i radio_info | grep OperatingChannelBandwidt | cut -d"=" -f2`
                         case $bw in
                         20)
                                 op_class="131"

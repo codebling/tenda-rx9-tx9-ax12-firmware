@@ -1,0 +1,9 @@
+#!/bin/sh
+
+uci -q batch <<-EOF >/dev/null
+	set network.wan.ispType=0
+	set network.wan.ispArea=null
+	commit network
+EOF
+
+exit 0

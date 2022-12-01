@@ -12,9 +12,12 @@ config interface 'wan'
 	option proto 'DHCP'
 #	option username 'intelbras'
 #	option password 'intelbras'
+	option default_dns '2402:4e00:: 2400:3200::1'
 
 config interface 'lan'
 	option prefixlen '64'
-	option mode '1'
+	option mode '2'
 	option prefixaddr 'fd83:3fa9:649b::/64'
+	option default_dns '2001:2::2'
+	option default_prefixaddr '2001:3::/64'
 

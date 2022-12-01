@@ -1,0 +1,28 @@
+#!/bin/bash
+vlanid=$(uci get iptv.@stb[0].vlanId)	
+untag=$(uci get iptv.@stb[0].untag)
+wanvlan=$(uci get network.wan.vlanid)
+
+[ "$untag"x = "1"x ] && {
+	[ "$wanvlan"x != ""x ] && {
+		[ "$vlanid"x != ""x ] && {
+			#隔离LAN3口上网
+			ebtables -t nat -A PREROUTING -i eth0_2 -j mark --mark-set 0x50
+			iptables -t mangle -N VLAN_RULE
+			iptables -t mangle -I FORWARD -j VLAN_RULE
+			iptables -t mangle -A VLAN_RULE -m mark --mark 0x50 -j DROP
+			
+			#隔离LAN1，lan2,lan3 的 IPTV功能
+			ebtables -t filter -I FORWARD -i eth0_2 -o eth1.$vlanid -j ACCEPT
+			ebtables -t filter -I FORWARD -i eth1.$vlanid -o eth0_2 -j ACCEPT
+			ebtables -t filter -A FORWARD -o eth1.$vlanid -j DROP
+			ebtables -t filter -A FORWARD -o eth0_2 -j DROP
+			ebtables -t filter -A FORWARD -i eth1.$vlanid -j DROP
+			ebtables -t filter -A FORWARD -i eth0_2 -j DROP
+			
+			#清下加加速表，
+			switch_cli dev=0 GSW_MAC_TABLE_CLEAR
+			switch_cli dev=1 GSW_MAC_TABLE_CLEAR
+		}
+	}
+}

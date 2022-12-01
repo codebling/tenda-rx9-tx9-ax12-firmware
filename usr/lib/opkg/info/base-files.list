@@ -57,6 +57,7 @@
 /sbin/hotplug-call
 /usr/libexec/validate_firmware_image
 /etc/hotplug.d/firmware/12-ath9k-eeprom
+/etc/iptv_my_access
 /lib/upgrade/nand.sh
 /etc/rc.button/failsafe
 /lib/upgrade/fwtool.sh

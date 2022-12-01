@@ -100,10 +100,33 @@ setup_switch() {
 	
 	local vlanid=$(uci get iptv.@stb[0].vlanId)		
 	local untag=$(uci get iptv.@stb[0].untag)
+	local wanvlan=$(uci get network.wan.vlanid)
 	
 	[ "$untag"x = "1"x ] && {
-		setup_tag_mde $lanport $lanportmap $vlanid
+		[ "$wanvlan"x != ""x ] && {
+			return;
+		} || {
+			setup_tag_mde $lanport $lanportmap $vlanid
+		}
 	}||{
 		setup_tranparent_mode $lanport $lanportmap
+	}
+}
+
+setup_iptv_mde_MY() {
+	local vlanid=$(uci get iptv.@stb[0].vlanId)	
+	local untag=$(uci get iptv.@stb[0].untag)
+	local wanvlan=$(uci get network.wan.vlanid)
+	
+	[ "$untag"x = "1"x ] && {
+		[ "$wanvlan"x != ""x ] && {
+			[ "$vlanid"x != ""x ] && {
+				ip link add link eth1 name eth1.$vlanid type vlan id $vlanid
+				ifconfig eth1.$vlanid up
+				
+				ppacmd delwan -i eth1.$vlanid
+				ppacmd addlan -i eth1.$vlanid
+			}
+		}
 	}
 }

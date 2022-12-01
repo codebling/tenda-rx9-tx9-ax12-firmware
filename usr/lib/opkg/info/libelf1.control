@@ -9,5 +9,5 @@ LicenseFiles: COPYING COPYING-GPLV2 COPYING-LGPLV3
 Section: libs
 Maintainer: Luiz Angelo Daros de Luca <luizluca@gmail.com>
 Architecture: mips_24kc_nomips16
-Installed-Size: 42864
+Installed-Size: 42865
 Description:  ELF manipulation libraries (libelf)

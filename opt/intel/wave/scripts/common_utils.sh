@@ -4,7 +4,7 @@
 
 function check_meta_factory() {
 	if [ ! -f $UCI_DB_PATH/meta-factory ]; then
-		cp $DEFAULT_DB_PATH/meta-factory $UCI_DB_PATH/
+		copy_meta_factory
 	else
 		local enable=`$UCI -c $DEFAULT_DB_PATH/ get meta-factory.merge.enable`
 		$UCI set meta-factory.merge.enable=$enable
@@ -37,9 +37,9 @@ function do_meta_factory_init(){
         TMP_CONF_FILE=$(mktemp /tmp/tmpConfFile.XXXXXX)
 }
 
-function create_meta(){
+function do_create_meta(){
 	rm /tmp/meta-wireless > /dev/null 2>&1
-	rm /nvram/etc/config/meta-wireless > /dev/null 2>&1
+	rm $UCI_DB_PATH/meta-wireless > /dev/null 2>&1
 	local tmp_meta=$(mktemp /tmp/meta-wireless.XXXXXX)
 
 	local prev_ifs="$IFS"
@@ -47,9 +47,9 @@ function create_meta(){
 
 	local radios=`cat $UCI_DB_PATH/wireless | grep 'wifi-device'`
 	for radio in $radios; do
-		echo "$radio" >> "$tmp_meta"
-		echo "    option param_changed '0'" >> "$tmp_meta"
-		echo "    option interface_changed '0'" >> "$tmp_meta"
+		uci_set_helper "$radio" "$tmp_meta"
+		uci_set_helper "    option param_changed '0'" "$tmp_meta"
+		uci_set_helper "    option interface_changed '0'" "$tmp_meta"
 		local radio_idx=`echo "$radio" | sed 's/[^0-9]*//g'`
 
 		local ifaces=`cat $UCI_DB_PATH/wireless | grep 'wifi-iface'`
@@ -57,23 +57,19 @@ function create_meta(){
 			local iface_idx=`echo "$iface" | sed 's/[^0-9]*//g'`
 			local device=`uci get wireless.default_radio"${iface_idx}".device`
 			if [ "radio${radio_idx}" = "$device" ]; then
-				echo "$iface" >> "$tmp_meta"
-				echo "    option device '${device}'" >> "$tmp_meta"
-				echo "    option param_changed '0'" >> "$tmp_meta"
+				uci_set_helper "$iface" "$tmp_meta"
+				uci_set_helper "    option device '${device}'" "$tmp_meta"
+				uci_set_helper "    option param_changed '0'" "$tmp_meta"
 			fi
 		done
 	done
 
 	mv "$tmp_meta" '/tmp/meta-wireless'
-	ln -s /tmp/meta-wireless /nvram/etc/config/meta-wireless
+	ln -s /tmp/meta-wireless $UCI_DB_PATH/meta-wireless
 	IFS="$prev_ifs"
 }
 
 function reset_on_init(){
-	if [ ! "$OS_NAME" = "RDKB" ]; then
-		print_logs "$0: reset on init (meta-factory init) is not supported"
-		return
-	fi
 	if [ -e "/nvram/wifi_reset_indicator" ]; then
 		full_reset "$@"
 		rm /nvram/wifi_reset_indicator > /dev/null 2>&1
@@ -368,7 +364,7 @@ function validate_radio_map_file(){
 get_phys_from_file_return=
 function get_phys_from_file(){
 	if [ -z "$PHYS_CONF_FILE" ] || [ ! -f "$PHYS_CONF_FILE" ]; then
-		print_logs "ERROR:no phy conf file supplied, provide one in the db folder"
+		print_logs "ERROR:no phys_conf_file supplied, provide one in the db folder (at $PHYS_CONF_FILE)"
 		exit 1;
 	fi
 	get_phys_from_file_return=`cat "$PHYS_CONF_FILE" | grep phy | sed 's/...=//'`
@@ -460,7 +456,7 @@ function save_entire_section(){
 		fi
 
 		if [ "$curr_type" = "config" ]; then
-			echo "set $cur_section_name=$cur_section_type=" >> $file_name
+			echo "set wireless.$cur_section_name=$cur_section_type" >> $file_name
 		elif [ "$curr_type" = "option" ]; then
 			echo "set wireless.$cur_section_name.$param=$value" >> $file_name
 		elif [ "$curr_type" = "list" ]; then
@@ -484,14 +480,14 @@ function partial_merge_reset(){
 			local section_pref=`check_preference "user_preference" "$section_name"`
 			if [ "$section_pref" = "1" ]; then
 				save_entire_section "$tmp_partial" "$section_name"
-				skip_section=1
+				skip_section="1"
 			else
-				skip_section=0
+				skip_section="0"
 			fi
 
 			continue
 
-		elif [[ $skip_section != 1 && "$curr_type" = "option" || "$curr_type" = "list" ]]; then
+		elif [ "$skip_section" -ne "1" ] && [ "$curr_type" = "option" -o "$curr_type" = "list" ]; then
 			local param=`echo $line | awk '{print $2}'`
 			local value=`echo $line | awk '{print $3}' | sed "s/'//g"`
 		else
@@ -516,6 +512,46 @@ function partial_merge_reset(){
 	done < $UCI_DB_PATH/wireless
 
 	full_reset
+
+	while read line; do
+		local curr_type=`echo $line | awk '{print $1}'`
+		if [ "$curr_type" = "config" ]; then
+			section_name=`echo $line | awk '{print $3}' | sed "s/'//g"`
+			section_type=`echo $line | awk '{print $2}'`
+
+			local section_pref=`check_preference "user_preference" "$section_name"`
+			if [ "$section_pref" = "1" ]; then
+				$UCI delete wireless.$section_name
+				skip_section="1"
+			else
+				skip_section="0"
+			fi
+
+			continue
+
+		elif [ "$skip_section" -ne "1" ] && [ "$curr_type" = "option" -o "$curr_type" = "list" ]; then
+			local param=`echo $line | awk '{print $2}'`
+			local value=`echo $line | awk '{print $3}' | sed "s/'//g"`
+		else
+			continue
+		fi
+
+		local param_pref=`check_preference "user_preference" "$section_name" "$param" "$section_type"`
+		if [ "$param_pref" != "1" ]; then
+			continue
+		fi
+
+		local idx=`echo $section_name | sed 's/[^0-9]*//g'`
+		if [ $idx -ge $DUMMY_VAP_OFSET ]; then
+			continue
+		fi
+
+		if [ "$curr_type" = "option" ]; then
+			$UCI delete wireless.$section_name.$param
+		elif [ "$curr_type" = "list" ]; then
+			$UCI del_list wireless.$section_name.$param=$value
+		fi
+	done < $UCI_DB_PATH/wireless
 
 	while read line; do
 		$UCI $line
@@ -601,25 +637,23 @@ function increase_num_of_vaps_by(){
 		local rpc_idx=$((iface_index/2+ifname_sfx*num_of_phys))
 		$UCI set wireless.vap_rpc_indexes.index$rpc_idx=$uci_idx
 
-		echo "config wifi-iface 'default_radio$uci_idx'" >> $tmp_wireless
-		echo "    option rpc_index '$rpc_idx'" >> $tmp_wireless
-		echo "    option device '$radio'" >> $tmp_wireless
-		echo "    option ifname '$new_ifname'" >> $tmp_wireless
+		uci_set_helper "config wifi-iface 'default_radio$uci_idx'" $tmp_wireless
+		uci_set_helper "    option rpc_index '$rpc_idx'" $tmp_wireless
+		uci_set_helper "    option device '$radio'" $tmp_wireless
+		uci_set_helper "    option ifname '$new_ifname'" $tmp_wireless
 		new_mac=`update_mac_address $new_ifname`
-		echo "    option macaddr '$new_mac'" >> $tmp_wireless
+		uci_set_helper "    option macaddr '$new_mac'" $tmp_wireless
 
-		set_conf_to_file $uci_idx $DEFAULT_DB_VAP_SPECIFIC$uci_idx $DEFAULT_DB_VAP  $tmp_wireless
+		use_templates $uci_idx $DEFAULT_DB_VAP_SPECIFIC$uci_idx $DEFAULT_DB_VAP  $tmp_wireless
 
 		# Add per-vap meta-data
-		echo "config wifi-iface 'default_radio$uci_idx'" >> $tmp_meta
-		echo "    option device '$radio'" >> $tmp_meta
-		echo "    option param_changed '0'" >> $tmp_meta
+		prepare_meta_data_default_radio "$uci_idx" "$radio" "$tmp_meta"
+		uci_set_helper "    option param_changed '0'" $tmp_meta
 
 		count=$((count+1))
 	done
 
-	cat $tmp_wireless >> $UCI_DB_PATH/wireless
-	cat $tmp_meta >> /tmp/meta-wireless
+	add_changes_commit "$tmp_wireless" "$tmp_meta"
 }
 
 function update_num_of_vaps(){
@@ -666,6 +700,7 @@ function update_num_of_vaps(){
 function template_diff(){
 	local old_template=$1
 	local new_template=$2
+	local main_template=$3
 	local output=""
 
 	if [[ ! -f $old_template && ! -f $new_template ]]; then
@@ -682,6 +717,7 @@ function template_diff(){
 			elif [ "$cur_type" = "option" ]; then
 				output="$output set"
 			else
+				print_logs "warning: invalid line in $new_template"
 				continue
 			fi
 
@@ -697,8 +733,17 @@ function template_diff(){
 				output="$output del_list"
 				cur_value=`echo $line | awk '{print $3}'`
 			elif [ "$cur_type" = "option" ]; then
+				if [ -f "$main_template" ]; then
+					local tmp=`cat $main_template | grep "$cur_type $cur_param"`
+					if [ ! "$tmp" = "" ]; then
+						cur_value=`echo $tmp | awk '{print $3}'`
+						output="$output set $cur_param=$cur_value"
+						continue
+					fi
+				fi
 				output="$output del"
 			else
+				print_logs "warning: invalid line in $old_template"
 				continue
 			fi
 
@@ -718,11 +763,22 @@ function template_diff(){
 				if [ "$tmp" = "" ]; then
 					output="$output del_list $cur_param=$cur_value"
 				fi
-			else
+			elif [ "$cur_type" = "option" ]; then
 				local tmp=`cat $new_template | grep "$cur_type $cur_param "`
 				if [ "$tmp" = "" ]; then
+					if [ -f "$main_template" ]; then
+						local tmp=`cat $main_template | grep "$cur_type $cur_param"`
+						if [ ! "$tmp" = "" ]; then
+							cur_value=`echo $tmp | awk '{print $3}'`
+							output="$output set $cur_param=$cur_value"
+							continue
+						fi
+					fi
 					output="$output del $cur_param"
 				fi
+			else
+				print_logs "warning: invalid line in $old_template"
+				continue
 			fi
 		done < $old_template
 
@@ -738,6 +794,7 @@ function template_diff(){
 				elif [ "$cur_type" = "option" ]; then
 					output="$output set"
 				else
+					print_logs "warning: invalid line in $new_template"
 					continue
 				fi
 
@@ -779,6 +836,7 @@ function apply_diff(){
 	done
 }
 
+# TODO: add support for 6g in merge functions
 function complete_merge_reset_radio(){
 	local radio=$1
 
@@ -791,9 +849,10 @@ function complete_merge_reset_radio(){
 
 		`cat /proc/net/mtlk/wlan${iface_idx}/radio_cfg | grep "zw-dfs ant:" | grep "true" > /dev/null`
 		if [ $? -eq 0 ]; then
+			local main_template="$DEFAULT_DB_PATH/wireless_def_radio_${band}g"
 			local old_tmpl="$UCI_DB_PATH/src_templates/wireless_def_radio_${band}g_zw_dfs"
 			local new_tmpl="$DEFAULT_DB_PATH/wireless_def_radio_${band}g_zw_dfs"
-			radio_diff=`template_diff "$old_tmpl" "$new_tmpl"`
+			radio_diff=`template_diff "$old_tmpl" "$new_tmpl" "$main_template"`
 			apply_diff "$old_tmpl" "$radio" $radio_diff
 		fi
 	fi
@@ -825,13 +884,15 @@ function complete_merge_reset_vap(){
 	apply_diff "$old_tmpl" "$vap" $vap_diff
 
 	if [[ -f $UCI_DB_PATH/src_templates/wireless_def_vap_${idx} || -f $DEFAULT_DB_PATH/wireless_def_vap_${idx} ]]; then
+		local main_template="$new_tmpl"
 		local old_tmpl="$UCI_DB_PATH/src_templates/wireless_def_vap_${idx}"
 		local new_tmpl="$DEFAULT_DB_PATH/wireless_def_vap_${idx}"
-		local vap_diff=`template_diff "$old_tmpl" "$new_tmpl"`
+		local vap_diff=`template_diff "$old_tmpl" "$new_tmpl" "$main_template"`
 		apply_diff "$old_tmpl" "$vap" $vap_diff
 	fi
 }
 
+# TODO: add support for 6g in merge functions
 function complete_merge_reset(){
 	local section_type="$1"
 	local section_name="$2"
@@ -969,6 +1030,12 @@ function full_reset_radio(){
 	local iface_name=$1
 	local radio_idx=`echo $iface_name | sed "s/[^0-9]//g"`
 	local phy_idx=`iw $iface_name info | grep wiphy | awk '{print $2}'`
+	local phy="phy$phy_idx"
+	local orig_band=`$UCI get wireless.radio$radio_idx.band | head -c1`
+
+	if [ -z "$phy_idx" ]; then
+		phy=`$UCI get wireless.radio$radio_idx.phy`
+	fi
 
 	# remove all configurable parameters, since there might be parameters which do not exist in the default db file.
 	local extra_params=`$UCI show wireless.radio$radio_idx | grep "wireless.radio$radio_idx\." | grep -v "\.phy" \
@@ -979,8 +1046,11 @@ function full_reset_radio(){
 		$UCI delete $option
 	done
 
-	`iw phy$phy_idx info | grep "* 5... MHz" > /dev/null`
-	local is_radio_5g=$?
+	local phy_band=`get_band "$phy" "$iface_name"`
+
+	if [ -z "$phy_band" ]; then
+		phy_band=$orig_band
+	fi
 
 	remove_dfs_state_file "$radio_idx"
 
@@ -989,13 +1059,19 @@ function full_reset_radio(){
 	# <file name>_<radio idx>
 	# <file name>_<radio idx>_<HW type>_<HW revision>
 	local board=`iw dev $iface_name iwlwav gEEPROM | grep "HW type\|HW revision" | awk '{print $4}' | tr '\n' '_' | sed "s/.$//"`
-	if [ $is_radio_5g = '0' ]; then
+	if [ $phy_band = "5" ]
+	then
 		set_conf_to_file $radio_idx ${DEFAULT_DB_RADIO_5}_${radio_idx} $DEFAULT_DB_RADIO_5  ${TMP_CONF_FILE}_
 		`cat /proc/net/mtlk/${iface_name}/radio_cfg | grep "zw-dfs ant:" | grep "true" > /dev/null`
-		if [ $? -eq 0 ]; then
+		if [ $? -eq 0 ]
+		then
 			set_conf_to_file $radio_idx ${DEFAULT_DB_RADIO_5}_zw_dfs ${TMP_CONF_FILE}_ ${TMP_CONF_FILE}_
 		fi
 		set_conf_to_file $radio_idx ${DEFAULT_DB_RADIO_5}_${radio_idx}_${board} ${TMP_CONF_FILE}_ $TMP_CONF_FILE
+	elif [ $phy_band = "6" ]
+	then
+		set_conf_to_file $radio_idx ${DEFAULT_DB_RADIO_6}_${radio_idx} $DEFAULT_DB_RADIO_6  ${TMP_CONF_FILE}_
+		set_conf_to_file $radio_idx ${DEFAULT_DB_RADIO_6}_${radio_idx}_${board} ${TMP_CONF_FILE}_ $TMP_CONF_FILE
 	else
 		set_conf_to_file $radio_idx ${DEFAULT_DB_RADIO_24}_${radio_idx} $DEFAULT_DB_RADIO_24  ${TMP_CONF_FILE}_
 		set_conf_to_file $radio_idx ${DEFAULT_DB_RADIO_24}_${radio_idx}_${board} ${TMP_CONF_FILE}_ $TMP_CONF_FILE
@@ -1019,59 +1095,7 @@ function full_reset_radio(){
 	rm -f $TMP_CONF_FILE
 }
 
-function partial_merge_reset_radio(){
-	local radio=$1
-	local tmp_partial=`mktemp /tmp/partial_${radio}.XXXXXX`
-	local section_pref=""
-
-	local section_pref=`check_preference "user_preference" "$radio"`
-	if [ "$section_pref" = "1" ]; then
-		return
-	else
-		while read line; do
-			local curr_type=`echo $line | awk '{print $1}'`
-			if [ "$curr_type" = "config" ]; then
-				section_name=`echo $line | awk '{print $3}' | sed "s/'//g"`
-				continue
-			elif [[ "$curr_type" = "option" || "$curr_type" = "list" ]]; then
-				local param=`echo $line | awk '{print $2}'`
-				local value=`echo $line | awk '{print $3}' | sed "s/'//g"`
-			else
-				continue
-			fi
-
-			if [ "$section_name" != "$radio" ]; then
-				continue
-			fi
-
-			local param_pref=`check_preference "user_preference" "$section_name" "$param" "wifi-device"`
-			if [ "$param_pref" != "1" ]; then
-				continue
-			fi
-
-			if [ "$curr_type" = "option" ]; then
-				echo "set wireless.$section_name.$param=$value" >> $tmp_partial
-			elif [ "$curr_type" = "list" ]; then
-				echo "add_list wireless.$section_name.$param=$value" >> $tmp_partial
-			fi
-		done < $UCI_DB_PATH/wireless
-	fi
-
-	full_reset_radio "$radio"
-
-	while read line; do
-		$UCI $line
-	done < $tmp_partial
-
-	rm $tmp_partial
-}
-
 function reset_radio(){
-
-	if [ ! "$OS_NAME" = "RDKB" ]; then
-		print_logs "$0: radio reset is not supported"
-		return
-	fi
 
 	print_logs "$0: Performing radio reset for radio $1..."
 
@@ -1085,22 +1109,7 @@ function reset_radio(){
 		wave_trusted_store factory "$prog" radio "$iface"
 	fi
 
-	if [ ! -f $UCI_DB_PATH/meta-factory ]; then
-		full_reset_radio "$vap"
-		return
-	fi
-
-	local merge_stat=`$UCI get $MERGE_PARAM` 2>/dev/null
-	if [ "$merge_stat" != "1" ]; then
-		full_reset_radio "$iface"
-		return
-	else
-		if [ -f $DEFAULT_DB_PATH/user_preference ]; then
-			partial_merge_reset_radio "$radio"
-		else
-			complete_merge_reset_radio "$radio"
-		fi
-	fi
+	full_reset_radio "$iface"
 
 	$UCI set meta-wireless.${radio}.param_changed=1
 
@@ -1143,59 +1152,7 @@ function full_reset_vap(){
 	rm $TMP_CONF_FILE
 }
 
-function partial_merge_reset_vap(){
-	local vap=$1
-	local tmp_partial=`mktemp /tmp/partial_${vap}.XXXXXX`
-	local section_name=""
-
-	local section_pref=`check_preference "user_preference" "$vap"`
-	if [ "$section_pref" = "1" ]; then
-		return
-	else
-		while read line; do
-			local curr_type=`echo $line | awk '{print $1}'`
-			if [ "$curr_type" = "config" ]; then
-				section_name=`echo $line | awk '{print $3}' | sed "s/'//g"`
-				continue
-			elif [[ "$curr_type" = "option" || "$curr_type" = "list" ]]; then
-				local param=`echo $line | awk '{print $2}'`
-				local value=`echo $line | awk '{print $3}' | sed "s/'//g"`
-			else
-				continue
-			fi
-
-			if [ "$section_name" != "$vap" ]; then
-				continue
-			fi
-
-			local param_pref=`check_preference "user_preference" "$section_name" "$param" "wifi-iface"`
-			if [ "$param_pref" != "1" ]; then
-				continue
-			fi
-
-			if [ "$curr_type" = "option" ]; then
-				echo "set wireless.$section_name.$param=$value" >> $tmp_partial
-			elif [ "$curr_type" = "list" ]; then
-				echo "add_list wireless.$section_name.$param=$value" >> $tmp_partial
-			fi
-		done < $UCI_DB_PATH/wireless
-	fi
-
-	full_reset_vap "$vap"
-
-	while read line; do
-		$UCI $line
-	done < $tmp_partial
-
-	rm $tmp_partial
-}
-
 function reset_vap(){
-
-	if [ ! "$OS_NAME" = "RDKB" ]; then
-		print_logs "$0: reset vap is not supported"
-		return
-	fi
 
 	print_logs "$0: Performing Vap reset for VAP $1 ..."
 
@@ -1211,24 +1168,9 @@ function reset_vap(){
 		wave_trusted_store factory "$prog" vap $1
 	fi
 
-	if [ ! -f $UCI_DB_PATH/meta-factory ]; then
-		full_reset_vap "$vap"
-		return
-	fi
+	full_reset_vap "$vap"
 
-	local merge_stat=`$UCI get $MERGE_PARAM 2>/dev/null`
-	if [ "$merge_stat" != "1" ]; then
-		full_reset_vap "$vap"
-		return
-	else
-		if [ -f $DEFAULT_DB_PATH/user_preference ]; then
-			partial_merge_reset_vap "$vap"
-		else
-			complete_merge_reset_vap "$vap"
-		fi
-	fi
-
-	$UCI set meta-wireless.${def_radio}.param_changed=1
+	$UCI set meta-wireless.${vap}.param_changed=1
 
 	$UCI commit wireless
 	$UCI commit -c /tmp/ meta-wireless
@@ -1249,7 +1191,8 @@ function uci_set_helper_ubus(){
         input=`echo "$1" | awk '{$1=$1};1' `
         type=`echo "$input" | cut -f 1 -d " "`
         set_to=`echo "$input" | cut -f 2 -d " "`
-        value=`echo "$input" | cut -f 3 -d " " | tr -d "'"`
+        value=${input#*$set_to }
+        value=${value//\'/}
         if [ "$type" = "config" ]; then
                 ubus call uci add '{ "config" : "wireless", "type" : "'$set_to'", "name" : "'$value'" }' > /dev/null 2>&1
                 CURRENT_CONFIG="$value"
@@ -1269,6 +1212,9 @@ function uci_parser() {
 	if [ "$config" = "meta-wireless" ]; then
 		config="wireless"
 	fi
+	if [ "$config" = "-c" ]; then
+		return
+	fi
 	if [ "$cmd" = "show" ]; then
 		uci show "$argument"
 	elif [ "$cmd" = "-c" ]; then
@@ -1283,7 +1229,7 @@ function uci_parser() {
 		uci changes "$argument"
 	elif [ "$cmd" = "delete" ] || [ "$cmd" = "del" ]; then
 		section=`echo $argument | sed 's/[_a-z0-9A-Z-]*\.//' | sed 's/\..*//'`
-		set_to=`echo $argument | sed 's/[_a-z0-9A-Z-]*\.//' | sed 's/[_a-z0-9A-Z-]*\.//' | sed 's/\=.*//'`
+		set_to=`echo $argument | sed 's/[_a-z0-9A-Z-]*\.//' | grep "\." | sed 's/[_a-z0-9A-Z-]*\.//' | sed 's/\=.*//'`
 		if [ -n "$set_to" ]; then
 			ubus call uci delete '{ "config" : "'$config'", "section" : "'$section'", "option" : "'$set_to'" }'
 		else
@@ -1332,8 +1278,16 @@ get_iface_idx_on_device(){
 }
 
 get_band_on_device(){
-        `iw $1 info | grep "* 5... MHz" > /dev/null`
-	echo "$?"
+	if [ `iw $1 info | grep -c "* 6... MHz"` -gt 0 ]
+	then
+		echo 6
+	elif [ `iw $1 info | grep -c "* 5... MHz"` -gt 0 ]
+	then
+		echo 5
+	elif [ `iw $1 info | grep -c "* 24.. MHz"` -gt 0 ]
+	then
+		echo 2
+	fi
 }
 
 get_board_on_device(){
@@ -1359,9 +1313,11 @@ get_number_of_vaps(){
 		print_logs "using default number of VAPs"
 		num_slave_vaps_24g=`$UCI -c $DEFAULT_DB_PATH/ get defaults.num_vaps.24g`
 		num_slave_vaps_5g=`$UCI -c $DEFAULT_DB_PATH/ get defaults.num_vaps.5g`
+		num_slave_vaps_6g=`$UCI -c $DEFAULT_DB_PATH/ get defaults.num_vaps.6g`
 	else
 		num_slave_vaps_24g="$vapCount"
 		num_slave_vaps_5g="$vapCount"
+		num_slave_vaps_6g="$vapCount"
 		print_logs "overriding default number of VAPs"
 	fi
 }

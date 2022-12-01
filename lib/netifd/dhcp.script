@@ -22,9 +22,12 @@ clear_lan_ipaddr(){
 		return
 	fi
 	lan_addr=$(uci get network.lan.ipaddr)
+	lan_mask=$(uci get network.lan.netmask)
+	local prefix
+	eval "$(ipcalc.sh "$lan_addr $lan_mask")";prefix="$PREFIX"
 	[ -n $lan_addr -a $lan_addr != $ip ]&&{
        		logger "Tenda :Lan switch to AP mode - $ip"
-       		ip addr del $lan_addr/24 dev br-lan
+       		ip addr del $lan_addr/$prefix dev br-lan
     	}
 	/etc/init.d/dnsmasq stop
 }
@@ -33,6 +36,8 @@ setup_interface () {
 	proto_init_update "*" 1
 	proto_add_ipv4_address "$ip" "${subnet:-255.255.255.0}"
 	# TODO: apply $broadcast
+
+    local ispType=`uci get network.wan.ispType`
 
 	local ip_net
 	eval "$(ipcalc.sh "$ip/$mask")";ip_net="$NETWORK"
@@ -60,9 +65,16 @@ setup_interface () {
 		set_class_routes $ro
 	done
 
-	for i in $dns; do
-		proto_add_dns_server "$i"
-	done
+    local wan_dnsserver_num=`ubus call network.interface.wan status | sed -n '/dns-server/,+1p' | grep '[0-9]' | wc -l`  
+    if [ "5" == "$ispType" -a "$wan_dnsserver_num" -ge "1" ];then                                                         
+            echo "wan's dns is exist, nothing to do..."
+    else                                                                                                                  
+            for i in $dns; do                                                                                             
+                    proto_add_dns_server "$i"                                                                             
+            done                                                                                                          
+    fi 
+
+
 	for i in $domain; do
 		proto_add_dns_search "$i"
 	done
@@ -111,7 +123,7 @@ setup_interface () {
 		ubus call network add_dynamic "$(json_dump)"
 	fi
 
-	[ "$INTERFACE" == "wan" ] && [ "$1" == "renew" ] && {                                
+	[ "$INTERFACE" == "wan" -o "$INTERFACE" == "wan2" ] && [ "$1" == "renew" ] && {                                
          /usr/bin/td_conflict_check -n                                          
     }
 }

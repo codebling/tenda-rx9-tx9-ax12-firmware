@@ -11,4 +11,3 @@
 		option short_gi_20 '1'
 		option short_gi_40 '1'
 		option txpower '100'
-		option sDisableMasterVap '1'

@@ -1,10 +1,10 @@
 Package: kmod-eip97
 Version: 4.9.206+1.4.10-1
-Depends: kernel (=4.9.206-1-73b4078bb8acdc578ded46d0b302884e), kmod-crypto-cmac, kmod-crypto-aead, kmod-crypto-hash, kmod-crypto-authenc, kmod-crypto-hmac, kmod-crypto-md5, kmod-crypto-sha1, kmod-crypto-sha256, kmod-crypto-sha512, kmod-ipsec4
+Depends: kernel (=4.9.206-1-6ceae50cbd3fbb1b6331d5aa1f7b9cea), kmod-crypto-cmac, kmod-crypto-aead, kmod-crypto-hash, kmod-crypto-authenc, kmod-crypto-hmac, kmod-crypto-md5, kmod-crypto-sha1, kmod-crypto-sha256, kmod-crypto-sha512, kmod-ipsec4
 Source: intel_source/feeds/thirdparty/eip97
 SourceName: kmod-eip97
 Section: kernel
 Maintainer: Intel
 Architecture: mips_24kc_nomips16
-Installed-Size: 75981
+Installed-Size: 75983
 Description:  Kernel module to EIP-97 crypto library

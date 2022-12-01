@@ -212,11 +212,15 @@ function initValue(obj) {
 		case "2":
 			$("#wanMTU" + wanIndex).attr("data-options", '{"type": "num", "args":[1280,1492]}');
 			break;
+		//更新russia（3，4，5）下 wanMTU规格
 		case "3":
-			$("#wanMTU" + wanIndex).attr("data-options", '{"type": "num", "args":[1280,1444]}');
+			$("#wanMTU" + wanIndex).attr("data-options", '{"type": "num", "args":[576,1460]}');
 			break;
 		case "4":
-			$("#wanMTU" + wanIndex).attr("data-options", '{"type": "num", "args":[1280,1460]}');
+			$("#wanMTU" + wanIndex).attr("data-options", '{"type": "num", "args":[576,1460]}');
+			break;
+		case "5":
+			$("#wanMTU" + wanIndex).attr("data-options", '{"type": "num", "args":[576,1492]}');
 			break;
 		default:
 			$("#wanMTU" + wanIndex).attr("data-options", '{"type": "num", "args":[1280,1500]}');

@@ -1,4 +1,5 @@
 /usr/sbin/igmpproxy
+/etc/uci-defaults/igmpproxy.defaults
 /lib/upgrade/keep.d/igmpproxy
 /etc/init.d/iptv
 /etc/hotplug.d/iface/50-igmpproxy

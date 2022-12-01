@@ -1,11 +1,11 @@
 Package: kmod-macvlan
 Version: 4.9.206-1
-Depends: kernel (=4.9.206-1-73b4078bb8acdc578ded46d0b302884e)
+Depends: kernel (=4.9.206-1-6ceae50cbd3fbb1b6331d5aa1f7b9cea)
 Source: package/kernel/linux
 SourceName: kmod-macvlan
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 9225
+Installed-Size: 9231
 Description:  A kernel module which allows one to create virtual interfaces that
  map packets to or from specific MAC addresses to a particular interface

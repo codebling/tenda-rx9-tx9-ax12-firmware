@@ -4,7 +4,7 @@
     "wpsEn": "1",
     "namePwd": "0", 
     "beamforming": "0",
-    "signal": "00",
+    "signal": "02",
     "apMode":"1",
     "WifiAntijamEn": "true"
 }

@@ -1,9 +1,9 @@
 Package: kmod-mac_filter
 Version: 4.9.206-1
-Depends: kernel (=4.9.206-1-73b4078bb8acdc578ded46d0b302884e), kmod-nf-conntrack, kmod-bm
+Depends: kernel (=4.9.206-1-6ceae50cbd3fbb1b6331d5aa1f7b9cea), kmod-nf-conntrack, kmod-bm
 Source: package/tenda_property/kmod-td_filter/mac_filter
 SourceName: kmod-mac_filter
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 4311
+Installed-Size: 4312
 Description:  Tenda's mac_filter Component

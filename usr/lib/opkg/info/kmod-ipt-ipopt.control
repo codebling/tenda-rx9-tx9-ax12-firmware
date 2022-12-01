@@ -1,12 +1,12 @@
 Package: kmod-ipt-ipopt
 Version: 4.9.206-1
-Depends: kernel (=4.9.206-1-73b4078bb8acdc578ded46d0b302884e), kmod-ipt-core
+Depends: kernel (=4.9.206-1-6ceae50cbd3fbb1b6331d5aa1f7b9cea), kmod-ipt-core
 Source: package/kernel/linux
 SourceName: kmod-ipt-ipopt
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 6137
+Installed-Size: 6143
 Description:  Netfilter (IPv4) modules for matching/changing IP packet options
  Includes:
  - CLASSIFY

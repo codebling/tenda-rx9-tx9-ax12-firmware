@@ -9,3 +9,4 @@
 /lib/modules/4.9.206/cfg80211.ko
 /lib/preinit/91_wireless_calib
 /lib/firmware/cal_wlan2.bin
+/lib/firmware/cal_wlan4.bin

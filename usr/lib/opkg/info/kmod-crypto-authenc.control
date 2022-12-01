@@ -1,10 +1,10 @@
 Package: kmod-crypto-authenc
 Version: 4.9.206-1
-Depends: kernel (=4.9.206-1-73b4078bb8acdc578ded46d0b302884e), kmod-crypto-manager, kmod-crypto-null
+Depends: kernel (=4.9.206-1-6ceae50cbd3fbb1b6331d5aa1f7b9cea), kmod-crypto-manager, kmod-crypto-null
 Source: package/kernel/linux
 SourceName: kmod-crypto-authenc
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 3336
+Installed-Size: 3340
 Description:  Combined mode wrapper for IPsec

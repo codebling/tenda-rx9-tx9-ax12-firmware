@@ -1,7 +1,11 @@
 #!/bin/sh
 
+flag=
+[ ${DEVICE%%.*} == "eth1" ] && {
+    flag=1
+}
 
-[ "$ACTION" == "ifup" ] && ([ "$DEVICE" == "eth1" ] || [ "$DEVICE" == "pppoe-wan" ])&& {
+[ "$ACTION" == "ifup" ] && ([ "$DEVICE" == "eth1" ] || [ "$flag" == "1" ] || [ "$DEVICE" == "pppoe-wan" ]|| [ "$DEVICE" == "pptp-wan" ]|| [ "$DEVICE" == "l2tp-wan" ] || [ "$DEVICE" == "br-guest" ] || [ "$DEVICE" == "wlan1" ] || [ "$DEVICE" == "wlan3" ] )&& {
   killall td_conflict_check
   /usr/bin/td_conflict_check
 }

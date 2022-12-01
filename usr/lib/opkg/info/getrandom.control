@@ -7,5 +7,5 @@ License: GPL-2.0
 Section: base
 Maintainer: John Crispin <john@phrozen.org>
 Architecture: mips_24kc_nomips16
-Installed-Size: 1683
+Installed-Size: 1685
 Description:  OpenWrt getrandom system helper

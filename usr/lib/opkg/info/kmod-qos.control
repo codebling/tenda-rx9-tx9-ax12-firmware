@@ -1,9 +1,9 @@
 Package: kmod-qos
 Version: 4.9.206-1
-Depends: kernel (=4.9.206-1-73b4078bb8acdc578ded46d0b302884e), kmod-nf-conntrack, kmod-bm
+Depends: kernel (=4.9.206-1-6ceae50cbd3fbb1b6331d5aa1f7b9cea), kmod-nf-conntrack, kmod-bm
 Source: package/tenda_property/kmod-qos
 SourceName: kmod-qos
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 16304
+Installed-Size: 16316
 Description:  Tenda behaver manager basic modules

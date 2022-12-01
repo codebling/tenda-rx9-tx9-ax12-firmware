@@ -6,5 +6,5 @@ SourceName: ip6tables-mod-nat
 License: GPL-2.0
 Section: net
 Architecture: mips_24kc_nomips16
-Installed-Size: 1675
+Installed-Size: 1673
 Description:  iptables extensions for IPv6-NAT targets.

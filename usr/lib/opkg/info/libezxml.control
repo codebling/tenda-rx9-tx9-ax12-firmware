@@ -5,5 +5,5 @@ Source: intel_source/feeds/opensource/ezxml
 SourceName: libezxml
 Section: libs
 Architecture: mips_24kc_nomips16
-Installed-Size: 11579
+Installed-Size: 11582
 Description:  ezXML is a fast and lightweight C library for parsing XML documents.

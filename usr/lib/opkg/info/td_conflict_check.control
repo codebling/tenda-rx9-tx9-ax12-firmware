@@ -5,5 +5,5 @@ Source: package/tenda_property/td_conflict_check
 SourceName: td_conflict_check
 Section: Tenda Property
 Architecture: mips_24kc_nomips16
-Installed-Size: 1965
+Installed-Size: 2027
 Description:  tenda ip conflict check.

@@ -33,8 +33,8 @@ var view = R.moduleView({
 var moduleModel = R.moduleModel({
     initData: initValue,
     getSubmitData: function() {
-        var submitStr = "power=" + $("[name='power']:checked").val() + "&power_5g=" + $("[name='power_5g']:checked").val()
-        if (G.initData.power_5g != $("[name='power_5g']:checked").val()) {
+        var submitStr ="power=" + $("[name='power']:checked").val() + "&power_5g=" + $("[name='power_5g']:checked").val()
+        if(G.initData.power_5g != $("[name='power_5g']:checked").val() ){
             submitStr += '&wifi_chkHz=1'
         }
         return submitStr
@@ -67,7 +67,7 @@ function initEvent() {
 }
 
 function initValue(obj) {
-    G.initData = obj;
+    G.initData = obj
     top.$(".main-dailog").removeClass("none");
     top.$("iframe").removeClass("none");
     top.$(".loadding-page").addClass("none");
@@ -82,6 +82,10 @@ function initValue(obj) {
 
     $("#goPage").attr("href", top.G.homePage);
 
+    //获取dfs
+    // $.getJSON("goform/GetDfsCfg?" + Math.random(), function (obj) {
+    //     G.dfsEnable = obj.enable;
+    // });
     //获取主网络5G是否开启
     $.getJSON("goform/WifiBasicGet?" + Math.random(), function(obj){
         G.main5gEn = obj.wrlEn_5g;
@@ -96,9 +100,9 @@ function callback(str) {
         return;
     }
     var num = $.parseJSON(str).errCode;
-    if (num == 1) {
-        top.showDFSMsg();
-    } else {
+    if(num ==1){
+        top.showDFSMsg(0);
+    }else{
         top.showSaveMsg(num);
     }
     if (num == 0) {

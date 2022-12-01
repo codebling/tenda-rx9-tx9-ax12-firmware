@@ -7,5 +7,5 @@ License: BSD-4-Clause
 Section: net
 Maintainer: Felix Fietkau <nbd@nbd.name>
 Architecture: mips_24kc_nomips16
-Installed-Size: 10714
+Installed-Size: 10715
 Description:  This package contains a PPPoE (PPP over Ethernet) plugin for ppp.

@@ -1,11 +1,11 @@
 Package: kmod-ppa-drv-grx500-mpe
 Version: 4.9.206+1.0-1
-Depends: kernel (=4.9.206-1-73b4078bb8acdc578ded46d0b302884e), kmod-ppa-drv-grx500
+Depends: kernel (=4.9.206-1-6ceae50cbd3fbb1b6331d5aa1f7b9cea), kmod-ppa-drv-grx500
 Source: intel_source/feeds/ugw/net/ppa/ppa-drv
 SourceName: kmod-ppa-drv-grx500-mpe
 License: GPL-2.0
 Section: kernel
 Maintainer: Intel
 Architecture: mips_24kc_nomips16
-Installed-Size: 108320
+Installed-Size: 108329
 Description:  PPA GRX500 Packet Protocol Acceleration Multi-Protocol Engine module

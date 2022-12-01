@@ -5,5 +5,5 @@ Source: package/tenda_property/td_serverd
 SourceName: td_serverd
 Section: Tenda Property
 Architecture: mips_24kc_nomips16
-Installed-Size: 112225
+Installed-Size: 126020
 Description:  td_serverd

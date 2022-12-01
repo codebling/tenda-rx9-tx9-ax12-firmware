@@ -293,7 +293,7 @@ function showIframe (title, url, width, height, extraDataStr) {
 	$(".save-msg").removeClass("none");
 	$("#page-message").html(_("Loading..."));
 
-    $("iframe").attr("src", url + "?random=" + Math.random() + "&" + extraDataStr);
+	$("iframe").attr("src", url + "?random=" + Math.random() + "&" + extraDataStr);
 	$("#head_title").html(title);
 
 	//位置调整
@@ -313,7 +313,7 @@ function showIframe (title, url, width, height, extraDataStr) {
 	top.iframeload = false;
 	//iframe加载成功之后，initIframeHeight()
 	$("iframe").on("load.iframeload", function () {
-        top.iframeload = true;
+		top.iframeload = true;
 		$(".main-dailog").removeClass("none");
 		$(".save-msg").addClass("none");
 		var time = 0;
@@ -336,7 +336,7 @@ function closeIframe () {
 	$(".main-dailog").find("iframe").attr("src", "").removeClass("none");
 	$("#iframe-msg").html("");
 	$("#gbx_overlay").remove();
-	if (window[top.mainPageLogic.modelObj] && typeof window[top.mainPageLogic.modelObj].initValue == "function") {
+	if (top.mainPageLogic && window[top.mainPageLogic.modelObj] && typeof window[top.mainPageLogic.modelObj].initValue == "function") {
 		window[top.mainPageLogic.modelObj].initValue();
 	}
 }
@@ -422,9 +422,10 @@ function showSaveMsg (num, str, flag, change,time) {
 		}
 	} else if (num == "999") {
 		hideDialog = false; //不隐藏弹出框
-        $(".save-msg").removeClass("none");
-        //todo
-		$("#page-message").html(_("Saving failed"));
+		$(".save-msg").removeClass("none");
+		 //todo
+		$("#page-message").html(_("Try Later"));
+		//$("#page-message").html(_("Saving success"));
 		$("#page-message").addClass("none");
 		top.location.reload(true);
 	}else if(num == "-2"){
@@ -436,8 +437,9 @@ function showSaveMsg (num, str, flag, change,time) {
 		}, 1000);
 	} else {
 		$(".save-msg").removeClass("none");
-        //todo Saving failed多语言词条需更新
-        $("#page-message").html(_("Saving failed"));
+		 //todo Saving failed多语言词条需更新
+        $("#page-message").html(_("Try Later"));
+		//$("#page-message").html(_("Saving success"));
 		setTimeout(function () {
 			$(".save-msg").addClass("none");
 			$("#gbx_overlay").remove();
@@ -486,7 +488,7 @@ var pc = 0,
 		showPro: function (str, str2, ip) {
 			closeIframe();
 			$("body").undelegate("#gbx_overlay", "click");
-			clearTimeout(top.staInfo.time);
+			top.staInfo && clearTimeout(top.staInfo.time);
 			str2 = str2 || _("Rebooting... Please wait.");
 			ipaddress = ip || "";
 			if ($("#gbx_overlay").length == 0) {
@@ -526,6 +528,18 @@ var pc = 0,
 		}
 	};
 })(jQuery);
+
+/**
+ * by xm 
+ * 关闭弹出时取消了重启的请求，导致重启请求不能正常下发到后台，解决方法，将重启的请求放到外层
+ * @param {*} callback 
+ */
+function toolReboot(callback) {
+    closeIframe();
+    $.get("goform/SysToolReboot?" + Math.random(), function (str) {
+        callback(str)
+    });
+}
 
 function rebooting (time, type) {
 	time = time || 200;
@@ -568,7 +582,8 @@ function rebooting (time, type) {
 		}
 	}
 }
-var dfsAjaxTimes,dfsMsgTimes;
+
+var dfsAjaxTimes, dfsMsgTimes;
 /**
  * dfs提示
  * msg为string
@@ -579,7 +594,7 @@ function showDFSMsg() {
     clearInterval(dfsMsgTimes);
     var time = 0;
 
-    var showMsg = function (time,msg){
+    var showMsg = function (time, msg) {
         msg = msg || _("According to the national laws and regulations, the router is undergoing dynamic frequency selection (DFS). WiFi signal needs about %s to connect normally. Please wait", "<span style='color:#f00;'>" + time + "s</span>");
         $('.dfs-time').html(time);
         $("#dfs-message").html(msg);
@@ -592,7 +607,7 @@ function showDFSMsg() {
     var index = 20;
 
     /**轮询时显示文字 TODO */
-    showMsg(null,_("Saving..."));
+    showMsg(null, _("Saving..."));
 
     var getTime = function () {
         $.get("goform/GetDFSCACTime?" + Math.random(), function (res) {
@@ -614,11 +629,11 @@ function showDFSMsg() {
             } else {
                 dfsAjaxTimes = setTimeout(function () {
                     index--;
-                    if(index == 0){
-                        clearTimeout(dfsAjaxTimes) 
+                    if (index == 0) {
+                        clearTimeout(dfsAjaxTimes)
                         $(".dfs-msg").addClass("none");
                         $("#gbx_overlay").remove();
-                    }else{
+                    } else {
                         getTime();
                     }
                 }, 1000);
@@ -910,26 +925,6 @@ function checkIsVoildIpMask (ip, mask) {
 	if (bIndex == 0) {
 		return _("The IP address cannot be a broadcast IP address.");
 	}
-}
-
-/**by xm RX9定制 IP和掩码是否为同类地址*/
-function checkIsSimilarIpMask(ip, mask) {
-    var ip_arr = ip.split('.');
-    var mask_arr = mask.split('.');
-    var ip_0 = ip_arr[0];
-    // ip网络判断
-    var classip_a = ip_0 > 0 && ip_0 <= 127;
-    var classip_b = ip_0 > 127 && ip_0 <= 191;
-    var classip_c = ip_0 > 191 && ip_0 <= 223;
-
-    var classm_a = mask_arr[0] == '255';
-    var classm_b = mask_arr[0] == '255' && mask_arr[1] == '255';
-    var classm_c = mask_arr[0] == '255' && mask_arr[1] == '255' && mask_arr[2] == '255';
-
-    if ((classip_a && classm_a) || (classip_b && classm_b) || (classip_c && classm_c)) {
-        return false
-    }
-    return _("Incorrect IP address.");
 }
 
 //usb容量条
@@ -1654,12 +1649,6 @@ function checkDevNameValidity (devName, isCanNull) {
 	if (devName.length > 20) {
 		return _("The device name can contain only a maximum of %s characters.", [20]);
 	}
-
-    /**by xm 添加字节校验，避免出现字节过长，后台挂掉没有wanInfo信息问题*/
-    var byteValid = $.validate.valid.byteLen(devName, 1, 20);
-    if (byteValid) {
-        return byteValid;
-    }
 	return;
 }
 

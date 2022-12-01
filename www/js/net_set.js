@@ -584,10 +584,9 @@ function initWan(obj) {
 	wanOptStr += '<option value="0">' + _("Dynamic IP Address") + '</option><option value="1">' + _("Static IP Address") + '</option>';
 	if (obj.wl_mode !== "wisp") { //wisp 隐藏pppoe选择框
 
-        /*RX9 Pro定制，无vpn拨号方式，屏蔽 by xm */
-        // if ((top.G.countryCode === "RU" || top.G.countryCode === "UA") && wanIndex == 1) {
-		// 	wanOptStr += '<option value="3">' + _("PPTP") + '</option><option value="4">' + _("L2TP") + '</option><option value="5">' + _("PPPoE MODE2");
-		// }
+		if ((top.G.countryCode === "RU" || top.G.countryCode === "UA") && wanIndex == 1) {
+			wanOptStr += '<option value="3">' + _("PPTP") + '</option><option value="4">' + _("L2TP") + '</option><option value="5">' + _("PPPoE MODE2");
+		}
 	}
 
 	$("#netWanType").html(wanOptStr);

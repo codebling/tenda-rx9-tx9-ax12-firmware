@@ -5,5 +5,5 @@ Source: intel_source/feeds/ugw/wlan/feed_wlan_6x_uci/wlan_wave_feed/iwlwav-iw
 SourceName: iwlwav-iw
 Section: net
 Architecture: mips_24kc_nomips16
-Installed-Size: 90609
+Installed-Size: 92907
 Description:  iw for Wave

@@ -1,14 +1,1 @@
-{
-   "IPv6En": "1",
-    "conType": "Static",
-    "ISPusername": "123456",
-    "ISPpassword": "123456",
-    "lanType": "1",
-    "prefixDelegate": "1",
-    "wanAddr": "2001:250:207:1::ff02/64",
-    "gateWay": "2001:250:207:1::1",
-    "wanPreDNS": "2001::444",
-    "wanAltDNS": "2001::13",
-    "lanAddr": "2005:20::1/64",
-    "lanPrefix": "2005:20::"
-}
+{"IPv6En":"1","wanIp":"0.0.0.0","wanType":"5","conType":"PPPoE","ISPusername":"CD0283353911819","ISPpassword":"123456","dyWanAddr":"240e:398:e0e:cfc2:ea65:d426:31a1:1fe9/64","prefixDelegate":"1","lanType":"0","lanAddr":"240e:399:e67:bf90::1/64","lanPrefix":"fd83:3fa9:649b::/64"}

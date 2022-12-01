@@ -93,9 +93,6 @@ if (moduleId.indexOf("system_password") != -1) {
 var rebootView = R.moduleView({
 	initEvent: function () {
 		$("#sys_reboot").on("click", function () {
-            if (!confirm(_(""))) {
-                return false;
-            }
 			document.forms[0].submit();
 		});
 	}
@@ -275,9 +272,6 @@ var resetView = R.moduleView({
 	initEvent: function () {
 
 		$("#sys_config").on("click", function () {
-            if (!confirm(_(""))) {
-                return false;
-            }
 			document.forms[1].submit();
 		});
 	}

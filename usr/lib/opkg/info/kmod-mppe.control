@@ -1,10 +1,10 @@
 Package: kmod-mppe
 Version: 4.9.206-1
-Depends: kernel (=4.9.206-1-73b4078bb8acdc578ded46d0b302884e), kmod-ppp, kmod-crypto-sha1, kmod-crypto-ecb
+Depends: kernel (=4.9.206-1-6ceae50cbd3fbb1b6331d5aa1f7b9cea), kmod-ppp, kmod-crypto-sha1, kmod-crypto-ecb
 Source: package/kernel/linux
 SourceName: kmod-mppe
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 4555
+Installed-Size: 4558
 Description:  Kernel modules for Microsoft PPP compression/encryption

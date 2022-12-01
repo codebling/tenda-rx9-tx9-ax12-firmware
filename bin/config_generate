@@ -240,12 +240,15 @@ generate_static_system() {
 	uci -q batch <<-EOF
 		delete system.@system[0]
 		add system system
-		set system.@system[-1].hostname='RX9 Pro'
+		set system.@system[-1].hostname='RX9Pro'
 		set system.@system[-1].timezone='GMT-8:00'
 		set system.@system[-1].ttylogin='1'
 		set system.@system[-1].log_size='64'
 		set system.@system[-1].urandom_seed='0'
-
+		set system.@system[-1].work_mode='router'
+		set system.@system[-1].product_id='00031027'
+		set system.@system[-1].beamforming='1'
+		
 		delete system.ntp
 		set system.ntp='timeserver'
 		set system.ntp.enabled='1'

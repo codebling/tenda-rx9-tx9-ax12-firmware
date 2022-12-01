@@ -268,12 +268,12 @@ if ("undefined" === typeof jQuery && "undefined" === typeof REasy) {
                     '<div class="dialog-content">' + options.content + '</div>' +
                     '<div class="' + nopromptClass + '">' +
                     '<label class="checkbox" for="nocheck">' +
-                    '<input type="checkbox" id="dialog-noprompt" />' + _("Never show this again.") +
+                    '<input type="checkbox" id="dialog-noprompt" />不再提示' +
                     '</label>' +
                     '</div>' +
                     '<div class="dialog-btn-group">' +
-                    '<button type="button" class="btn" id="dialog-apply">' + _("OK")+'</button>' +
-                    '<button type="button" class="btn" id="dialog-cancel">'+_("Cancel")+'</button>' +
+                    '<button type="button" class="btn" id="dialog-apply">确定</button>' +
+                    '<button type="button" class="btn" id="dialog-cancel">取消</button>' +
                     '</div>';
             } else if (model === 'message') {
                 ret = '<h2 class="dialog-title">' +
@@ -1492,15 +1492,6 @@ if ("undefined" === typeof jQuery && "undefined" === typeof REasy) {
 
                     this['data-check-error'] = true;
                 } else {
-
-                    //判断当前同一级中是否有错误提示信息，如果有且是none则将其
-                    if ($this.parent().find('.validatebox-tip-content').length == 1) {
-                        var errTip = $this.parent().find('.validatebox-tip-content');
-                        if (errTip.css('display') == 'none') {
-                            errTip.css('display', 'block');
-                        }
-                    }
-
 					$this.removeClass("validatebox-invalid");
                     utils.errorNum--;
 
@@ -2152,10 +2143,10 @@ if ("undefined" === typeof jQuery && "undefined" === typeof REasy) {
                     span;
 
                 elem.validateTipId = tipId;
-                
+
                 tipElem.innerHTML = '<span id="' + tipId +
                     '" class="validatebox-tip">' +
-                    '<span class="validatebox-tip-content" title="' + _(str) +'">' + _(str) + '</span>' +
+                    '<span class="validatebox-tip-content">' + _(str) + '</span>' +
                     '<span class="validatebox-tip-pointer"></span>' +
                     '</span>';
 
@@ -2169,9 +2160,8 @@ if ("undefined" === typeof jQuery && "undefined" === typeof REasy) {
                 tipElem = createTipElem($.validateTipId++, _(str), this);
                 $tipElem = $(tipElem).css({
                     "position": "absolute",
-                    "width": "100%",
-                    "height": "0",
-                    "display":"inline-block"
+                    "width": "0",
+                    "height": "0"
                 });
                 $this.before(tipElem);
             });
@@ -2179,19 +2169,7 @@ if ("undefined" === typeof jQuery && "undefined" === typeof REasy) {
 
         showValidateTip: function () {
             return this.each(function () {
-                //解决同一行多个input验证提示重叠问题（只显示同行单个错误提示）
-                if ($(this).parent().find(".validatebox-tip-content").length > 1) {
-                    $("#" + this.validateTipId).find('.validatebox-tip-content').css("display", "none");
-                    var tip1 = ($($(this).parent().find(".validatebox-tip-content")[0]).css('display') == 'none');
-                    var tip2 = ($($(this).parent().find(".validatebox-tip-content")[1]).css('display') == 'none');
-                    if (tip1 && tip2) {
-                        $("#" + this.validateTipId).find('.validatebox-tip-content').css("display", "block");
-                    }
-                }
-
                 $("#" + this.validateTipId).css("visibility", "visible");
-                $("#" + this.validateTipId).parent().parent().css("position", "relative");
-
             });
         },
 

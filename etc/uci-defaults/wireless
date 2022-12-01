@@ -1,0 +1,58 @@
+#!/bin/sh
+
+[ -d /sys/class/ieee80211 ] || exit;
+
+wdir="/tmp/wlan-detect"
+vapfile="/etc/wifi_max_vap_count"
+mkdir -p $wdir
+for phy in $(ls /sys/class/ieee80211 2>/dev/null); do
+	iw $phy info | grep "* 2... MHz" >/dev/null
+	if [ $? == "0" ]; then
+		if [ ! -f "$wdir/2G-phy" ]; then
+			uci set wireless.radio0.phy=$phy
+			echo "phy=$phy" > $wdir/2G-phy
+			max_vaps=$(iw $phy info | awk '/total/ {print $3}')
+			echo "max_2g_vaps=$max_vaps" >> $vapfile
+		else
+			uci set wireless.radio4.phy=$phy
+			echo "phy=$phy" > $wdir/2G-phy-2
+			max_vaps=$(iw $phy info | awk '/total/ {print $3}')
+			echo "max_xg_vaps=$max_vaps" >> $vapfile
+		fi
+	fi
+	iw $phy info | grep "* 58.. MHz" >/dev/null
+	if [ $? == "0" ]; then
+		if [ ! -f "$wdir/5G-phy" ]; then
+			uci set wireless.radio2.phy=$phy
+			echo "phy=$phy" > $wdir/5G-phy
+			max_vaps=$(iw $phy info | awk '/total/ {print $3}')
+			echo "max_5g_vaps=$max_vaps" >> $vapfile
+		else
+			uci set wireless.radio4.phy=$phy
+			echo "phy=$phy" > $wdir/5G-phy-2
+			max_vaps=$(iw $phy info | awk '/total/ {print $3}')
+			echo "max_xg_vaps=$max_vaps" >> $vapfile
+		fi
+	fi
+	iw $phy info | grep "* 59.. MHz" >/dev/null
+	if [ $? == "0"  -a ! -f "$wdir/6G-phy" ]; then
+		uci set wireless.radio4.phy=$phy
+		echo "phy=$phy" > $wdir/6G-phy
+		max_vaps=$(iw $phy info | awk '/total/ {print $3}')
+		echo "max_xg_vaps=$max_vaps" >> $vapfile
+	fi
+done
+
+uci commit wireless
+chown -R servd:servd $wdir
+chown servd:servd $vapfile
+chmod 700 $wdir
+chmod 600 $wdir/*
+chmod 400 $vapfile
+rm -f /tmp/.uci/wireless
+
+# To reduce high idle CPU load, disable prplmesh in UGW.
+# TODO: Remove these code when idle CPU load is fixed.
+uci set prplmesh.config.enable=0
+uci commit prplmesh
+rm -f /tmp/.uci/prplmesh

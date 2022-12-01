@@ -39,7 +39,7 @@ fi
 
 echo " CE $1 go on" > /dev/console
 
-case "$country_2_4" in  CN|US|MX|HK|TW|TH|GB|DE|RO|PL|FR|ES|IT|RU|BR)
+case "$country_2_4" in  CN|US|MX|MY|HK|TW|TH|GB|DE|RO|PL|FR|ES|IT|RU|AU|AR|BR|IN|UZ|ZA|GE|CL|IQ|UY|CA)
     echo "CE country" ;;
     *)
     echo "other country" ;;
@@ -69,11 +69,12 @@ if [ $1 == 1 ]; then
     [ "$CE_mode" == 0 ] && {
             return
     }
-    uci set advance.safety.CE_mode='0'
-    uci commit advance
     
     wait_fastboot_finish
     echo "[CE 1]:finish fastboot" > /dev/console
+
+    uci set advance.safety.CE_mode='0'
+    uci commit advance
 
     if [ -z $(uci get advance.safety.txpower_2) ];then
       uci set wireless.radio0.txpower=100

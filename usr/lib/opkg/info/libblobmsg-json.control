@@ -7,5 +7,5 @@ License: ISC
 Section: libs
 Maintainer: Felix Fietkau <nbd@nbd.name>
 Architecture: mips_24kc_nomips16
-Installed-Size: 4000
+Installed-Size: 4003
 Description:  blobmsg <-> json conversion library

@@ -1,7 +1,6 @@
 {
   "apStatus": "2303002",
   "clientNum": "12",
-  "countryCode": "RO",
   "deviceName": "Controller-AA22",
   "wanInfo": [{
     "wanStatus": "2311004",

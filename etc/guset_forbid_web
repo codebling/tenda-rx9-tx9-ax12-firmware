@@ -12,19 +12,31 @@ while [ $num != 0 ];do
   num=$(($num/2));
 done
 done
-prefix=`echo $(grep -o "1" /tmp/num | wc -l)`
+guest_prefix=`echo $(grep -o "1" /tmp/num | wc -l)`
 rm /tmp/num
 
-varguest=$guestip"/"$prefix
-varlan=$lanip"/"$lanmask
-iptables -t filter -I INPUT -i br-guest -s $varguest -d $lanip -p tcp --dport 80 -j DROP
+b=$(echo "$lanmask" | awk -F "." '{print $1" "$2" "$3" "$4}')
+for num2 in $b;
+do
+while [ $num2 != 0 ];do
+  echo -n $(($num2%2)) >> /tmp/num2;
+  num2=$(($num2/2));
+done
+done
+lan_prefix=`echo $(grep -o "1" /tmp/num2 | wc -l)`
+rm /tmp/num2
 
-iptables -t filter -D FORWARD -i br-lan -o br-guest -j DROP
-iptables -t filter -D FORWARD -i br-guest -o br-lan -j DROP
-iptables -t filter -D INPUT -i br-guest -d $varlan -j DROP
-iptables -t filter -D INPUT -i br-lan -d $varguest -j DROP
+
+
+guest_subnet=$guestip"/"$guest_prefix
+lan_subnet=$lanip"/"$lan_prefix
+iptables -t filter -I INPUT -i br-guest -s $guest_subnet -d $lanip -p tcp --dport 80 -j DROP
+iptables -t filter -I INPUT -i br-guest -s $guest_subnet -d $guestip -p tcp --dport 80 -j DROP
+iptables -t filter -I INPUT -i br-guest -s $guest_subnet -d $guestip -p tcp --dport 443 -j DROP
 
 iptables -t filter -I FORWARD -i br-lan -o br-guest -j DROP
 iptables -t filter -I FORWARD -i br-guest -o br-lan -j DROP
-iptables -t filter -I INPUT -i br-guest -d $varlan -j DROP
-iptables -t filter -I INPUT -i br-lan -d $varguest -j DROP
+iptables -t filter -I INPUT -i br-lan -d $guest_subnet -j DROP
+iptables -t filter -I INPUT -i br-guest -d $lan_subnet -j DROP
+iptables -t filter -I OUTPUT -s $lan_subnet -o br-guest -j DROP
+iptables -t filter -I OUTPUT -s $guest_subnet -o br-lan -j DROP

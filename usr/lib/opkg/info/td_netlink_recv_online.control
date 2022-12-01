@@ -5,5 +5,5 @@ Source: package/tenda_property/td_netlink_recv_online
 SourceName: td_netlink_recv_online
 Section: Tenda Property
 Architecture: mips_24kc_nomips16
-Installed-Size: 2727
+Installed-Size: 2718
 Description:  td_netlink_recv_online

@@ -707,7 +707,7 @@ staInfo = {
                 showIframe(_("Manage Device"), "online_list.html", 800, 490);
             });
             $("#addMeshList").on("click", function () {
-                showIframe(_("How to add/remove child nodes?"), "mesh_help.html", 800, 490);
+                showIframe(_("如何添加/删除子节点？"), "mesh_help.html", 800, 490);
             });
 
             $("#meshList").on("click", ".status-mesh-li", function () {
@@ -812,7 +812,7 @@ staInfo = {
             staInfo.hideMenu = true;
         }
         $("#routerMode").addClass("none");
-        // $("#statusDeviceName").html(toHtmlCode(obj.deviceName));
+        //$("#statusDeviceName").html(toHtmlCode(obj.deviceName));
         $("#apMode").addClass("none");
         //子节点没有mesh列表
         if (obj.nodeType == "agent") {
@@ -827,13 +827,13 @@ staInfo = {
             if (G.workMode == "router") {
                 staInfo.setRouterMode(obj);
                 $("#routerMode").removeClass("none");
-            } else if (G.workMode == "ap") {
+            } else if(G.workMode == "ap") {
                 $("#apMode").removeClass("none");
                 staInfo.setAPMode(obj);
-            } else if (G.workMode == "wisp") {
+            } else if(G.workMode == "wisp") {
                 $("#apMode").removeClass("none");
                 staInfo.setWispMode(obj);
-            } else if (G.workMode == "client+ap") {
+            } else if(G.workMode == "client+ap") {
                 $("#apMode").removeClass("none");
                 staInfo.setApclientMode(obj);
             }
@@ -862,7 +862,7 @@ staInfo = {
             if (workMode == "client+ap") {
                 hideArr.push("adv_sleepMode");
             }
-        } else if (workMode == "wisp") {
+        }else if (workMode == "wisp") {
             $("[href='#guest-setting']").parent().addClass("none");
             $("[href='#parent-control']").parent().removeClass("none");
             hideArr = ["wrl_wps", "wrl_wifi_time", "adv_sleepMode", "adv_iptv"];
@@ -908,6 +908,7 @@ staInfo = {
             $("#statusApDisconnected").removeClass("none");
         }
     },
+
     setWispMode: function (obj) {
         var wispConnectStatus = obj.wanInfo[0].wanStatus;
         $("#statusApConnected").addClass("none");
@@ -930,6 +931,7 @@ staInfo = {
         }
 
     },
+
     setWlStatus: function (obj) {
 
         //双频合一开启
@@ -1017,7 +1019,168 @@ function wanTypeSelect(wan_type, wanIndex) {
         }
     }
 
+
     switch (parseInt(wan_type)) {
+        case 0:
+        {
+            $("#ppoe_set" + wanFlag).addClass("none");
+            $("#double_accessn" + wanFlag).addClass("none");
+            $("#dnsType" + wanFlag).removeClass("none");
+            $("#static_ip" + wanFlag).addClass("none");
+            if (netInfo.currentWanType[wanIndex - 1] === "0") {
+                if (netInfo.currentDnsType[wanIndex - 1] === "1") {
+                    $("#dnsAuto" + wanFlag).val("1");
+                    $("#dnsContainer" + wanFlag).addClass("none");
+                } else {
+                    $("#dnsAuto" + wanFlag).val("0");
+                    $("#dnsContainer" + wanFlag).removeClass("none");
+                }
+            } else {
+                $('#dnsAuto' + wanFlag).val("1");
+                $('#dnsAuto' + wanFlag).removeClass("none");
+                $("#dnsContainer" + wanFlag).addClass("none");
+            }
+            if(netInfo.wlMode == "wisp" && $("#ispType").attr("disabled") != "disabled") {
+                $("#ispType").attr("disabled", "disabled");
+            }
+            break;
+        }
+        case 1:
+        {
+            $("#ppoe_set" + wanFlag).addClass("none");
+            $("#double_access" + wanFlag).addClass("none");
+            $("#dnsType" + wanFlag).addClass("none");
+            $("#static_ip" + wanFlag).removeClass("none");
+            $("#dnsContainer" + wanFlag).removeClass("none");
+
+            break;
+        }
+        case 2:
+            $("#ppoe_set" + wanFlag).removeClass("none");
+            $("#double_access" + wanFlag).addClass("none");
+            $("#dnsType" + wanFlag).removeClass("none");
+            $("#static_ip" + wanFlag).addClass("none");
+            if (netInfo.currentWanType[wanIndex - 1] === "2") {
+                if (netInfo.currentDnsType[wanIndex - 1] === "1") {
+                    $("#dnsAuto" + wanFlag).val("1");
+                    $("#dnsContainer" + wanFlag).addClass("none");
+                } else {
+                    $("#dnsAuto" + wanFlag).val("0");
+                    $("#dnsContainer" + wanFlag).removeClass("none");
+                }
+            } else {
+                $('#dnsAuto' + wanFlag).val("1");
+                $('#dnsAuto' + wanFlag).removeClass("none");
+                $("#dnsContainer" + wanFlag).addClass("none");
+            }
+            break;
+        case 3: //多WAN没有以下情况
+        {
+            $("#ppoe_set").addClass("none");
+            $("#double_access").removeClass("none");
+            $("#double_access #serverInfo").removeClass("none");
+
+            if (netInfo.currentWanType[wanIndex - 1] === "3") {
+                if (netInfo.currentVpnType[wanIndex - 1] === "1") {
+                    $('[name="vpnWanType"]:eq(0)').prop("checked", true);
+                    $("#dnsType").addClass("none");
+                    $("#static_ip").addClass("none");
+                    $('#dnsAuto').val("1");
+                    $("#dnsAuto").addClass("none");
+                    $("#dnsContainer").addClass("none");
+                    //     $("#dnsContainer").addClass("none");
+                    // if (netInfo.currentDnsType[wanIndex - 1] === "1") {
+                    //     $('#dnsAuto').val("1");
+                    //     $("#dnsContainer").addClass("none");
+                    // } else {
+                    //     $('#dnsAuto').val("0");
+                    //     $("#dnsContainer").removeClass("none");
+                    // }
+                } else {
+                    $('[name="vpnWanType"]:eq(1)').prop("checked", true);
+                    $("#dnsType").addClass("none");
+                    $("#static_ip").removeClass("none");
+                    $("#dnsContainer").removeClass("none");
+                }
+            } else {
+                $('[name="vpnWanType"]:eq(0)').prop("checked", true);
+                $("#dnsType").addClass("none");
+                $("#static_ip").addClass("none");
+                $('#dnsAuto').val("1");
+                $("#dnsAuto").addClass("none");
+                $("#dnsContainer").addClass("none");
+            }
+
+            break;
+        }
+        case 4:
+        {
+            $("#ppoe_set").addClass("none");
+            $("#double_access").removeClass("none");
+            $("#double_access #serverInfo").removeClass("none");
+
+            if (netInfo.currentWanType[wanIndex - 1] === "4") {
+                if (netInfo.currentVpnType[wanIndex - 1] === "1") {
+                    $('[name="vpnWanType"]:eq(0)').prop("checked", true);
+                    $("#dnsType").addClass("none");
+                    $("#static_ip").addClass("none");
+                    $('#dnsAuto').val("1");
+                    $("#dnsAuto").addClass("none");
+                    $("#dnsContainer").addClass("none");
+                } else {
+                    $('[name="vpnWanType"]:eq(1)').prop("checked", true);
+                    $("#dnsType").addClass("none");
+                    $("#static_ip").removeClass("none");
+                    $("#dnsContainer").removeClass("none");
+                }
+            } else {
+                $('[name="vpnWanType"]:eq(0)').prop("checked", true);
+                $("#dnsType").addClass("none");
+                $("#static_ip").addClass("none");
+                $('#dnsAuto').val("1");
+                $("#dnsAuto").addClass("none");
+                $("#dnsContainer").addClass("none");
+            }
+
+            break;
+        }
+        case 5:
+        {
+            $("#ppoe_set").removeClass("none");
+            $("#double_access").removeClass("none");
+            $("#double_access #serverInfo").addClass("none");
+
+            if (netInfo.currentWanType[wanIndex - 1] === "5") {
+                if (netInfo.currentVpnType[wanIndex - 1] === "1") {
+                    $('[name="vpnWanType"]:eq(0)').prop("checked", true);
+                    $("#dnsType").addClass("none");
+                    $("#static_ip").addClass("none");
+                    $('#dnsAuto').val("1");
+                    $("#dnsAuto").addClass("none");
+                    $("#dnsContainer").addClass("none");
+                } else {
+                    $('[name="vpnWanType"]:eq(1)').prop("checked", true);
+                    $("#dnsType").addClass("none");
+                    $("#static_ip").removeClass("none");
+                    $("#dnsContainer").removeClass("none");
+                }
+            } else {
+                $('[name="vpnWanType"]:eq(0)').prop("checked", true);
+                $("#dnsType").addClass("none");
+                $("#static_ip").addClass("none");
+                $('#dnsAuto').val("1");
+                $("#dnsAuto").addClass("none");
+                $("#dnsContainer").addClass("none");
+            }
+            break;
+        }
+        default:
+            break;
+    }
+
+
+
+   /* switch (parseInt(wan_type)) {
         case 0:
             {
                 $("#ppoe_set" + wanFlag).addClass("none");
@@ -1170,7 +1333,7 @@ function wanTypeSelect(wan_type, wanIndex) {
             }
         default:
             break;
-    }
+    }*/
 }
 
 netInfo = {
@@ -1188,12 +1351,19 @@ netInfo = {
     saving: false, //保存中，连接中或断开中
     clickSaveBtn: "", //判断点击的是哪个保存
     ipv6Flag: "0", //ipv6功能是否开启
+    lanIpTemp:"",
+
     init: function () {
+        //获取lan侧网关地址信息，后续判断是否与首选DNS相同
+        $.getJSON("goform/AdvGetLanIp?rand=" + new Date().toTimeString(), function (obj) {
+            netInfo.lanIpTemp = obj.lanIp
+        });
         //判断是否修改了WAN参数
         netInfo.wanBtnChange = false;
         netInfo.wanBtnChange2 = false;
         if (!netInfo.loading) {
             $("#netWanType").on("change", netInfo.changeWanType);
+            $("[name='ispType']").on("change", netInfo.changeIspType);
             $("[name='vpnWanType']").on("click", netInfo.changeVpnType);
             $('#dnsAuto').on('change', netInfo.changeDnsAuto);
             $("#wan1SetWrap").delegate("input,select", "change.re", function () {
@@ -1321,7 +1491,6 @@ netInfo = {
         $("#gateway, #gateway2").attr("data-options", '{"type":"ip","msg":"' + _("Please enter a correct gateway IP address.") + '"}');
         $("#dns1, #dns1").attr("data-options", '{"type":"ip","msg":"' + _("Please enter the IP address of the primary DNS server.") + '"}');
         $("#dns2, #dns2").attr("data-options", '{"type":"ip","msg":"' + _("Please enter the IP address of the secondary DNS server.") + '"}');
-
         $.GetSetData.getJson("goform/getWanParameters?" + Math.random(), function (obj) {
             netInfo.initObj = obj;
             //定时刷新器
@@ -1347,15 +1516,28 @@ netInfo = {
             wanOptStr += '<option value="0">' + _("Dynamic IP Address") + '</option><option value="1">' + _("Static IP Address") + '</option>';
             if (obj.wl_mode !== "wisp") { //wisp 隐藏pppoe选择框
 
-                /*RX9 Pro定制，无vpn拨号方式，屏蔽 by xm */
-                // if (G.countryCode === "RU" || G.countryCode === "UA") {
-                    // wanOptStr += '<option value="3">' + _("PPTP") + '</option><option value="4">' + _("L2TP") + '</option><option value="5">' + _("PPPoE MODE2");
-                // }
+                if (G.countryCode === "RU" || G.countryCode === "UA") {
+                    wanOptStr += '<option value="3">' + _("PPTP") + '</option><option value="4">' + _("L2TP") + '</option><option value="5">' + _("PPPoE MODE2");
+                }
             }
 
             $("#netWanType").html(wanOptStr);
-            $("#netWanType").val(obj.wanInfo[0].wanType);
+
+            if(obj.wanInfo[0].ispType == "5"){
+                $("#netWanType").html('<option value="3">' + _("PPTP Russia") + '</option><option value="4">' + _("L2TP Russia") + '</option><option value="5">' + _("PPPoE Russia"));
+            }else{
+                $("#netWanType").html(wanOptStr);
+            }
+            setTimeout(function () {
+                $("#netWanType").val(obj.wanInfo[0].wanType);
+            },0)
+
+            //$("#netWanType").val(obj.wanInfo[0].wanType);
             inputValue(obj.wanInfo[0]);
+
+            netInfo.changeIspType()
+            $("#ispArea").val(obj.wanInfo[0].ispArea)
+
             $("#downSpeedLimit input[type='text']").val(obj.wanInfo[0].downSpeedLimit);
             $("#downSpeedLimit")[0].val(obj.wanInfo[0].downSpeedLimit);
 
@@ -1413,6 +1595,9 @@ netInfo = {
                 netInfo.changeWan2Type();
             }
         });
+        $("a[href='#internet-setting']").on("click", function() {
+            netInfo.dnsLoaded = false;
+        });
     },
     setValue: (function () {
         var statusType = 1, //连接状态类型，1错误， 2尝试，3成功
@@ -1437,6 +1622,37 @@ netInfo = {
             netInfo.clientFlag = [];
             netInfo.hasConnTime = [];
             netInfo.isConnect = [];
+
+            netInfo.wlMode = dataObj["wl_mode"];
+
+            // 需要加上限制，防止输入过程中更新
+            if(
+                (
+                    dataObj.wanInfo[0]["dns1"] != netInfo.dns1
+                    || dataObj.wanInfo[0]["dns2"] != netInfo.dns2
+                    || netInfo.dnsLoaded != true
+                )
+                && dataObj.wanInfo[0]["ispType"] == "5"
+            ) {
+
+                netInfo.dns1 = dataObj.wanInfo[0]["dns1"];
+                netInfo.dns2  = dataObj.wanInfo[0]["dns2"];
+                netInfo.ispType = "5";
+
+                if ($("input:radio:checked[name='vpnWanType']").val() === "0") {
+                    $("#static_ip").removeClass("none");
+                    $("#dnsContainer").removeClass("none");
+                    $("#dnsType").addClass("none");
+                    $("#staticIp").focus();
+                    $('#dnsAuto').val("0");
+                    netInfo.dnsLoaded = true;
+                } else {
+                    $("#dnsType").addClass("none");
+                    $("#static_ip").addClass("none");
+                    $("#dnsContainer").addClass("none");
+                    $('#dnsAuto').val("1");
+                }
+            }
 
             for (var i = 0; i < dataObj.wanInfo.length; i++) {
                 obj = dataObj.wanInfo[i];
@@ -1467,7 +1683,7 @@ netInfo = {
 
                 //联网时长
                 isConnect = parseInt(obj["connectStatus"].charAt(2), 10);
-                $("#connectTime" + wanIndex).html(formatSeconds(obj["connectTime"]));
+                $("#connectTime" + wanIndex).html(formatSeconds(obj["connectTime"] || 0));
                 /*setTimeout(function () {
                     $("#connectTime" + wanIndex).html(formatSeconds(parseInt(obj["connectTime"], 10) + 1))
                 }, 1000);*/
@@ -1595,6 +1811,8 @@ netInfo = {
             }
         }
 
+
+
         //保存时处理
         if (formWrap == "internet-form") {
             if (wanObj2.wan_type == 1) { //static ip
@@ -1637,7 +1855,6 @@ netInfo = {
             });
             dataArr.push(wanObj2);
         }
-
         for (var i = 0; i < dataArr.length; i++) {
             btn_val = dataArr[i].btn_val;
 
@@ -1712,11 +1929,7 @@ netInfo = {
                     }
 
                     errMsg = checkIsVoildIpMask(ip, mask);
-                    if (errMsg) {
-                        return errMsg;
-                    }
-                    /**by xm RX9 Pro定制开发，解决 静态IP接入设置2位网络号的子网掩码，DUT接口一直处于异常重启状态 问题 */
-                    errMsg = checkIsSimilarIpMask(ip, mask);
+
                     if (errMsg) {
                         return errMsg;
                     }
@@ -1736,9 +1949,30 @@ netInfo = {
                     }
                 }
 
+                var ispType = +$("[name=ispType]").val(),
+                    wanIdVal = $("#wanVlanId").val(),
+                    lanIdVal = $("#lanVlanId").val();
+
+                if (ispType == 3) {
+
+                    if (wanIdVal == "") {
+                        // 翻译
+                        return _("WAN VLAN ID can not be empty");
+                    }
+                    if (wanIdVal == lanIdVal) {
+                        return _("Two IDs can not be the same");
+                    }
+                }
+
                 //手动DNS时不能DNS1与DNS2不能相同
                 if ((dnsAuto == "0") && (dns1 == dns2) && (dns1 != "")) {
                     return _("The primary DNS server and secondary DNS server cannot be the same.");
+                }
+                if(dnsAuto == "0") {
+                    if (netInfo.lanIpTemp == dns1) {
+                        //return _("%s cannot be the same as that of %s.", [10, _("LAN IP Address")]);
+                        return _("Please enter the IP address of the primary DNS server.");
+                    }
                 }
             }
         }
@@ -1748,6 +1982,7 @@ netInfo = {
             wan_type = $("#netWanType").val(),
             server = $("#vpnServer").val(),
             dns1 = $("#dns1").val(),
+            dns2 = $("#dns2").val(),
             btn_val = $("#wan_submit").val(),
             saveContentObj = {
                 "all_submit": "internet-form",
@@ -1771,7 +2006,7 @@ netInfo = {
 
                 /*PPTP/L2TP双接入时；若服务器地址为ip，且地址类型为静态。dns可为全空，且dns为空时，向后台传入dnsAuto "1",不为空，传入dnsAuto "0",除此以外的静态IP设置下，dns1不能为空*/
                 if (!($("#dns1").is(":hidden"))) {
-                    if (dns1 === "") {
+                    if (dns1 === "" && dns2 === "") {
                         subData = subData.replace("dnsAuto=0", "dnsAuto=1");
                     } else {
                         subData = subData.replace("dnsAuto=1", "dnsAuto=0");
@@ -1783,7 +2018,7 @@ netInfo = {
 
                 /*PPTP/L2TP双接入时；若服务器地址为ip，且地址类型为静态。dns可为全空，且dns为空时，向后台传入dnsAuto "1",不为空，传入dnsAuto "0",除此以外的静态IP设置下，dns1不能为空*/
                 if (!($("#dns1").is(":hidden"))) {
-                    if (dns1 === "") {
+                    if (dns1 === "" && dns2 === "") {
                         subData = subData.replace("dnsAuto=0", "dnsAuto=1");
                     } else {
                         subData = subData.replace("dnsAuto=1", "dnsAuto=0");
@@ -1811,6 +2046,42 @@ netInfo = {
 
         netInfo.saving = true;
         netInfo.reboot = false;
+        var ispType = +$("[name=ispType]").val(),
+            ispArea = $("#ispArea").val(),
+            wanIdVal = $("#wanVlanId").val(),
+            lanIdVal = $("#lanVlanId").val(),
+            wanType = $("#netWanType").val(),
+            wanData = netInfo.initObj.wanInfo[0];
+
+        // if( wanData.ispType != ispType ||wanData.wanType != wanType || ((ispType == "2" || ispType == "6" || ispType == "7") && wanData.ispArea != ispArea) || (ispType == "3" && (wanData.wanVlanId != wanIdVal || wanData.lanVlanId != lanIdVal)) || netInfo.initObj.multiWanEn != ($("#multiWanEn").hasClass("btn-on") ? "true" : "false")){
+        //     if (confirm(_("Your settings will take effect after the system reboots. Do you want to reboot the system?"))) {
+        //         netInfo.reboot = true;
+        //     } else {
+        //         return;
+        //     }
+        // }
+        //只有存在ispArea时才判断，否则会造成，没有修改也会重启的问题
+        if( 
+            wanData.ispType != ispType || //1、isptype改变 重启
+            ((ispType == "2" || ispType == "6" || ispType == "7") && wanData.ispArea != ispArea) || //2、有ispArea的改变ispArea后 重启
+            (ispType == "3" && (wanData.wanVlanId != wanIdVal || wanData.lanVlanId != lanIdVal)) ||  // 3、手动模式下，vlan id改变 重启
+            netInfo.initObj.multiWanEn != ($("#multiWanEn").hasClass("btn-on") ? "true" : "false") || // 4、双线路接入开关变化 重启
+            ((ispType == "5") && wanData.wanType != wanType) // 5、俄罗斯接入模式下，改变接入方式 重启
+            ){
+            if (confirm(_("Your settings will take effect after the system reboots. Do you want to reboot the system?"))) {
+                netInfo.reboot = true;
+            } else {
+                return;
+            }
+        }
+        // if( wanData.ispType != ispType || wanData.ispArea != ispArea || (ispType == "3" && (wanData.wanVlanId != wanIdVal || wanData.lanVlanId != lanIdVal))){
+        //     if (confirm(_("Your settings will take effect after the system reboots. Do you want to reboot the system?"))) {
+        //         netInfo.reboot = true;
+        //     } else {
+        //         return;
+        //     }
+        // }
+
         if (netInfo.initObj.multiWanEn != ($("#multiWanEn").hasClass("btn-on") ? "true" : "false")) {
             if (confirm(_("Your settings will take effect after the system reboots. Do you want to reboot the system?"))) {
                 netInfo.reboot = true;
@@ -1818,12 +2089,19 @@ netInfo = {
                 return;
             }
         }
+
         subObj = {
             "data": subData,
             "url": "goform/WanParameterSetting?" + Math.random(),
             "callback": netInfo.callback
         };
         return subObj;
+    },
+    wanIsReboot:function (){
+        if($("#netWanType").val() != netInfo.initObj.wanInfo[0].wanType){
+            return true;
+        }
+        return false
     },
     callback: function (str) {
         if (!top.isTimeout(str)) {
@@ -1840,6 +2118,12 @@ netInfo = {
 
         //开关多WAN需要重启
         if (netInfo.reboot) {
+            $.get("goform/SysToolReboot?" + Math.random(), function (str) {
+                //top.closeIframe(num);
+              /*  if (!top.isTimeout(str)) {
+                    return;
+                }*/
+            });
             top.$.progress.showPro("reboot");
             return;
         }
@@ -1868,6 +2152,65 @@ netInfo = {
             netInfo.ajaxInterval.stopUpdate();
         }
 
+        if($("[name='ispType']").val() == "3") {
+            $("#ispWrap").removeClass("none");
+        }else{
+            $("#ispWrap").addClass("none");
+        }
+
+    },
+
+    changeIspType: function() {
+        var wanOptStr1 = '<option value="2">' + _("PPPoE") + '</option>' + '<option value="0">' + _("Dynamic IP Address") + '</option><option value="1">' + _("Static IP Address") + '</option>';
+        var wanOptStr2 = '<option value="3">' + _("PPTP Russia") + '</option><option value="4">' + _("L2TP Russia") + '</option><option value="5">' + _("PPPoE Russia");
+        var ispType = $("[name='ispType']").val()
+        if(ispType == "3") {
+            $("#ispWrap").removeClass("none");
+            $("#netWanType").html(wanOptStr1);
+        }else if(ispType == "5"){
+            $("#netWanType").html(wanOptStr2);
+            $("#ispWrap").addClass("none");
+        } else  {
+            $("#ispWrap").addClass("none");
+            $("#netWanType").html(wanOptStr1);
+        }
+        if(ispType == "2" || ispType== "6" ||ispType== "7"){
+            $("#isp_area").show()
+            netInfo.changeArea(ispType)
+        }else{
+            $("#isp_area").hide()
+        }
+        netInfo.changeWanType();
+    },
+
+    changeArea: function(ispType) {
+        var areaObj = {
+                "2": { //celcome
+                    "0": _("Maxis"),
+                    "1": _("Maxis-special")
+                },
+                "6": { //celcome
+                    "0": _("Celcom West(BIZ)"),
+                    "1": _("Celcom West(HOME)"),
+                    "2": _("Celcom East(BIZ)"),
+                    "3": _("Celcom East(HOME)")
+                },
+                "7": { //digi
+                    "0": _("Digi-TM"),
+                    "1": _("Digi"),
+                    "2": _("Digi-CT Sabah"),
+                    "3": _("Digi-TNB")
+                }
+            },
+            str = "",
+            obj;
+
+        obj = areaObj[ispType];
+        for (var prop in obj) {
+            str += "<option value=" +prop+ ">" +obj[prop]+ "</option>";
+        }
+        $("#ispArea").html(str);
+
     },
 
     changeVpnType: function () {
@@ -1884,14 +2227,29 @@ netInfo = {
         } else {
             $("#connect_message").addClass("none");
         }
+        if (netInfo.ispType == "5") {
+            if ($(this).val() === "0") {
+                $("#static_ip").removeClass("none");
+                $("#dnsContainer").removeClass("none");
+                $("#dnsType").addClass("none");
+                $("#staticIp").focus();
+                $('#dnsAuto').val("0");
 
+            } else {
+                $("#dnsType").addClass("none");
+                $("#static_ip").addClass("none");
+                $("#dnsContainer").addClass("none");
+                $('#dnsAuto').val("1");
+            }
+            return;
+        }
         if ($(this).val() === "0") {
             $("#static_ip").removeClass("none");
             $("#dnsContainer").removeClass("none");
             $("#dnsType").addClass("none");
             $("#staticIp").focus();
         } else {
-            $("#dnsType").removeClass("none").val("1");
+            $("#dnsType").val("1");
             $("#dnsContainer").addClass("none");
             $("#static_ip").addClass("none");
             if ($("#dnsAuto").val() == "0") { //手动时切回自动
@@ -1996,9 +2354,9 @@ wrlInfo = {
             case "wrl_wifi_time":
                 showIframe(_("WiFi Schedule"), "wifi_time.html", 610, 470);
                 break;
-            // case "wrl_bridge":
-            //     showIframe(_("Wireless Repeating"), "wisp.html", 700, 350);
-            //     break;
+            case "wrl_bridge":
+                showIframe(_("Wireless Repeating"), "wisp.html", 700, 350);
+                break;
             case "wrl_channel":
                 showIframe(_("Channel & Bandwidth"), "wireless.html", 460, 480);
                 break;
@@ -2008,9 +2366,9 @@ wrlInfo = {
             case "wrl_wps":
                 showIframe("WPS", "wifi_wps.html", 600, 400);
                 break;
-            // case "wrl_beamforming":
-            //     showIframe("Beamforming+", "wifi_bf.html", 600, 400);
-            //     break;
+            case "wrl_beamforming":
+                showIframe("Beamforming+", "wifi_bf.html", 600, 400);
+                break;
             case "wrl_ofdma":
                 showIframe("OFDMA", "wifi_ofdma.html", 600, 400);
                 break;
@@ -2021,7 +2379,7 @@ wrlInfo = {
                 showIframe(_("Anti-interference"), "anti_interference.html", 600, 300);
                 break;
             case "wrl_atf":
-                showIframe(_("Fair Communication"), "wifi_atf.html", 600, 300);
+                showIframe(_("通信公平"), "wifi_atf.html", 600, 300);
                 break;
         }
     },
@@ -2036,11 +2394,11 @@ wrlInfo = {
         } else {
             $("#wrl_wifi_time .function-status").html(_("Disable"));
         }
-        // if (obj.beamforming === "1") {
-        //     $("#wrl_beamforming .function-status").html(_("Enable"));
-        // } else {
-        //     $("#wrl_beamforming .function-status").html(_("Disable"));
-        // }
+        if (obj.beamforming === "1") {
+            $("#wrl_beamforming .function-status").html(_("Enable"));
+        } else {
+            $("#wrl_beamforming .function-status").html(_("Disable"));
+        }
         if (obj.ofdmaEn === "1") {
             $("#wrl_ofdma .function-status").html(_("Enable"));
         } else {
@@ -2051,16 +2409,16 @@ wrlInfo = {
         } else {
             $("#wrl_ap_mode .function-status").html(_("Disable"));
         }
-        // if (obj.wispEn == 0) {
-        //     $("#wrl_bridge .function-status").html(_("Disable"));
-        //     //$("#sys_lan_status").removeClass("disabled");
-        // } else if (obj.wispEn == 2) {
-        //     //$("#sys_lan_status").addClass("disabled");
-        //     $("#wrl_bridge .function-status").html(_("Connected"));
-        // } else {
-        //     //$("#sys_lan_status").addClass("disabled");
-        //     $("#wrl_bridge .function-status").html(_("Enable"));
-        // }
+        if (obj.wispEn == 0) {
+            $("#wrl_bridge .function-status").html(_("Disable"));
+            //$("#sys_lan_status").removeClass("disabled");
+        } else if (obj.wispEn == 2) {
+            //$("#sys_lan_status").addClass("disabled");
+            $("#wrl_bridge .function-status").html(_("Connected"));
+        } else {
+            //$("#sys_lan_status").addClass("disabled");
+            $("#wrl_bridge .function-status").html(_("Enable"));
+        }
 
         if (obj.WifiAntijamEn == "false") {
             $("#wrl_anti_interference .function-status").html(_("Disable"));
@@ -2089,8 +2447,6 @@ guestInfo = {
     initObj: null,
     dfsEnable:0, //dfs默认关闭
     main5gEn:'0',//主5G网络是否打开
-    // 5G是否修改
-    dfs_5G:'0',
     _5gOption:["guestSsid_5g","guestWrlPwd_5g"],//5G网络相关的参数（DFS通过这些参数的变化来判断是否提示）
     init: function () {
         if (!guestInfo.loading) {
@@ -2192,7 +2548,7 @@ guestInfo = {
             if (obj.wl_mode != "ap") {
                 showErrMsg("guest_save_msg", _("This function is not available if Wireless Repeating is enabled."), true);
             } else if (obj.wl_en != "1") {
-                showErrMsg("guest_save_msg", _("This function is not available if Wireless Repeating is disabled."), true);
+                showErrMsg("guest_save_msg", _("This function is not available if WiFi is disabled."), true);
             }
         } else {
             showErrMsg("guest_save_msg", "", true);
@@ -2221,12 +2577,9 @@ guestInfo = {
             "effectiveTime": $("[name=effectiveTime]").val(),
             "shareSpeed": $("#shareSpeed")[0].val() * 128
         };
-        if (guestInfo.initObj.guestSsid_5g!=dataObj.guestSsid_5g){
+        if (guestInfo.initObj.guestSsid_5g != dataObj.guestSsid_5g || guestInfo.initObj.guestWrlPwd_5g != dataObj.guestWrlPwd_5g || guestInfo.initObj.guestEn_5g != dataObj.guestEn_5g){
             dataObj['wifi_chkHz']='1'; 
         }
-        if (guestInfo.initObj.guestWrlPwd!=dataObj.guestWrlPwd){
-	    dataObj['wifi_chkHz']='1'; 
-	}
         guestInfo.setGuestInfo = dataObj;
         subData = objTostring(dataObj);
         subObj = {
@@ -2241,10 +2594,10 @@ guestInfo = {
             return;
         }
         var num = $.parseJSON(str).errCode;
-        if(num == 1){
-            showDFSMsg();
+        if(num ==1){
+            top.showDFSMsg(0);
         }else{
-            showSaveMsg(num);
+            top.showSaveMsg(num);
         }
         if (num == 0) {
             $("#guest_submit").blur();
@@ -2621,7 +2974,7 @@ ipv6Info = {
     },
     setValue: function (obj) {
         var prop,
-            ipv6Arr = ["wanAddr", "lanPrefix"], //ipv6地址输入框
+            ipv6Arr = ["wanAddr"/*, "lanPrefix"*/], //ipv6地址输入框
             i = 0;
         inputValue(obj);
         ipv6Info.data = obj;
@@ -2707,8 +3060,13 @@ ipv6Info = {
             if (gateWay == wanIpv6) {
                 showErrMsg("msg-err-wan", _("The default IPv6 gateway cannot be the duplicate with WAN IPv6 address"));
                 return false;
-            } else if (gateWay == lanIpv6) {
-                showErrMsg("msg-err-lan", _("The default IPv6 gateway cannot be duplicate with LAN IPv6 address"));
+            }
+            //else if (gateWay == lanIpv6) {
+            //    showErrMsg("msg-err-lan", _("The default IPv6 gateway cannot be duplicate with LAN IPv6 address"));
+            //   return false;
+            // }
+            if(wanIpv6 == wanPreDNS){
+                showErrMsg("msg-err-wan", _("%s cannot be the same as that of %s.", [_("Primary IPv6 DNS"), _("IPv6 Address")]))
                 return false;
             }
             if (wanPreDNS == wanAltDNS) {
@@ -2721,19 +3079,19 @@ ipv6Info = {
                     return false;
                 }
             }
-            if (ipv6Info.checkIpv6InSameSegment(wanIpv6, lanPrefix, 64, 64)) {
-                showErrMsg("msg-err-lan", _("IPv6 WAN address and IPv6 LAN address cannot be in the same segment"));
-                return false;
-            }
+            // if (ipv6Info.checkIpv6InSameSegment(wanIpv6, lanPrefix, 64, 64)) {
+            //     showErrMsg("msg-err-lan", _("IPv6 WAN address and IPv6 LAN address cannot be in the same segment"));
+            //     return false;
+            // }
          }
-        if(wan_type != "Static" && !$("#prefixDelegate").is(":checked")){
+        /*if(wan_type != "Static" && !$("#prefixDelegate").is(":checked")){
             if(ipv6Info.data.dyWanAddr){
                 if (ipv6Info.checkIpv6InSameSegment(ipv6Info.data.dyWanAddr.split("/")[0], lanPrefix, 64, 64)) {
                     showErrMsg("msg-err-lan", _("IPv6 WAN address and IPv6 LAN address cannot be in the same segment"));
                     return false;
                 }
             }
-        }
+        }*/
 
         return true;
     },
@@ -2798,8 +3156,10 @@ ipv6Info = {
             //     $("#dhcpEn,#lanType,#dnsType_v6").prop("disabled", true);
             // }
         }
-        ipv6Info.changeLanCfg();
+        // ipv6Info.changeLanCfg();
     },
+
+
 
     // changeRemoteIp: function (wan_type) {
     //     var remoteIP = "",
@@ -3278,7 +3638,7 @@ sysInfo = {
                 showIframe(_("Reboot and Reset"), "system_reboot.html", 400, 205);
                 break;
             case "adv_remoteweb":
-                showIframe(_("Remote Management"), "remote_web.html", 500, 475, (sysInfo.data.nopwd === true) ? "nopwd" : "");
+                showIframe(_("Remote Management"), "remote_web.html", 500, 475, (sysInfo.data.nopwd == 'true') ? "nopwd" : "");
                 break;
             case "sys_upgrade":
                 showIframe(_("Firmware Upgrade"), "system_upgrade.html", 665, 556);
@@ -3325,9 +3685,8 @@ if (B.lang == "ru") {
     mainAreaDisplay("#sys_backup");
     mainAreaDisplay("#adv_netcontrol");
     mainAreaDisplay("#vpn_online_user");
+    mainAreaDisplay('#wrl_channel');
     $("#adslUser").attr("placeholder", "");
-    mainAreaDisplay("#wrl_channel");
-
 }
 if (B.lang == "uk") {
     mainAreaDisplay("#sys_reboot");
@@ -3337,39 +3696,21 @@ if (B.lang == "uk") {
 if (B.lang == "laes") {
     mainAreaDisplay("#wrl_ssid_pwd");
     mainAreaDisplay("#sys_pwd");
-    mainAreaDisplay("#adv_netcontrol");
-    mainAreaDisplay("#sys_upgrade")
 }
 
 if (B.lang == "pl") {
     mainAreaDisplay("#sys_upgrade");
-    mainAreaDisplay("#sys_backup");
-    $("#sys_auto .function-title").css("white-space", "normal");
     // mainAreaDisplay("#wrl_bridge");
 }
-
-/**by xm */
-if (B.lang == 'brpt'){
-    mainAreaDisplay("#wrl_channel");
-    mainAreaDisplay("#wrl_signal");
+if (B.lang == "laes") {
+    mainAreaDisplay("#sys_pwd");
 }
 
-if(B.lang == 'it'){
+if (B.lang == "pl") {
     mainAreaDisplay("#sys_backup");
+    $("#sys_auto .function-title").css("white-space", "normal");
 }
 
-if(B.lang == 'fr'){
-    mainAreaDisplay("#wrl_channel");
-    mainAreaDisplay("#adv_netcontrol");
-}
-if(B.lang == 'es'){
-    mainAreaDisplay("#wrl_ssid_pwd");
-    mainAreaDisplay("#sys_auto");
-}
-if (B.lang == 'pt'){
-    mainAreaDisplay("#wrl_signal");
-    mainAreaDisplay("#sys_upgrade");
-}
 // <!-- 主菜单语言选择 -->
 //$('.main-content').prepend('<div class="lang" id="lang" style="color: #999; font-size: 13px; margin-top:2px; float:none; position: absolute; left: 850px; top:15px;"><a class="lang-toggle" id="langToggle"><span>中文</span><b style="border-top-color:#999" class="caret"></b></a><ul class="lang-menu none" style="top: 43px; z-index: 1000;" id="langMenu"><li><a data-country="en">English</a></li><li><a data-country="cn">中文</a></li><li><a data-country="zh">繁體中文</a></li></ul><span style="margin-left:10px;">|<a style="margin-left:10px; color: #999;" href="goform/exit">Exit</a></span></div>');
 // var lanSelect = '<a class="lang-toggle"><span>中文</span><b style="border-top-color:#999" class="caret"></b></a><ul class="lang-menu none" style="top: 43px; z-index: 1000;"><li><a data-country="en">English</a></li><li><a data-country="cn">中文</a></li><li><a data-country="zh">繁體中文</a></li><li><a data-country="tr">tuerqi</a></li></ul><span>|</span>';
@@ -3386,6 +3727,7 @@ $.getJSON("goform/SysToolpassword?" + Math.random(), function (obj) {
         $(".go-exit").css("display", "none");
     }
 });
+
 if (B.lang == "zh" || B.lang =="cn") {
     $(".go-exit").css('width', '65px');
 }

@@ -45,7 +45,7 @@ proto_dhcp_setup() {
 
 	json_for_each_item proto_dhcp_add_sendopts sendopts dhcpopts
 
-	# [ -z "$hostname" ] && hostname="$(cat /proc/sys/kernel/hostname)"
+	[ -z "$hostname" ] && hostname="$(cat /proc/sys/kernel/hostname)"
 	[ "$defaultreqopts" = 0 ] && defaultreqopts="-o" || defaultreqopts=
 	[ "$broadcast" = 1 ] && broadcast="-B" || broadcast=
 	[ "$release" = 1 ] && release="-R" || release=
@@ -63,7 +63,8 @@ proto_dhcp_setup() {
 	append dhcpopts "-O 249"
 
 	if [ $iface = "br-lan" -a "$ipaddr"x != "x" ];then
-        ifconfig br-lan $ipaddr
+		local mask=`uci get network.lan.netmask`
+        ifconfig br-lan $ipaddr netmask $mask
 		/etc/init.d/dnsmasq restart
     fi
 	

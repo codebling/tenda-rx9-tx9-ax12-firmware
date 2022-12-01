@@ -30,7 +30,7 @@
 #
 # Usage in server: wave_factory_reset.sh platform_dependent_build_time.sh
 # You may change the platform_dependent_build_time.sh OS_NAME,DEFAULT_DB_PATH,UCI_DB_PATH to fit your needs.
-# database dir must contain wireless_def_vap_db as well as wireless_def_radio_<24g/5g> files and phys_conf_file
+# database dir must contain wireless_def_vap_db as well as wireless_def_radio_<24g/5g/6g> files and phys_conf_file
 # Make sure common_utils.sh script is in the same folder as the wave_factory_reset.sh you are running
 #
 
@@ -54,14 +54,14 @@ function main() {
 	# Process optional arguments -p and/or -v
 	while getopts "p:v:" OPTS; do
 		if [ "$OPTS" = "p" ]; then
-			if [ "${OPTARG//[0-9A-Za-z_-]/}" = "" ]; then
+			if [ "${OPTARG//[0-9A-Za-z_\/-]/}" = "" ]; then
 				if [ -d $DEFAULT_DB_PATH/"$OPTARG" ]; then
 					PROG="$OPTARG"
 				else
 					print_logs "requested default DB folder "$OPTARG" does not exist"
 				fi
 			else
-				print_logs "illegal default DB folder requested "$OPTARG". must use only \"0-9,a-z,A-Z,_,-\""
+				print_logs "illegal default DB folder requested "$OPTARG". must use only \"0-9,a-z,A-Z,_,/,-\""
 			fi
 		elif [ "$OPTS" = "v" ]; then
 			if [ "${OPTARG//[0-9]/}" = "" ] && [ "$OPTARG" -le 8 ]; then
@@ -83,6 +83,7 @@ function main() {
 	print_logs "factory reset using default files from $DEFAULT_DB_PATH"
 
 	DEFAULT_DB_STATION_VAP=$DEFAULT_DB_PATH/wireless_def_station_vap
+	DEFAULT_DB_RADIO_6=$DEFAULT_DB_PATH/wireless_def_radio_6g
 	DEFAULT_DB_RADIO_5=$DEFAULT_DB_PATH/wireless_def_radio_5g
 	DEFAULT_DB_RADIO_24=$DEFAULT_DB_PATH/wireless_def_radio_24g
 	DEFAULT_DB_VAP=$DEFAULT_DB_PATH/wireless_def_vap_db
@@ -94,8 +95,15 @@ function main() {
 	DUMMY_VAP_OFSET=1000
 }
 
-function usage(){
-	print_logs "usage: $0 [vap|radio|all_radios] <interface name>"
+function usage {
+	print_logs "usage: $0 [init|merge|vap|radio|all_radios|help] <interface name>"
+	print_logs "	init|merge 	run init flow - if no wireless db exists
+			do full reset, else if merge is enabled ,do merge"
+	print_logs "	vap <interface name> 		reset vap"
+	print_logs "	radio <main interface name> 	reset radio"
+	print_logs "	all_radios 			reset all radios"
+	print_logs "	help				this log"
+	print_logs "	anything else (or nothing)	full complete reset"
 }
 
 function create_station(){
@@ -118,7 +126,7 @@ function create_station(){
 	fi
 }
 
-# main function if meta_factory is not used
+# main function on regular flow
 
 function full_reset(){
 
@@ -128,9 +136,11 @@ function full_reset(){
 		print_logs "using default number of VAPs"
 		num_slave_vaps_24g=`$UCI -c $DEFAULT_DB_PATH/ get defaults.num_vaps.24g`
 		num_slave_vaps_5g=`$UCI -c $DEFAULT_DB_PATH/ get defaults.num_vaps.5g`
+		num_slave_vaps_6g=`$UCI -c $DEFAULT_DB_PATH/ get defaults.num_vaps.6g`
 	else
 		num_slave_vaps_24g="$vapCount"
 		num_slave_vaps_5g="$vapCount"
+		num_slave_vaps_6g="$vapCount"
 		print_logs "overriding default number of VAPs"
 	fi
 
@@ -167,14 +177,14 @@ function full_reset(){
 	# Fill Radio interfaces
 	for phy in $phys; do
 		get_iface_idx
+		iface="wlan$iface_idx"
 
-		is_radio_5g=`get_band "$phy"`
+		local phy_band=`get_band "$phy" "$iface"`
 
 		radio_rpc_index=$(($iface_idx/2))
 
 		remove_dfs_state_file "$iface_idx"
 
-		iface="wlan$iface_idx"
 		uci_set_helper "config wifi-device 'radio$iface_idx'" "$tmp_wireless"
 		uci_set_helper "        option rpc_index '$radio_rpc_index'" "$tmp_wireless"
 		uci_set_helper "        option index$radio_rpc_index '$iface_idx'" "$tmp_rpc_indexes_radio"
@@ -187,7 +197,8 @@ function full_reset(){
 		# <file name>_<iface idx>_<HW type>_<HW revision>
 
 		get_board
-		if [ $is_radio_5g = '0' ]; then
+		if [ $phy_band = "5" ]
+		then
 			local num_slave_vaps=$num_slave_vaps_5g
 			use_templates $iface_idx ${DEFAULT_DB_RADIO_5}_${iface_idx} $DEFAULT_DB_RADIO_5  $TMP_CONF_FILE
 			local is_radio_zwdfs=`get_is_zwdfs ${iface_idx} $phy`
@@ -196,6 +207,11 @@ function full_reset(){
 				use_templates $iface_idx ${DEFAULT_DB_RADIO_5}_zw_dfs $TMP_CONF_FILE $TMP_CONF_FILE
 			fi
 			use_templates_tmp_file $iface_idx ${DEFAULT_DB_RADIO_5}_${iface_idx}_${board} $TMP_CONF_FILE $tmp_wireless
+		elif [ $phy_band = "6" ]
+		then
+			local num_slave_vaps=$num_slave_vaps_6g
+			use_templates $iface_idx ${DEFAULT_DB_RADIO_6}_${iface_idx} $DEFAULT_DB_RADIO_6  $TMP_CONF_FILE
+			use_templates_tmp_file $iface_idx ${DEFAULT_DB_RADIO_6}_${iface_idx}_${board} $TMP_CONF_FILE $tmp_wireless
 		else
 			local num_slave_vaps=$num_slave_vaps_24g
 			use_templates $iface_idx ${DEFAULT_DB_RADIO_24}_${iface_idx} $DEFAULT_DB_RADIO_24  $TMP_CONF_FILE
@@ -268,54 +284,12 @@ function full_reset(){
 	print_logs "$0: Done..."
 }
 
-# main function if meta_factory is used
-
-function factory_reset(){
-	if [ ! -f $UCI_DB_PATH/wireless ]; then
-		full_reset "$@"
-		return
-	fi
-
-	local prev_prog=`$UCI get meta-factory.merge.prog 2>/dev/null`
-	if [ "$prev_prog" != "$PROG" ]; then
-		full_reset "$@"
-		return
-	fi
-
-	local merge_stat=`$UCI get $MERGE_PARAM 2>/dev/null`
-	if [ "$merge_stat" != "1" ]; then
-		full_reset "$@"
-		return
-	else
-		local prev_checksum=`$UCI get meta-factory.merge.checksum 2>/dev/null`
-		local curr_checksum=`cat $DEFAULT_DB_PATH/* | md5sum | awk '{print $1}'`
-		if [ "$prev_checksum" != "$curr_checksum" ]; then
-			if [ -f $DEFAULT_DB_PATH/user_preference ]; then
-				partial_merge_reset "$@"
-			else
-				complete_merge_reset "$@"
-			fi
-			update_templates
-
-            if [ -f $DEFAULT_DB_PATH/obligatory_settings ]; then
-                obligatory_override
-            fi
-		fi
-	fi
-
-	$UCI commit wireless
-	$UCI commit -c /tmp/ meta-wireless
-}
-
 main "$@"
 
 case $1 in
 	radio)
 		if [ "$#" -ne 2 ]; then
 			usage
-			if [ $SET_FACTORY_MODE -eq 1 ]; then
-				rm $UCI_DB_PATH/factory_mode
-			fi
 			exit 1
 		fi
 		reset_radio $2
@@ -331,25 +305,21 @@ case $1 in
 	vap)
 		if [ "$#" -ne 2 ]; then
 			usage
-			if [ $SET_FACTORY_MODE -eq 1 ]; then
-				rm $UCI_DB_PATH/factory_mode
-			fi
 			exit 1
 		fi
 		reset_vap $2
 		break
 		;;
-	init)
+	help)
+		usage
+		break
+		;;
+	init|merge)
 		reset_on_init
 		break
 		;;
 	*)
-		if [ ! -f $UCI_DB_PATH/meta-factory ]; then
-			# The common case in non-rdkb
-			full_reset
-		else
-			factory_reset
-		fi
+		full_reset
 		;;
 esac
 

@@ -1,5 +1,5 @@
 {
-"doubleBand":"0",
+"doubleBand":false,
 
 "wrlEn": "1",
 "wrlEn_5g": "1",
@@ -14,5 +14,5 @@
 "security_5g": "wpapsk",
 
 "hideSsid": "1",
-"hideSsid_5g": "1"
+"hideSsid_5g": "1: "
 }

@@ -30,6 +30,7 @@ $(function () {
                 user = $("#adslUser").val(),
                 pwd = $("#adslPwd").val(),
                 cloneType = $("#cloneType").val(),
+                ispType = $("#ispType").val(),
 
                 lanIp = $("#lanIp").val(),
                 lanMask = $("#lanMask").val(),
@@ -141,6 +142,7 @@ $(function () {
                 user = $("#adslUser").val(),
                 pwd = $("#adslPwd").val(),
                 cloneType = $("#cloneType").val(),
+                ispType = $("#ispType").val(),
 
                 lanIp = $("#lanIp").val(),
                 lanMask = $("#lanMask").val(),
@@ -228,7 +230,16 @@ $(function () {
                 "dnsAuto": dnsAuto
             }];
 
-            var data = objTostring(internetObj[parseInt(netWanType)]);
+            //var data = objTostring(internetObj[parseInt(netWanType)]);
+
+            var data1  = internetObj[parseInt(netWanType)];
+            data1.ispArea = $("#ispArea").val()
+            data1.ispType = $("#ispType").val()
+            if(ispType === "3"){
+                data1.wanVlanId = $("#wanVlanId").val();
+                data1.lanVlanId = $("#lanVlanId").val();
+            }
+            data = objTostring(data1);
             $.post("goform/fast_setting_internet_set", data);
 
             $("#internet").addClass("none");
@@ -341,14 +352,14 @@ function getInitData () {
     });
 
 
-    $.getJSON("goform/fast_setting_get" + "?" + Math.random(), function (obj) {
+  /*  $.getJSON("goform/fast_setting_get" + "?" + Math.random(), function (obj) {
         var host = location.host;
-        /*路由器不能上网时，访问网站dns解析到192.168.0.2；当路由器可以上网后，域名解析正常了，所以原有的访问失效了，所以不能配置路由器
-        解决办法：提取浏览器的输入框域名：如果不是www.tendawifi.com、tendawifi.com和管理ip，页面做一个跳转*/
+        /!*路由器不能上网时，访问网站dns解析到192.168.0.2；当路由器可以上网后，域名解析正常了，所以原有的访问失效了，所以不能配置路由器
+        解决办法：提取浏览器的输入框域名：如果不是www.tendawifi.com、tendawifi.com和管理ip，页面做一个跳转*!/
         if ((obj.lanIp !== host) && (G.domain !== host)) {
             location.host = G.domain;
         }
-    });
+    });*/
 
     // 获取已设置过的联网设置
     $.getJSON("goform/getWanParameters?" + Math.random(), function (res) {
@@ -557,6 +568,29 @@ function initEvent () {
         wanTypeSelect($("#netWanType").val());
     });
 
+    $("[name='ispType']").on("change", function(){
+        var wanOptStr1 = '<option value="2">' + _("PPPoE") + '</option>' + '<option value="0">' + _("Dynamic IP Address") + '</option><option value="1">' + _("Static IP Address") + '</option>';
+        var wanOptStr2 = '<option value="3">' + _("PPTP Russia") + '</option><option value="4">' + _("L2TP Russia") + '</option><option value="5">' + _("PPPoE Russia");
+        var ispType = $("[name='ispType']").val()
+        if($("[name='ispType']").val() == "3") {
+            $("#ispWrap").removeClass("none");
+            $("#netWanType").html(wanOptStr1);
+        }else if($("[name='ispType']").val() == "5"){
+            $("#netWanType").html(wanOptStr2);
+            $("#ispWrap").addClass("none");
+        } else  {
+            $("#ispWrap").addClass("none");
+            $("#netWanType").html(wanOptStr1);
+        }
+        if(ispType == "2" || ispType== "6" ||ispType== "7"){
+            $("#isp_area").show()
+            changeArea(ispType)
+        }else{
+            $("#isp_area").hide()
+        }
+        wanTypeSelect($("#netWanType").val());
+    });
+
     $("[name='vpnWanType']").on("click", function () {
         if ($(this).val() === "1") {
             $("#static_ip").addClass("none");
@@ -575,6 +609,36 @@ function initEvent () {
         }
     });
 }
+function changeArea(ispType){
+    var areaObj = {
+            "2": { //celcome
+                "0": _("Maxis"),
+                "1": _("Maxis-special")
+            },
+            "6": { //celcome
+                "0": _("Celcom West(BIZ)"),
+                "1": _("Celcom West(HOME)"),
+                "2": _("Celcom East(BIZ)"),
+                "3": _("Celcom East(HOME)")
+            },
+            "7": { //digi
+                "0": _("Digi-TM"),
+                "1": _("Digi"),
+                "2": _("Digi-CT Sabah"),
+                "3": _("Digi-TNB")
+            }
+        },
+        str = "",
+        obj;
+
+    obj = areaObj[ispType];
+    for (var prop in obj) {
+        str += "<option value=" +prop+ ">" +obj[prop]+ "</option>";
+    }
+    $("#ispArea").html(str);
+
+}
+
 
 function showMsg (className, str) {
     $("." + className).html(str);
@@ -622,15 +686,13 @@ function initValue (obj) {
     $('#ssid').addPlaceholder(_("WiFi Name"));
 
     if (G.data.line == 1) { //已插网线
-      
+        if(G.fastTimeId){
+            clearInterval(G.fastTimeId);
+            G.fastTimeId = null;
+        }
         //G.data.net = 0;
         $("#net_setting").addClass("none");
         if (G.data.net == 1) { //是否检测完
-            /**解决当获取到网线插入之后，但插入类型还未检测到的情况下，断网，也就是failed时，出现一直转圈问题 */
-            if (G.fastTimeId) {
-                clearInterval(G.fastTimeId);
-                G.fastTimeId = null;
-            }
             if ($("#step-over").hasClass("none")) {
                 //表示已经通过了这个检测，就不需要再进行了
                 return;
@@ -640,11 +702,10 @@ function initValue (obj) {
             $("#internet").removeClass("none");
             $("#netWanType").focus();
             //俄罗斯和乌克兰
-            /*RX9 Pro定制，无vpn拨号方式，屏蔽 by xm */
-            // if (G.countryCode === "RU" || G.countryCode === "UA") {
-            //     $("#macCloneWrapper").removeClass("none");
-            //     $("#netWanType").append('<option value="3">' + _("PPTP") + '</option><option value="4">' + _("L2TP") + '</option><option value="5">' + _("PPPoE MODE2") + '</option>');
-            // }
+            if (G.countryCode === "RU" || G.countryCode === "UA") {
+                $("#macCloneWrapper").removeClass("none");
+                $("#netWanType").append('<option value="3">' + _("PPTP") + '</option><option value="4">' + _("L2TP") + '</option><option value="5">' + _("PPPoE MODE2") + '</option>');
+            }
 
             //初始化推荐的联网方式
             if ((G.data.wanType === 0) || (G.data.wanType === 1) || (G.data.wanType === 2)) {
@@ -710,6 +771,10 @@ function fast_setting_get (fn) {
     $.getJSON("goform/fast_setting_get" + "?" + Math.random(), function res () {
         hasReturn = true;
         fn.apply(null, arguments);
+        if(arguments[0].line == 1){
+            clearInterval(G.fastTimeId)
+            G.fastTimeId = null
+        }
     });
     if(G.fastTimeId != null){
         G.fastTimeId = setTimeout(function () {
@@ -843,8 +908,8 @@ function nextSet () {
         }, 5000);
     } else if (!$("#net_setting").hasClass("none")) {
         //未插网线
-        showMsg("main-text", _("Connect the Ethernet cable with internet connectivity to the Internet port and then proceed with the configuration."));
-        $(".main-text").css("color", "red");
+       /* showMsg("main-text", _("Connect the Ethernet cable with internet connectivity to the Internet port and then proceed with the configuration."));
+        $(".main-text").css("color", "red");*/
         // $.getJSON("goform/fast_setting_get" + "?" + Math.random(), function (obj) {
         //     G.data = obj;
         //     if (G.data.line == 1) {
@@ -885,15 +950,17 @@ function nextSet () {
         //     }
         // });
         //
-        // fast_setting_get(function (obj) {
-        //     G.data = obj;
-        //     if (G.data.line == 1) {
-        //     } else {
-        //         showMsg("main-text", _("Connect the Ethernet cable with internet connectivity to the Internet port and then proceed with the configuration."));
-        //         //继续按钮
-        //         $(".main-text").css("color", "red");
-        //     }
-        // });
+
+
+        fast_setting_get(function (obj) {
+            G.data = obj;
+            if (G.data.line == 1) {
+            } else {
+                showMsg("main-text", _("Connect the Ethernet cable with internet connectivity to the Internet port and then proceed with the configuration."));
+                //继续按钮
+                $(".main-text").css("color", "red");
+            }
+        });
     }
     /*else if (!$("#dhcp_setting").hasClass("none")) {
            $("#dhcp_setting").addClass("none")
@@ -1024,6 +1091,27 @@ function nextSet () {
             $("#confirmNext").removeClass("none");
         }
     } else if (!$("#internet").hasClass("none")) {
+
+        var ispType = +$("[name=ispType]").val(),
+            wanIdVal = $("#wanVlanId").val(),
+            lanIdVal = $("#lanVlanId").val();
+
+        if (ispType == 3) {
+            // 未翻译 WAN VLAN ID can not be empty   Two IDs can not be the same
+            if (wanIdVal == "") {
+                showErrMsg("message-net", _("WAN VLAN ID can not be empty"));
+                return;
+            }
+            if (wanIdVal == lanIdVal) {
+                showErrMsg("message-net", _("Two IDs can not be the same"));
+                return;
+            }
+        }
+        if(ispType != 0){
+            if(!confirm(_('Your settings will take effect after the system reboots. Do you want to reboot the system?'))){
+                return
+            }
+        }
         G.validate.checkAll();
     }
 }
@@ -1070,7 +1158,6 @@ function continueSet () {
         $.post("goform/fast_setting_wifi_set", data, handWifi);
     });
 }
-
 function showFinish () {
     $("#btn_control").addClass("none");
     if (G.wanStatus == "7") {
@@ -1088,13 +1175,9 @@ function showFinish () {
         } else {
             $("#connected-tip, .wel-button").addClass("none");
         }
-
     } else {
         //TODO: 跳转到未联网状态,即不显示恭喜您可以上网了
         //倒计时完成后需要再次获取wan口数据，如果G.wanStatus仍然不等于7，则不显示恭喜您可以上网了
-        //$.getJSON("goform/getWanConnectStatus?"+Math.random(),function(obj) {
-        //G.wanStatus = obj.connectStatus;
-        //G.wanStatus = "6";
         $("#waiting").addClass("none");
         $("#set_ok").removeClass("none");
         $("#wifi_setting").addClass("none");
@@ -1114,18 +1197,85 @@ function showFinish () {
         } else {
             $(".loadding-ok .loading-content").removeClass("text-success").addClass("text-warning");
             $("#connected, #connected-tip, .wel-button").addClass("none");
-            //间隔3秒后未联网时，跳转到主页
-            if (G.accessType == 1) {
-                setTimeout(function () {
-                    window.location = window.location.href.split("/index")[0];
-                }, 3000);
-            }
+        }
+        //非normal接入时，保存后重启;
+        var ispType = $("#ispType").val();
+        if (ispType !== "0") {
+            // $.quickset.reboot();
+            $.progress.showPro("reboot");
+        } else {
+            //normal接入，保存3s后刷新页面
+            setTimeout(function () {
+                window.location.reload();
+            }, 3000);
         }
     }
     $('#more_set').focus();
 }
 
-function handWifi () {
+/*function handWifi () {
+    var index = 0;
+    $("#waiting").removeClass("none");
+    $("#wifi_setting").addClass("none");
+    $("#btn_control").addClass("none");
+    setTimeout(function () {
+        $.getJSON("goform/getWanConnectStatus?" + Math.random(), function (obj) {
+            G.wanStatus = obj.connectStatus;
+        });
+    }, 5000);
+    var msg1 = "正在保存WAN口参数配置...",
+        msg1f = "正在保存WAN口参数配置 √",
+        msg2 = "正在保存无线参数配置...",
+        msg2f = "正在保存无线参数配置 √",
+        msg3 = "正在保存系统参数配置...",
+        msg3f = "正在保存系统参数配置 √",
+        msg4 = "正在保存生效所有配置...",
+        msg4f = "正在保存生效所有配置 √";
+    $(".dfs-status").html(msg1);
+    $(".dfs-status").removeClass('success').addClass('grid');
+    if (index == 0) {
+        var pc = 70;
+        var time = setInterval(function () {
+            pc--;
+            $(".loadding-number").html(pc);
+            switch (pc) {
+                case 53:
+                    $(".dfs-status").html(msg1f);
+                    $(".dfs-status").removeClass('grid').addClass('success');
+                    break;
+                case 51:
+                    $(".dfs-status").html(msg2);
+                    $(".dfs-status").removeClass('success').addClass('grid');
+                    break;
+                case 36:
+                    $(".dfs-status").html(msg2f);
+                    $(".dfs-status").removeClass('grid').addClass('success');
+                    break;
+                case 34:
+                    $(".dfs-status").html(msg3);
+                    $(".dfs-status").removeClass('success').addClass('grid');
+                    break;
+                case 19:
+                    $(".dfs-status").html(msg3f);
+                    $(".dfs-status").removeClass('grid').addClass('success');
+                    break;
+                case 17:
+                    $(".dfs-status").html(msg4);
+                    $(".dfs-status").removeClass('success').addClass('grid');
+                    break;
+                case 2:
+                    $(".dfs-status").html(msg4f);
+                    $(".dfs-status").removeClass('grid').addClass('success');
+                    break;
+                case 0:
+                    showFinish();
+                    clearInterval(time);
+            }
+        }, 1000);
+    }
+}*/
+var time = null;
+function handWifi() {
     var index = 0;
     $("#waiting").removeClass("none");
     $("#wifi_setting").addClass("none");
@@ -1145,10 +1295,17 @@ function handWifi () {
         msg4f = _("Saving all configurations in effect √");
     $(".dfs-status").html(msg1);
     $(".dfs-status").removeClass('success').addClass('grid');
+    var ispType = $("#ispType").val();
+    if (ispType !== "0") {
+        index = 1;
+        showFinish();
+    }
     if (index == 0) {
         var pc = 80;
         $(".loadding-number").html(pc);
-        var time = setInterval(function () {
+        //定时器开始之前，清掉定时器，避免出现因为第三方多次执行此方法导致页面定时器乱跳的问题
+        clearInterval(time);
+        time = setInterval(function () {
             pc--;
             $(".loadding-number").html(pc);
             switch (pc) {

@@ -124,14 +124,13 @@ ppp_generic_setup() {
 		}
 	}
 
-	[ -n "$keepalive" ] || keepalive="5 1"
+	[ -n "$keepalive" ] || keepalive="10 15"
 
 	local lcp_failure="${keepalive%%[, ]*}"
 	local lcp_interval="${keepalive##*[, ]}"
 	local lcp_adaptive="lcp-echo-adaptive"
 	[ "${lcp_failure:-0}" -lt 1 ] && lcp_failure=""
-	[ "$lcp_interval" != "$keepalive" ] || lcp_interval=5
-	[ "${keepalive_adaptive:-1}" -lt 1 ] && lcp_adaptive=""
+	[ "$lcp_interval" != "$keepalive" ] || lcp_interval=15
 	[ -n "$connect" ] || json_get_var connect connect
 	[ -n "$disconnect" ] || json_get_var disconnect disconnect
 
@@ -139,7 +138,7 @@ ppp_generic_setup() {
 		nodetach ipparam "$config" \
 		ifname "$pppname" \
 		${localip:+$localip:} \
-		${lcp_failure:+lcp-echo-interval $lcp_interval lcp-echo-failure $lcp_failure $lcp_adaptive} \
+		${lcp_failure:+lcp-echo-interval $lcp_interval lcp-echo-failure $lcp_failure} \
 		${ipv6:++ipv6} \
 		${autoipv6:+set AUTOIPV6=1} \
 		${ip6table:+set IP6TABLE=$ip6table} \

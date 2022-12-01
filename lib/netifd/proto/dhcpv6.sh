@@ -56,9 +56,15 @@ proto_dhcpv6_setup() {
 	local reqaddress reqprefix clientid reqopts defaultreqopts noslaaconly forceprefix extendprefix norelease noserverunicast noclientfqdn noacceptreconfig ip6prefix ip6prefixes iface_dslite iface_map iface_464xlat ifaceid userclass vendorclass sendopts delegate zone_dslite zone_map zone_464xlat zone encaplimit_dslite encaplimit_map soltimeout fakeroutes sourcefilter keep_ra_dnslifetime ra_holdoff
 	json_get_vars reqaddress reqprefix clientid reqopts defaultreqopts noslaaconly forceprefix extendprefix norelease noserverunicast noclientfqdn noacceptreconfig iface_dslite iface_map iface_464xlat ifaceid userclass vendorclass delegate zone_dslite zone_map zone_464xlat zone encaplimit_dslite encaplimit_map soltimeout fakeroutes sourcefilter keep_ra_dnslifetime ra_holdoff
 	json_for_each_item proto_dhcpv6_add_prefix ip6prefix ip6prefixes
+	
+	local default_prefixaddr
+	config_load ipv6UserCfg
+	config_get default_prefixaddr lan default_prefixaddr "2001:3::/64"
 
 	# Configure
 	local opts=""
+	[ -n "$default_prefixaddr" ] && append opts "-D$default_prefixaddr"
+	
 	[ -n "$reqaddress" ] && append opts "-N$reqaddress"
 
 	[ -z "$reqprefix" -a "$config" = "wan_6" ] && reqprefix=$(uci get network.wan.reqprefix)

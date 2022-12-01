@@ -1,2 +1,4 @@
 /usr/lib/libdwpal.so
+/usr/sbin/dwpal_daemon
 /usr/sbin/dwpal_cli
+/usr/lib/libdwpald_client.so

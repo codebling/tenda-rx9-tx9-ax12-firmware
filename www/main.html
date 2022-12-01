@@ -90,7 +90,7 @@
                     <span class="main-icons r-icon-internet"></span>
                     <span>Internet Status</span>
                 </div>
-                <!-- <div id="addMeshList" class="status-add-mesh clickable"><span class="r-icon-help"></span>如何添加 / 删除子节点?</div> -->
+                <!-- <div id="addMeshList" class="status-add-mesh clickable"><span class="r-icon-help"></span>How to add/remove child nodes?</div> -->
                 <div class="status-content">
                     <div>
                         <div id="routerMode" class="none">
@@ -156,6 +156,23 @@
                                 </div>
                             </div>
                         </div>
+<!--                        <div id="meshWrap" class="none">-->
+<!--                            <div class="status-mesh-line"></div>-->
+<!--                            <div id="meshList" class="status-mesh"></div>-->
+<!--                            <div class="status-mesh-legend">-->
+<!--                                <span>子节点连接状态:</span>-->
+<!--                                <span class="status-mesh-round">信号佳</span>-->
+<!--                                <span class="status-mesh-round warning">信号一般</span>-->
+<!--                                <span class="status-mesh-round error">信号差</span>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div>-->
+<!--                            <div id="onlineList" class="status-client clickable">-->
+<!--                                <span class="r-icon-devices"></span>-->
+<!--                                <span id="clientNum" class="status-client-num">0</span>台设备在线-->
+<!--                            </div>-->
+<!--                        </div>-->
+
                         <div id="meshWrap" class="none">
                             <div class="status-mesh-line"></div>
                             <div id="meshList" class="status-mesh"></div>
@@ -215,6 +232,59 @@
                                     <span id="lineUpTips">Ethernet cable connected</span>
                                 </div>
                             </div>
+
+                            <!--马来-->
+                            <div id="isp_set">
+                                <div class="control-group">
+                                    <label class="control-label">ISP Type:</label>
+                                    <div class="controls">
+                                        <select class="input-append" id="ispType" name="ispType">
+                                            <option value="0">Normal</option>
+                                            <option value="1">Unifi</option>
+                                            <option value="2">Maxis</option>
+                                            <option value="6">Celcom</option>
+                                            <option value="7">Digi</option>
+                                            <!-- Russia -->
+                                            <option value="5">Russia</option>
+                                            <option value="3">Manual</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control-group" id="isp_area" style="display: none">
+                                    <label class="control-label">Area:</label>
+                                    <div class="controls">
+                                        <select class="input-append" id="ispArea" name="ispArea">
+                                            <!--    <option value="2">Maxis</option>
+                                                <option value="4">Maxis-special</option>
+                                                <option value="6">CELCOME WEST(BIZ)</option>
+                                                <option value="7">CELCOME WEST(HOME)</option>
+                                                <option value="8">CELCOME EAST(BIZ)</option>
+                                                <option value="9">CELCOME EAST(HOME)</option>
+                                                <option value="10">Digi-TM</option>
+                                                <option value="11">Digi</option>
+                                                <option value="12">Digi-CT</option>
+                                                <option value="13">Digi-TNB</option>-->
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="ispWrap" class="none">
+                                    <div class="control-group">
+                                        <label class="control-label">Internet VLAN ID:</label>
+                                        <div class="controls">
+                                            <input type="text" class="validatebox" id="wanVlanId" name="wanVlanId" maxlength="4" data-options="{&quot;type&quot;:&quot;num&quot;,&quot;args&quot;:[2,4094]}">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label">IPTV VLAN ID:</label>
+                                        <div class="controls">
+                                            <input type="text" placeholder="Blank VLAN ID indicates that the IPTV function is disabled" class="validatebox" id="lanVlanId" name="lanVlanId" maxlength="4" data-options="{&quot;type&quot;:&quot;num&quot;,&quot;args&quot;:[2,4094]}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
                             <div class="control-group">
                                 <label class="control-label">Connection Type:</label>
                                 <div class="controls">
@@ -243,7 +313,7 @@
                                     <div class="control-group">
                                         <label class="control-label">Server IP Address/Domain Name:</label>
                                         <div class="controls">
-                                            <input type="text" class="validatebox" id="vpnServer" maxlength="63" name="vpnServer" required="required" data-options="{&quot;type&quot;:&quot;domain&quot;}">
+                                            <input type="text" class="validatebox" id="vpnServer" maxlength="64" name="vpnServer" required="required" data-options="{&quot;type&quot;:&quot;domain&quot;}">
                                         </div>
                                     </div>
                                     <div class="control-group">
@@ -477,11 +547,11 @@
                             <div class="function-title">WiFi Schedule</div>
                             <div class="function-status"></div>
                         </div>
-                        <!-- <div class="main-area" id="wrl_bridge">
+                         <!--<div class="main-area" id="wrl_bridge">
                             <div class="function-img r-icon-wifi-repeater"></div>
                             <div class="function-title">Wireless Repeating</div>
                             <div class="function-status"></div>
-                        </div> -->
+                        </div>-->
                         <div class="main-area" id="wrl_channel">
                             <div class="function-img r-icon-channel"></div>
                             <div class="function-title">Channel &amp; Bandwidth</div>
@@ -497,11 +567,11 @@
                             <div class="function-title">WPS</div>
                             <div class="function-status"></div>
                         </div>
-                        <!-- <div class="main-area" id="wrl_beamforming">
+                        <div class="main-area" id="wrl_beamforming">
                             <div class="function-img r-icon-beamforming"></div>
                             <div class="function-title">Beamforming+</div>
                             <div class="function-status"></div>
-                        </div> -->
+                        </div>
 <!--                        <div class="main-area" id="wrl_ofdma">-->
 <!--                            <div class="function-img r-icon-ofdma"></div>-->
 <!--                            <div class="function-title">OFDMA</div>-->
@@ -519,7 +589,7 @@
                         </div>
                         <div class="main-area none" id="wrl_atf">
                             <div class="function-img icon-atf"></div>
-                            <div class="function-title">Fair Communication</div>
+                            <div class="function-title">通信公平</div>
                             <div class="function-status"></div>
                         </div>
                     </section>
@@ -631,7 +701,7 @@
                     <section class="field-set">
                         <!-- <div class="main-area none" id="usb_xunlei">
                             <div class="function-img icon-xunlei-download"></div>
-                            <div class="function-title">迅雷远程下载</div>
+                            <div class="function-title">Offline Download with Xunlei</div>
                             <div class="function-status"></div>
                         </div> -->
                         <div class="main-area none" id="usb_samba">
@@ -701,14 +771,14 @@
                                     </div>
                                 </div>
                                 <!-- PPPoE End-->
-                                <div id="checkboxWrap" class="none">
+                                <!-- <div id="checkboxWrap" class="none">
                                     <div class="control-group">
                                         <div class="controls">
                                             <label class="checkbox" for="prefixDelegate"><input type="checkbox" id="prefixDelegate">
                                                 <span>Obtain IPv6 Prefix Delegation</span></label>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                                 <!-- Static Start-->
                                 <div id="staticWrap" class="none">
                                     <div class="control-group">
@@ -746,25 +816,19 @@
                                 <!-- 隧道 End-->
                                 <!-- WAN侧 End -->
                                 <!-- LAN侧 Start -->
-                                <h2 class="legend">IPv6 LAN Settings</h2>
+                                <!-- <h2 class="legend">IPv6 LAN Settings</h2>
                                 <div class="control-group">
                                     <label class="control-label">Distribution type</label>
                                     <div class="controls">
-                                        <div>
-                                            <label class="checkbox">
-                                                <input type="radio" name="lanType" value="0">DHCPv6
-                                            </label>
-                                        </div>
-                                        <div>
-                                            <label  class="checkbox">
-                                                <input type="radio" name="lanType" value="1"> SLAAC+Stateless DHCP
-                                            </label>
-                                        </div>
-                                        <div>
-                                            <label class="checkbox">
-                                                <input type="radio" name="lanType" value="2"> SLAAC+RDNSS
-                                            </label>
-                                        </div>
+                                        <label class="checkbox" style="display: block;">
+                                            <input type="radio" name="lanType" value="0">DHCPv6
+                                        </label>
+                                        <label  class="checkbox" style="display: block;">
+                                            <input type="radio" name="lanType" value="1"> SLAAC+Stateless DHCP
+                                        </label>
+                                        <label  class="checkbox" style="display: block;">
+                                            <input type="radio" name="lanType" value="2"> SLAAC+RDNSS
+                                        </label>
                                     </div>
                                 </div>
                                 <div class="control-group">
@@ -785,7 +849,7 @@
                                 </div>
                                 <div class="control-group">
                                     <div class="red page-err" id="msg-err-lan"></div>
-                                </div>
+                                </div> -->
                                 <!-- LAN侧 End -->
                             </div>
                             <div class="control-group">

@@ -6,5 +6,5 @@ Source: package/system/ca-certificates
 SourceName: ca-bundle
 Section: base
 Architecture: all
-Installed-Size: 115229
+Installed-Size: 115232
 Description:  System CA certificates as a bundle

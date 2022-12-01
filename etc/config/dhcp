@@ -33,7 +33,7 @@ config dhcp lan
 	option ip6dnstype	'auto'
 	option force	'1'
 	option ra 		'server'
-	option dhcpv6 		'server'
+	#option dhcpv6 		'server'
 	list dhcp_option	''
 	
 config dhcp guest

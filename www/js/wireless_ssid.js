@@ -91,8 +91,8 @@ function callback(str) {
 		return;
 	}
     var num = $.parseJSON(str).errCode;
-    if (num == 1) {
-        top.showDFSMsg();
+	if(num ==1){
+		top.showDFSMsg(0);
 	}else{
 		top.showSaveMsg(num);
 	}
@@ -130,8 +130,8 @@ var moduleModel = R.moduleModel({
 				"wrlPwd": $("#wrlPwd").val(),
 				"wrlPwd_5g": $("#wrlPwd_5g").val()
 			},
-            dataStr,
-            compare = ['wrlEn_5g', 'ssid_5g', 'hideSsid_5g', 'wrlPwd_5g', 'security_5g'];
+			dataStr,
+		    compare =['wrlEn_5g','ssid_5g','hideSsid_5g','wrlPwd_5g','security_5g'];
 		if(dataObj.doubleBand == "1"){  //双频优选开启时  5g信息保持和24g一样
 			for(prop in dataObj){
 				if(prop.indexOf("_5g")){
@@ -140,18 +140,40 @@ var moduleModel = R.moduleModel({
 			}
 		}
 		G.setWifiData = dataObj;
-        if (dataObj.doubleBand == '0') {
-            for (var i = 0; i < compare.length; i++) {
-                if (dataObj[compare[i]] != G.initWifiData[compare[i]]) {
-                    dataObj.wifi_chkHz = "1"
-                    break
-                }
-            }
-        }
+		if(dataObj.doubleBand == '0'){
+			for (var i = 0; i < compare.length ; i++) {
+				if(dataObj[compare[i]] != G.initWifiData[compare[i]]){
+					dataObj.wifi_chkHz = "1"
+					break
+				}
+			}
+		}
 		dataStr = objTostring(dataObj);
 		return dataStr;
 	}
 });
+
+
+//判断是否需要弹出5g相关的DFS提示
+function isShowDfs(){
+	if(G.setWifiData.wrlEn_5g == 0 && G.setWifiData.wrlEn ==0){
+		return false
+	}
+	for(var item in G._5gOption){
+		if(G._5gOption[item] == "wrlEn_5g"){
+			if((G.initWifiData[G._5gOption[item]] != G.setWifiData[G._5gOption[item]]) && G.initWifiData[G._5gOption[item]]=="1"){
+				return false;
+			}
+		}
+		if(G.initWifiData[G._5gOption[item]] != G.setWifiData[G._5gOption[item]]){
+			return true;
+		}
+	}
+	if(G.initWifiData.doubleBand==false&&G.setWifiData.doubleBand=="1"){
+		return true;
+	}
+	return false
+}
 
 
 //模块注册
@@ -184,9 +206,9 @@ function initEvent() {
 		if($(this).val() == 'wpa3sae' || $(this).val() == 'wpa3saewpa2psk' || $(this).val() == 'none'){
             var infoMsg = $(this).val() == 'wpa3sae' ? _("Please confirm that the access terminal supports WPA3-SAE mode. In case of equipment connection problems during use, it is recommended to switch back to WPA/WPA2-PSK") :
                 ($(this).val() == 'none' ? _("Wi-Fi is not encrypted, and there is a risk of being misused by unexpected users. It is recommended to set Wi-Fi password") : _("Please confirm that the access terminal supports WPA3-SAE/WPA2-PSK mode. In case of equipment connection problems during use, it is recommended to switch back to WPA/WPA2-PSK"));
-            var $info = $("<p style='color: #999999;margin-right: 130px;'>" + infoMsg + "</p>");
-            $(this).siblings().remove();
-            $(this).after($info)
+			var $info = $("<p style='color: #999999;margin-right: 130px;'>"+infoMsg+"</p>");
+			$(this).siblings().remove();
+			$(this).after($info)
 		}else{
 			$(this).siblings().remove();
 		}
@@ -333,15 +355,15 @@ function initValue(obj) {
 		if ($("#wrlPwd_").length > 0) {
 			$("#wrlPwd_").val("").attr("disabled", true);
 		}
-        $("select").eq(0).after($("<p style='color: #999999;margin-right: 130px;'>" + _("Wi-Fi is not encrypted, and there is a risk of being misused by unexpected users. It is recommended to set Wi-Fi password") + "</p>"))
+        $("select").eq(0).after($("<p style='color: #999999;margin-right: 130px;'>" + _("Wi-Fi is not encrypted, and there is a risk of being misused by unexpected users. It is recommended to set Wi-Fi password") +"</p>"))
 	} else {
 		$("#wrlPwd").attr("disabled", false);
 		if ($("#wrlPwd_").length > 0) {
 			$("#wrlPwd_").attr("disabled", false);
 		}
 		if(obj.security === 'wpa3sae'|| obj.security ==='wpa3saewpa2psk' ){
-            var infoMsg = obj.security == 'wpa3sae' ? _("Please confirm that the access terminal supports WPA3-SAE mode. In case of equipment connection problems during use, it is recommended to switch back to WPA2-PSK") : _("Please confirm that the access terminal supports WPA3-SAE/WPA2-PSK mode. In case of equipment connection problems during use, it is recommended to switch back to WPA2-PSK");
-            var $info = $("<p style='color: #999999;margin-right: 130px;'>" + infoMsg + "</p>");
+			var infoMsg = obj.security == 'wpa3sae'?  _("Please confirm that the access terminal supports WPA3-SAE mode. In case of equipment connection problems during use, it is recommended to switch back to WPA2-PSK"): _("Please confirm that the access terminal supports WPA3-SAE/WPA2-PSK mode. In case of equipment connection problems during use, it is recommended to switch back to WPA2-PSK");
+			var $info = $("<p style='color: #999999;margin-right: 130px;'>"+infoMsg+"</p>");
 			$("select").eq(0).after($info)
 		}
 	}
@@ -350,15 +372,15 @@ function initValue(obj) {
 		if ($("#wrlPwd_5g_").length > 0) {
 			$("#wrlPwd_5g_").val("").attr("disabled", true);
 		}
-        $("select").eq(1).after($("<p style='color: #999999;margin-right: 130px;'>" + _("Wi-Fi is not encrypted, and there is a risk of being misused by unexpected users. It is recommended to set Wi-Fi password") + "</p>"))
+		$("select").eq(1).after( $("<p style='color: #999999;margin-right: 130px;'>" + _("Wi-Fi is not encrypted, and there is a risk of being misused by unexpected users. It is recommended to set Wi-Fi password") + "</p>"))
 	} else {
 		$("#wrlPwd_5g").attr("disabled", false);
 		if ($("#wrlPwd_5g_").length > 0) {
 			$("#wrlPwd_5g_").attr("disabled", false);
 		}
 		if(obj.security_5g === 'wpa3sae' || obj.security_5g ==='wpa3saewpa2psk'){
-            var infoMsg = obj.security_5g == 'wpa3sae' ? _("Please confirm that the access terminal supports WPA3-SAE mode. In case of equipment connection problems during use, it is recommended to switch back to WPA2-PSK") : _("Please confirm that the access terminal supports WPA3-SAE/WPA2-PSK mode. In case of equipment connection problems during use, it is recommended to switch back to WPA2-PSK");
-            var $info = $("<p style='color: #999999;margin-right: 130px;'>" + infoMsg + "</p>");
+			var infoMsg = obj.security_5g == 'wpa3sae'?  _("Please confirm that the access terminal supports WPA3-SAE mode. In case of equipment connection problems during use, it is recommended to switch back to WPA2-PSK"): _("Please confirm that the access terminal supports WPA3-SAE/WPA2-PSK mode. In case of equipment connection problems during use, it is recommended to switch back to WPA2-PSK");
+			var $info = $("<p style='color: #999999;margin-right: 130px;'>"+infoMsg+"</p>");
 			$("select").eq(1).after($info)
 		}
 	}

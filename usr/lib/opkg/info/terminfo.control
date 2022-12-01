@@ -7,5 +7,5 @@ License: MIT
 LicenseFiles: README
 Section: libs
 Architecture: mips_24kc_nomips16
-Installed-Size: 6233
+Installed-Size: 6237
 Description:  Terminal Info Database (ncurses)

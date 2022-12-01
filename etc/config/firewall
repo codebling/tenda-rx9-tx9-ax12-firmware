@@ -244,3 +244,5 @@ config include 'tc_ipt'
 #config include 'icmp_drop'
 #	option path '/etc/sh/icmp_drop_rule.sh'
 
+config include 'iptv_my'
+	option path '/etc/iptv_my_access'

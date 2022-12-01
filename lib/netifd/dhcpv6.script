@@ -18,6 +18,85 @@ setup_interface () {
 
 	proto_init_update "*" 1
 
+	WAN_RA_DNS="$RA_DNS"
+	WAN_RDNSS="$RDNSS"
+
+	if [ $O_FLAG -eq 1 ];then
+	    if [ -n "$RDNSS" ];then
+	        WAN_RA_DNS=
+	        WAN_RDNSS="$RDNSS"
+        elif [ -n "$RA_DNS" ];then
+	        WAN_RA_DNS="$RA_DNS"
+	        WAN_RDNSS=
+        fi
+	elif [ $O_FLAG -eq 0 ];then
+		if [ -n "$RA_DNS" ];then
+	        WAN_RA_DNS="$RA_DNS"
+	        WAN_RDNSS=
+        elif [ -n "$RDNSS" ];then
+	        WAN_RA_DNS=
+	        WAN_RDNSS="$RDNSS"
+        fi
+	fi
+
+	# Merge RA-DNS
+	wan_origin_dns="$WAN_RDNSS"
+	for radns in $WAN_RA_DNS; do
+		local duplicate=0
+		for dns in $wan_origin_dns; do
+			[ "$radns" = "$dns" ] && duplicate=1
+		done
+		[ "$duplicate" = 0 ] && wan_origin_dns="$wan_origin_dns $radns"
+	done
+
+
+	local tmp_dns=
+	invalid_dns_flag=0
+	for dns in $RDNSS; do
+		local dns_head="${dns%%:*}"
+		if [ "$dns_head" != "fe80" -a "$dns_head" != "FE80" ]; then
+			if [ -z "$tmp_dns" ]; then
+				tmp_dns="$dns"
+			else
+				tmp_dns="$tmp_dns $dns"
+			fi
+		else
+			let invalid_dns_flag+=1;
+		fi
+	done
+	RDNSS="$tmp_dns"
+	
+	tmp_dns=
+	for dns in $RA_DNS; do
+		local dns_head="${dns%%:*}"
+		if [ "$dns_head" != "fe80" -a "$dns_head" != "FE80" ]; then
+			if [ -z "$tmp_dns" ]; then
+				tmp_dns="$dns"
+			else
+				tmp_dns="$tmp_dns $dns"
+			fi
+		else
+			let invalid_dns_flag+=1;
+		fi
+	done
+	RA_DNS="$tmp_dns"
+
+	if [ $M_FLAG -eq 0 -a $O_FLAG -eq 0 ];then
+		PREFIXES=
+	fi
+
+	if [ $O_FLAG -eq 1 -a -n "$RDNSS" ];then
+		RA_DNS=
+	elif [ $O_FLAG -eq 0 -a -n "$RA_DNS" ];then
+		RDNSS=
+	fi
+
+	if [ $O_FLAG -eq 1 -a -n "$DOMAINS" ];then
+		RA_DOMAINS=
+	elif [ $O_FLAG -eq 0 -a -n "$RA_DOMAINS" ];then
+		DOMAINS=
+	fi
+
 	# Merge RA-DNS
 	for radns in $RA_DNS; do
 		local duplicate=0
@@ -27,7 +106,18 @@ setup_interface () {
 		[ "$duplicate" = 0 ] && RDNSS="$RDNSS $radns"
 	done
 
-	for dns in $RDNSS; do
+	#defualt dns set
+	if [ -n "$RA_ADDRESSES" -o -n "$ADDRESSES" ];then
+		if [ "$invalid_dns_flag" -gt 0 ] && [ -z "$RDNSS" ]; then
+			#local default_dns=`uci get ipv6UserCfg.wan.default_dns`
+			#RA_DNS="$default_dns"
+			local lan_link_ipv6_addr=`ip -6 -o addr show dev br-lan | sed -n '/.link/{p}' | awk '{print $4}'`
+			RDNSS="${lan_link_ipv6_addr%%/*}"
+		fi
+	fi
+
+	#for dns in $RDNSS; do
+	for dns in $wan_origin_dns; do
 		proto_add_dns_server "$dns"
 	done
 
@@ -290,7 +380,8 @@ case "$2" in
 	bound)
 		teardown_interface "$1"
 		setup_interface "$1"
-		[ "$(uci get ipv6UserCfg.ipv6.reqiapd)" = "0" ] && /usr/sbin/conntrack -D -f ipv6
+		#[ "$(uci get ipv6UserCfg.ipv6.reqiapd)" = "0" ] && /usr/sbin/conntrack -D -f ipv6
+		[ "$(uci get firewall.nat6.enabled)" = "1" ] && /usr/sbin/conntrack -D -f ipv6 >/dev/null 2>&1
 	;;
 	informed|updated|rebound)
 		setup_interface "$1"

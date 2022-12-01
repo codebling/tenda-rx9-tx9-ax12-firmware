@@ -6,7 +6,7 @@ SourceName: urngd
 License: GPL-2.0 BSD-3-Clause
 Section: utils
 Architecture: mips_24kc_nomips16
-Installed-Size: 5550
+Installed-Size: 5554
 Description:  urngd is OpenWrt's micro non-physical true random number generator based on
  timing jitter.
  

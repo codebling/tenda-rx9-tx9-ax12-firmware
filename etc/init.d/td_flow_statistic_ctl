@@ -9,6 +9,6 @@ start_service() {
     stop_service
     procd_open_instance td_flow_statistic_ctl
     procd_set_param respawn
-    procd_set_param command /bin/td_flow_statistic_ctl
+    procd_set_param command /bin/td_flow_statistic_ctl -w
     procd_close_instance
 }

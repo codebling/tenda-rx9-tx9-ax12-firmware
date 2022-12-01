@@ -9,5 +9,5 @@ LicenseFiles: COPYING
 Section: libs
 Maintainer: Bo Berry <bberryusa@users.sourceforge.net>
 Architecture: mips_24kc_nomips16
-Installed-Size: 56064
+Installed-Size: 56065
 Description:  This package contains the safec  shared library.

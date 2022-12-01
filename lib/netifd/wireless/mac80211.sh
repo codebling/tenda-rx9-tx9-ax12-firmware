@@ -1,6 +1,7 @@
 #!/bin/sh
 . /lib/netifd/netifd-wireless.sh
 . /lib/netifd/hostapd.sh
+. /lib/wifi/platform_dependent.sh
 
 init_wireless_driver "$@"
 
@@ -13,6 +14,18 @@ MP_CONFIG_INT="mesh_retry_timeout mesh_confirm_timeout mesh_holding_timeout mesh
 	       mesh_hwmp_confirmation_interval mesh_awake_window mesh_plink_timeout"
 MP_CONFIG_BOOL="mesh_auto_open_plinks mesh_fwding"
 MP_CONFIG_STRING="mesh_power_mode"
+WAVE_D2="0x980"
+
+get_hwid_from_device()
+{
+        radio_interface=`uci show wireless | grep $1 | cut -d. -f2 | cut -d$'\n' -f1`
+        default_radio=`uci show wireless | grep "device='$radio_interface'"| cut -d. -f1-2 | cut -d$'\n' -f1`
+        ifname=`uci show $default_radio".ifname" | cut -d"=" -f2`
+        ifname=`echo $ifname | awk '{print substr($0, 2, length($0) - 2)}'`
+        ifname=`echo $ifname | cut -d"." -f1`
+        hw_id=`cat /proc/net/mtlk/$ifname/eeprom_parsed | grep -e "HW ID" | cut -d":" -f2 | cut -d"," -f2`
+        echo $hw_id
+}
 
 drv_mac80211_init_ax_config() {
 	config_add_int sDynamicMuTypeDownLink
@@ -21,6 +34,7 @@ drv_mac80211_init_ax_config() {
 	config_add_int he_su_beamformee
 	config_add_int he_mu_beamformer
 	config_add_int he_bss_color
+	config_add_boolean he_bss_color_randomize
 	config_add_int he_operation_bss_color_disabled
 	config_add_int he_default_pe_duration
 	config_add_int he_twt_required
@@ -57,6 +71,7 @@ drv_mac80211_init_ax_config() {
 	config_add_int he_spr_srg_obss_pd_min_offset
 	config_add_int he_spr_srg_obss_pd_max_offset
 	config_add_int multibss_enable
+	config_add_int he_phy_preamble_puncturing_rx
 }
 
 drv_mac80211_init_device_config() {
@@ -64,7 +79,7 @@ drv_mac80211_init_device_config() {
 	drv_mac80211_init_ax_config
 
 	config_add_string path phy 'macaddr:macaddr'
-	config_add_string hwmode band atf_config_file
+	config_add_string hwmode hwmode_real band atf_config_file
 	config_add_string acs_smart_info_file acs_history_file
 	config_add_int beacon_int chanbw frag rts dfs_debug_chan externally_managed testbed_mode
 	config_add_int rxantenna txantenna txpower distance sFixedLtfGi
@@ -82,7 +97,8 @@ drv_mac80211_init_device_config() {
 		vht_txop_ps \
 		htc_vht \
 		rx_antenna_pattern \
-		tx_antenna_pattern
+		tx_antenna_pattern \
+		he_beacon
 	config_add_int vht_max_a_mpdu_len_exp vht_max_mpdu vht_link_adapt vht160 rx_stbc tx_stbc
 	config_add_boolean \
 		ldpc \
@@ -92,10 +108,11 @@ drv_mac80211_init_device_config() {
 		max_amsdu \
 		dsss_cck_40
 	config_add_boolean atf
-	config_add_int atf_interval atf_free_time atf_debug
-	config_add_int obss_interval ignore_40_mhz_intolerant
+	config_add_int atf_interval atf_free_time atf_debug vht_oper_chwidth
+	config_add_int obss_interval obss_beacon_rssi_threshold ignore_40_mhz_intolerant
 	config_add_boolean full_ch_master_control
 	config_add_string ap_retry_limit
+	config_add_int unsolicited_frame_support unsolicited_frame_duration
 
 	if [ -f /lib/netifd/debug_infrastructure.sh ]; then
 		config_add_string hostapd_log_level
@@ -117,6 +134,7 @@ drv_mac80211_init_iface_config() {
 	config_add_int atf_vap_grant
 	config_add_array 'atf_sta_grants:list(macaddr,int)'
 	config_add_string vendor_elems
+	config_add_string start_after
 
 	# mesh
 	config_add_string mesh_id
@@ -141,6 +159,7 @@ mac80211_append_ax_parameters() {
 			he_mu_beamformer \
 			he_bss_color \
 			he_operation_bss_color_disabled \
+			he_bss_color_randomize \
 			he_default_pe_duration \
 			he_twt_required \
 			he_rts_threshold \
@@ -175,7 +194,10 @@ mac80211_append_ax_parameters() {
 			he_spr_non_srg_obss_pd_max_offset \
 			he_spr_srg_obss_pd_min_offset \
 			he_spr_srg_obss_pd_max_offset \
-			multibss_enable
+			multibss_enable \
+			he_phy_preamble_puncturing_rx \
+			unsolicited_frame_support \
+			unsolicited_frame_duration
 
 		append base_cfg "ieee80211ax=$ieee80211ax" "$N"
 		[ -n "$multibss_enable" ] && append base_cfg "multibss_enable=$multibss_enable" "$N"
@@ -184,6 +206,10 @@ mac80211_append_ax_parameters() {
 		[ -n "$he_su_beamformer" ] && append base_cfg "he_su_beamformer=$he_su_beamformer" "$N"
 		[ -n "$he_su_beamformee" ] && append base_cfg "he_su_beamformee=$he_su_beamformee" "$N"
 		[ -n "$he_mu_beamformer" ] && append base_cfg "he_mu_beamformer=$he_mu_beamformer" "$N"
+		if [ -n "$he_bss_color_randomize" ] && [ "$he_bss_color_randomize" = "1" ]; then
+			local rand_bss_color=$(awk 'BEGIN { srand(); printf("%d\n",1+rand()*63) }')
+			he_bss_color="$rand_bss_color"
+		fi
 		[ -n "$he_bss_color" ] && append base_cfg "he_bss_color=$he_bss_color" "$N"
 		[ -n "$he_operation_bss_color_disabled" ] && append base_cfg "he_operation_bss_color_disabled=$he_operation_bss_color_disabled" "$N"
 		[ -n "$he_default_pe_duration" ] && append base_cfg "he_default_pe_duration=$he_default_pe_duration" "$N"
@@ -220,7 +246,14 @@ mac80211_append_ax_parameters() {
 		[ -n "$he_spr_non_srg_obss_pd_max_offset" ] && append base_cfg "he_spr_non_srg_obss_pd_max_offset=$he_spr_non_srg_obss_pd_max_offset" "$N"
 		[ -n "$he_spr_srg_obss_pd_min_offset" ] && append base_cfg "he_spr_srg_obss_pd_min_offset=$he_spr_srg_obss_pd_min_offset" "$N"
 		[ -n "$he_spr_srg_obss_pd_max_offset" ] && append base_cfg "he_spr_srg_obss_pd_max_offset=$he_spr_srg_obss_pd_max_offset" "$N"
-
+		hw_id=`get_hwid_from_device $phy`
+		if [ "$hw_id" = "$WAVE_D2" ]; then
+			if [ "$band" = "5GHz" ]; then
+				[ -n "$he_phy_preamble_puncturing_rx" ] && append base_cfg "he_phy_preamble_puncturing_rx=$he_phy_preamble_puncturing_rx" "$N"
+			fi
+		fi
+		[ -n "$unsolicited_frame_support" ] && append base_cfg "unsolicited_frame_support=$unsolicited_frame_support" "$N"
+		[ -n "$unsolicited_frame_duration" ] && append base_cfg "unsolicited_frame_duration=$unsolicited_frame_duration" "$N"
 	fi
 }
 
@@ -246,8 +279,10 @@ mac80211_add_capabilities() {
 get_ht_capab() {
 	local ht_capab=
 
-	if [ "$auto_channel" -gt 1 ]; then
-		ht_capab="[HT40+][HT40-]"
+	if [ "$auto_channel" -gt 0 ]; then
+		if [ "$htmode" != "VHT20" ] && [ "$htmode" != "HT20" ]; then
+			ht_capab="[HT40+][HT40-]"
+		fi
 	else
 		case "$htmode" in
 			VHT20|HT20) ;;
@@ -308,11 +343,9 @@ mac80211_hostapd_setup_base() {
 	json_select config
 	json_get_vars band full_ch_master_control
 	set_default full_ch_master_control 0
-
+	json_get_vars acs_smart_info_file acs_history_file obss_beacon_rssi_threshold
 	[ "$auto_channel" -gt 0 ] && {
 		channel=acs_smart
-		json_get_values channel_list chanlist channels
-		json_get_values acs_fallback_chan_list acs_fallback_chan
 		
 		case "$htmode" in
 			auto)
@@ -339,9 +372,25 @@ mac80211_hostapd_setup_base() {
 		esac
 			
 	}
+	json_get_values channel_list chanlist channels
+	json_get_values acs_fallback_chan_list acs_fallback_chan
 
 	json_get_values ht_capab
 
+	hwmode_real=
+	#json_get_var hwmode_real hwmode_real
+
+	if [ "$1" == "phy0" ] #2.4G
+	then
+			hwmode_real=`uci get wireless.radio0.hwmode_real`
+	else #5G
+			hwmode_real=`uci get wireless.radio1.hwmode_real`
+	fi
+
+	require_ht=
+	require_he=
+	require_vht=
+	
 	ieee80211n=
 	ieee80211ac=
 	ieee80211ax=
@@ -351,6 +400,7 @@ mac80211_hostapd_setup_base() {
 			require_mode=n;;
 		ac) ieee80211ac=1
 			ieee80211n=1
+			require_vht=1
 			require_mode=ac;;
 		nac|anac)
 			ieee80211n=1
@@ -359,6 +409,7 @@ mac80211_hostapd_setup_base() {
 		ax) ieee80211ax=1
 			ieee80211n=0
 			ieee80211ac=0
+			require_he=1
 			require_mode=ax;;
 		bgnax)
 			ieee80211n=1
@@ -379,6 +430,22 @@ mac80211_hostapd_setup_base() {
 	esac
 
 	ht_capab=`get_ht_capab`
+	#if [ $hwmode_real == 11n -a $hwmode == a ]
+	if [ $hwmode_real == 11n ] && [ $hwmode == a -o $hwmode == g ]
+	then
+			require_ht=1;
+	fi
+
+	[ -n "$require_ht" ] && {
+					append base_cfg "require_ht=1" "$N"
+	}
+	[ -n "$require_he" ] && {
+					append base_cfg "require_he=1" "$N"
+	}
+	[ -n "$require_vht" ] && {
+					append base_cfg "require_vht=1" "$N"
+	}
+
 
 	[ -n "$ieee80211n" ] && {
 		append base_cfg "ieee80211n=1" "$N"
@@ -415,7 +482,8 @@ mac80211_hostapd_setup_base() {
 			DSSS_CCK-40:0x1000::$dsss_cck_40
 
 		ht_capab="$ht_capab$ht_capab_flags"
-		[ -n "$ht_capab" ] && append base_cfg "ht_capab=$ht_capab" "$N"
+		ht_capab_debug=`grep "ht_capab" $UCI_DB_PATH`
+		[ -n "$ht_capab" ] && [ "$ht_capab_debug" = "" ] && append base_cfg "ht_capab=$ht_capab" "$N"
 	}
 
 	enable_vht=0
@@ -438,18 +506,25 @@ mac80211_hostapd_setup_base() {
 				he_phy_channel_width_set=1
 			;;
 		esac
-		op_class=81
+		if [ "$channel" != "14" ]; then
+			op_class=81
+		else
+			op_class=82
+		fi
 	fi
 
 	[ -n "$ignore_40_mhz_intolerant" ] && append base_cfg "ignore_40_mhz_intolerant=$ignore_40_mhz_intolerant" "$N"
 
 	# 802.11ac
 	vht_oper_centr_freq_seg0_idx=0
-	vht_oper_chwidth=0
 	if [ "$band" = "5GHz" ] || [ "$band" = "6GHz" ]; then
 
 		if [ "$band" = "5GHz" ]; then
-			op_class=115
+			if [ $channel -gt 161 ]; then
+				op_class=125
+			else
+				op_class=130
+			fi
 		fi
 		if [ "$htmode" = "auto" ]; then
 			htmode="VHT160"
@@ -469,8 +544,8 @@ mac80211_hostapd_setup_base() {
 			VHT20|VHT40*)
 				vht_oper_chwidth=0
 				if [ "$htmode" = "VHT40+" ] || [ "$htmode" = "VHT40" ] || [ "$htmode" = "VHT40-" ]; then
-					[ "$htmode" = "VHT40+" ] && vht_oper_centr_freq_seg0_idx=$($channel+2)
-					[ "$htmode" = "VHT40-" ] && vht_oper_centr_freq_seg0_idx=$($channel-2)
+					[ "$htmode" = "VHT40+" ] && vht_oper_centr_freq_seg0_idx=$(($channel+2))
+					[ "$htmode" = "VHT40-" ] && vht_oper_centr_freq_seg0_idx=$(($channel-2))
 					he_phy_channel_width_set=2
 				fi
 
@@ -516,7 +591,7 @@ mac80211_hostapd_setup_base() {
 				fi
 			;;
 			VHT80)
-				vht_oper_chwidth=1
+				set_default vht_oper_chwidth 1
 				if [ "$band" = "6GHz" ]; then
 					op_class=133
 					case "$channel" in
@@ -549,7 +624,7 @@ mac80211_hostapd_setup_base() {
 				he_phy_channel_width_set=2
 			;;
 			VHT160)
-				vht_oper_chwidth=2
+				set_default vht_oper_chwidth 2
 				if [ "$band" = "6GHz" ]; then
 					op_class=134
 					case "$channel" in
@@ -587,6 +662,17 @@ mac80211_hostapd_setup_base() {
 				he_phy_channel_width_set=6
 			;;
 		esac
+	fi
+	set_default vht_oper_chwidth 0
+
+	if [ "$is_repeater_mode" -eq 1 ]; then
+		# In repeater mode the channel and bw are unknown until connection to far AP.
+		# Therefore we need to always advertise our maximum capabilities.
+		if [ "$band" = "2.4GHz" ]; then
+			he_phy_channel_width_set=1
+		else
+			he_phy_channel_width_set=6
+		fi
 	fi
 
 	append base_cfg "op_class=$op_class" "$N"
@@ -637,25 +723,35 @@ mac80211_hostapd_setup_base() {
 		[ "$rx_stbc" -lt "$cap_rx_stbc" ] && cap_rx_stbc="$rx_stbc"
 		vht_cap="$(( ($vht_cap & ~(0x700)) | ($cap_rx_stbc << 8) ))"
 
-		case "$vht_oper_chwidth" in
-			0)
-				short_gi_80=0
-				short_gi_160=0
-				vht160=0
-			;;
-			1)
-				short_gi_160=0
-				vht160=0
-			;;
-		esac
+		# In repeater mode the channel and bw are unknown until connection to far AP.
+		# Therefore we need to always advertise our maximum capabilities.
+		if [ "$is_repeater_mode" -ne 1 ]; then
+			case "$vht_oper_chwidth" in
+				0)
+					short_gi_80=0
+					short_gi_160=0
+					vht160=0
+				;;
+				1)
+					short_gi_160=0
+					vht160=0
+				;;
+			esac
+		fi
 
 		mac80211_add_capabilities vht_capab $vht_cap \
 			RXLDPC:0x10::$rxldpc \
 			SHORT-GI-80:0x20::$short_gi_80 \
 			SHORT-GI-160:0x40::$short_gi_160 \
-			TX-STBC-2BY1:0x80::$tx_stbc_2by1 \
+			TX-STBC-2BY1:0x80::$((tx_stbc & tx_stbc_2by1)) \
+			SU-BEAMFORMER:0x800::$su_beamformer \
+			SU-BEAMFORMEE:0x1000::$su_beamformee \
+			MU-BEAMFORMER:0x80000::$mu_beamformer \
+			MU-BEAMFORMEE:0x100000::$mu_beamformee \
 			VHT-TXOP-PS:0x200000::$vht_txop_ps \
 			HTC-VHT:0x400000::$htc_vht \
+			RX-ANTENNA-PATTERN:0x10000000::$rx_antenna_pattern \
+			TX-ANTENNA-PATTERN:0x20000000::$tx_antenna_pattern \
 			RX-STBC-1:0x700:0x100:1 \
 			RX-STBC-12:0x700:0x200:1 \
 			RX-STBC-123:0x700:0x300:1 \
@@ -706,6 +802,7 @@ mac80211_hostapd_setup_base() {
 		[ "$vht_link_adapt_hw" != 0 ] && \
 			vht_capab="$vht_capab[VHT-LINK-ADAPT-$vht_link_adapt_hw]"
 
+		vht_capab="$vht_capab[BF-ANTENNA-4]"
 
 		num_antennas_in_hex=`iw phy "$phy" info | grep Configured | awk '{print $4}' | tr -d '0' | tr -d 'x'`
 		case "$num_antennas_in_hex" in
@@ -714,17 +811,15 @@ mac80211_hostapd_setup_base() {
 			[3569ac]) sounding_dimension=2 ;;
 			[1248]) sounding_dimension=1 ;;
 		esac
-
-		[ -n "$vht_capab" ] && append base_cfg "vht_capab=$vht_capab" "$N"
+		vht_capab="$vht_capab[SOUNDING-DIMENSION-$sounding_dimension]"
+		vht_capab_debug=`grep "vht_capab" $UCI_DB_PATH`
+		[ -n "$vht_capab" ]  && [ "$vht_capab_debug" = "" ] && append base_cfg "vht_capab=$vht_capab" "$N"
 	fi
 
 	json_get_vars sFixedLtfGi
 	[ -n "$sFixedLtfGi" ] && append base_cfg "sFixedLtfGi=$sFixedLtfGi" "$N"
 
 	mac80211_append_ax_parameters
-
-	[ "$auto_channel" -gt 0 ] && {
-		json_get_vars acs_smart_info_file acs_history_file
 
 		set_default acs_smart_info_file "/var/run/acs_smart_info_wlan${phy#phy}.txt"
 		set_default acs_history_file "/var/run/acs_history_wlan${phy#phy}.txt"
@@ -734,13 +829,14 @@ mac80211_hostapd_setup_base() {
 		append base_cfg "acs_bw_comparison=0" "$N"
 		append base_cfg "acs_bw_threshold=80 80 80" "$N"
 
-		[ "$band" = "2.4GHz" ] && {
-			append base_cfg "acs_use24overlapped=1" "$N"
-		}
-		append base_cfg "acs_to_degradation=1 0 0 1 1 1 100" "$N"
-		append base_cfg "obss_beacon_rssi_threshold=-60" "$N"
-		append base_cfg "channel_bandwidth=$channel_bandwidth" "$N"
+	[ "$band" = "2.4GHz" ] && {
+	append base_cfg "acs_use24overlapped=1" "$N"
 	}
+	append base_cfg "acs_to_degradation=1 0 0 1 1 1 100" "$N"
+	append base_cfg "obss_beacon_rssi_threshold=-60" "$N"
+	append base_cfg "channel_bandwidth=$channel_bandwidth" "$N"
+
+	[ -n "$obss_beacon_rssi_threshold" ] && append base_cfg "obss_beacon_rssi_threshold=$obss_beacon_rssi_threshold" "$N"
 
 	json_get_vars ap_retry_limit
 	[ -n "$ap_retry_limit" ] && append base_cfg "ap_retry_limit=$ap_retry_limit" "$N"
@@ -807,13 +903,30 @@ mac80211_hostapd_setup_bss() {
 	append hostapd_cfg "$type=$ifname" "$N"
 
 	hostapd_set_bss_options hostapd_cfg "$vif" || return 1
-	json_get_vars wds dtim_period max_listen_int start_disabled
+	json_get_vars wds dtim_period max_listen_int start_disabled start_after
 
 	set_default wds 0
 	set_default start_disabled 0
 
 	[ "$wds" -gt 0 ] && append hostapd_cfg "wds_sta=1" "$N"
-	[ "$staidx" -gt 0 -o "$start_disabled" -eq 1 ] && append hostapd_cfg "start_disabled=1" "$N"
+
+	[ "$type" = "bss" ] && [ "$staidx" -gt 0 ] && start_disabled=1 # Repeater mode & not Master VAP
+
+	# delaying 2.4G Radio Start until after 5G Starts to Improve Same SSID situations Feature
+	if [ -n "$start_after" ]; then
+		local delayed_start_file="/tmp/${ifname}_start_after_${start_after}"
+		if [ ! -e "${delayed_start_file}" ]; then
+			start_disabled=1
+		else
+			local delayed_start_status=`cat ${delayed_start_file}`
+			if [ "$delayed_start_status" -eq 0 ]; then
+				start_disabled=1
+				delayed_start_might_need_restart=1
+			fi
+		fi
+	fi
+
+	[ "$start_disabled" -eq 1 ] && append hostapd_cfg "start_disabled=1" "$N"
 
 	cat >> /var/run/hostapd-$phy.conf <<EOF
 $hostapd_cfg
@@ -1115,7 +1228,13 @@ mac80211_setup_vif() {
 	json_get_vars mode
 
 	# try again if up wlanX fail.
-#	ip link set dev "$ifname" up || sleep 3
+	echo $ifname | egrep -q "^wlan[0-9]{1,2}\.[0-9]{1,2}$"
+	if [ $? == "0" ]; then
+		# ap interface is slave VAP, and is controlled by hostapd.
+		json_select ..
+		return
+	fi
+
 	ip link set dev "$ifname" up || {
 		wireless_setup_vif_failed IFUP_ERROR
 		json_select ..
@@ -1240,7 +1359,7 @@ drv_mac80211_setup_phy() {
 	do
 		`iw $phy info | grep "* 58.. MHz" > /dev/null`
 		is_phy_5g=$?
-		`iw $phy info | grep "* 59.. MHz" > /dev/null`
+		`iw $phy info | grep "* 60.. MHz" > /dev/null`
 		is_phy_6g=$?
 
 		if [ $is_phy_5g = '0' ]; then
@@ -1261,13 +1380,53 @@ drv_mac80211_setup_phy() {
 }
 
 check_repeater_mode() {
+	auto_channel=0
 	if [ "$band" = "5GHz" ]; then
-		channel=36
+		if [ "$country" = "QA" ] || [ "$country" = "GY" ] || [ "$country" = "ID" ] || [ "$country" = "NG" ]; then
+			channel=149
+		else
+			channel=36
+		fi
 	else
 		channel=1
 	fi
+	htmode="VHT20"
 
-	set_default ignore_40_mhz_intolerant 1
+	ignore_40_mhz_intolerant=1
+	obss_interval=0
+	is_repeater_mode=1
+}
+
+start_delayed_iface_start_script() {
+	echo "0" > "${delayed_start_file}"
+	/lib/netifd/iface_start_after_band.sh "$1" "$2" &
+	local delayed_script_pid=$!
+	local delayed_script_name="$(readlink -f /proc/${delayed_script_pid}/exe)"
+	wireless_add_process "${delayed_script_pid}" "${delayed_script_name}"
+}
+
+start_delayed_start_script_if_needed() {
+	json_select config
+
+	json_get_vars ifname start_after
+
+	[ -n "$ifname" ] || ifname="wlan${phy#phy}${if_idx:+-$if_idx}"
+	if_idx=$((${if_idx:-0} + 1))
+
+	json_select ..
+
+	if [ -n "$start_after" ]; then
+		local delayed_start_file="/tmp/${ifname}_start_after_${start_after}"
+		if [ ! -e "${delayed_start_file}" ]; then
+			touch "${delayed_start_file}"
+			start_delayed_iface_start_script "$ifname" "$start_after"
+		elif [ "${delayed_start_might_need_restart}" -eq 1 ]; then
+			local delayed_start_status=`cat ${delayed_start_file}`
+			if [ "$is_setup" -eq 1 -o "$delayed_start_status" -eq 1 ]; then
+				start_delayed_iface_start_script "$ifname" "$start_after"
+			fi
+		fi
+	fi
 }
 
 setup_reconf() {
@@ -1278,7 +1437,7 @@ setup_reconf() {
 		txpower \
 		rxantenna txantenna \
 		frag rts beacon_int:100 htmode atf_config_file \
-		obss_interval ignore_40_mhz_intolerant
+		obss_interval ignore_40_mhz_intolerant he_beacon
 
 	if [ -f /lib/netifd/debug_infrastructure.sh ]; then
 		json_get_vars hostapd_log_level
@@ -1290,6 +1449,8 @@ setup_reconf() {
 	json_select ..
 
 	local action="$1"; shift
+
+	[ "$action" == "setup" ] && is_setup=1
 
 	find_phy || {
 		echo "Could not find PHY for device '$1'"
@@ -1316,7 +1477,7 @@ setup_reconf() {
 	which flock > /dev/null 2>&1
 	local which_ret=$?
 	if [ $which_ret -eq 0 ]; then
-		local lock_attempts_left=5
+		local lock_attempts_left=30
 		local lock_file="/tmp/lock_file_$phy"
 		exec 222>$lock_file
 		flock -n 222
@@ -1330,6 +1491,7 @@ setup_reconf() {
 		done
 
 		if [ $lock_attempts_left -le 0 ]; then
+			echo "flock failed"
 			exit 1
 		fi
 	else
@@ -1374,9 +1536,8 @@ setup_reconf() {
 
 	rm -f "$hostapd_conf_file"
 
-	if [ "$action" = "setup" ]; then
-		for_each_interface "sta" check_repeater_mode
-	fi
+	is_repeater_mode=0
+	for_each_interface "sta" check_repeater_mode
 
 	[ -n "$has_ap" ] && mac80211_hostapd_setup_base "$phy"
 
@@ -1453,8 +1614,14 @@ setup_reconf() {
 					/etc/init.d/cron start
 				fi
 				# td acs schedule stop
-				iw dev wlan0 iwlwav sBfMode 4
-				iw dev wlan2 iwlwav sBfMode 4
+				beamforming=`uci get system.@system[0].beamforming`
+				if [ "$beamforming" -eq 1 ]; then
+					iw dev wlan0 iwlwav sBfMode 255
+					iw dev wlan2 iwlwav sBfMode 4
+				else
+					iw dev wlan0 iwlwav sBfMode 4
+					iw dev wlan2 iwlwav sBfMode 4
+                fi
 
 				if [ -f /lib/netifd/debug_infrastructure.sh ]; then
 					debug_infrastructure_execute_iw_command debug_iw_post_up_ $radio_index
@@ -1465,6 +1632,9 @@ setup_reconf() {
 			echo "Unknown action: \"$action\". Doing nothng"
 		;;
 	esac
+
+	# delaying 2.4G Radio Start until after 5G Starts to Improve Same SSID situations Feature
+	for_each_interface "ap" start_delayed_start_script_if_needed
 
 	if [ $which_ret -eq 0 ]; then
 		flock -u 222

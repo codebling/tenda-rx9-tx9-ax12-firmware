@@ -4,8 +4,15 @@ listenPort=9000
 . /lib/wifi/platform_dependent.sh
 . /lib/netifd/sigma-ap.sh
 
+# If certification flag doesn't exist, don't start the script
+if [ ! -e "$CERTIFICATION_FILE_PATH" ]
+then
+	echo "$0 : Certification flag was not found, please execute /opt/intel/wave/scripts/debug_toolbox.sh cert [IP address]" > /dev/console
+	return
+fi
+
 HOSTAPD_CLI_CMD=hostapd_cli
-if [ "$OS_NAME" = "UGW" ]; then
+if [ "${MODEL:0:3}" != "LGM" ] && [ "$OS_NAME" = "UGW" ]; then
 	HOSTAPD_CLI_CMD="sudo -u nwk -- $HOSTAPD_CLI_CMD"
 fi
 
@@ -30,7 +37,7 @@ kill_sigma_ap()
 		let killwatchdog=killwatchdog+1
 	done
 }
-
+kill_sigma_mbo_daemon
 kill_sigmaManagerDaemon
 kill_sigma_ap
 
@@ -60,11 +67,14 @@ else
 	chmod +x "$NC_COMMAND"
 fi
 
-ncPid=`ps | grep "light_nc" | grep -v "grep" | awk '{ print $1 }'`
+ncPid=`ps | grep "lite_nc" | grep -v "grep" | awk '{ print $1 }'`
 if [ "$ncPid" = "" ]; then
 	ncPid=`ps | grep "busybox nc -l -p $listenPort" | grep -v "grep" | awk '{ print $1 }'`
 fi
-kill "$ncPid"
+for cur_pid in $ncPid
+do
+	kill "$cur_pid"
+done
 
 if [ "$OS_NAME" = "RDKB" ]; then
 	iptables -t mangle -D FORWARD -m state ! --state NEW -j DSCP --set-dscp 0x00

@@ -1,2 +1,4 @@
+/etc/uci-defaults/wireless
+/usr/share/acl.d/dwpald_acl.json
 /etc/init.d/wireless
 /etc/config/wireless_sdk

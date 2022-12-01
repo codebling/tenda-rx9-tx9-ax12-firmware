@@ -7,5 +7,5 @@ License: BSD-4-Clause
 Section: net
 Maintainer: Felix Fietkau <nbd@nbd.name>
 Architecture: mips_24kc_nomips16
-Installed-Size: 113297
+Installed-Size: 113811
 Description:  This package contains the PPP (Point-to-Point Protocol) daemon.

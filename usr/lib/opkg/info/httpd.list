@@ -153,6 +153,7 @@
 /www/goform/SysToolChangePwd.txt
 /www/img/scan.gif
 /www/goform/getRebootStatus.txt
+/www/img/btn_on_disabled.png
 /www/printer.html
 /www/img/downspeed.png
 /www/goform/WifiRadioSet.txt
@@ -470,6 +471,7 @@
 /www/gulp/task/replace.js
 /www/img/circle.png
 /www/img/line-on.png
+/www/img/btn_off_disabled.png
 /www/img/icon-online.png
 /www/gulp/otherStyle/logo-white.png
 /www/img/device/htc.png

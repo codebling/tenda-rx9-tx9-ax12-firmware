@@ -80,7 +80,7 @@ detect_mac80211() {
 	}
 	
 	SUFFIX=`echo ${lan_mac#*:*:*:} | sed 's/://g' | tr [a-z] [A-Z]`
-	macaddr=$(macaddr_add "$lan_mac" 2 )
+	macaddr=$(macaddr_add "$lan_mac" 3 )
 	for _dev in /sys/class/ieee80211/*; do
 		[ -e "$_dev" ] || continue
 
@@ -185,6 +185,7 @@ detect_mac80211() {
 			set wireless.radio${devidx}.band=${band:-2.4}GHz
 			set wireless.radio${devidx}.channel=${channel:-auto}
 			set wireless.radio${devidx}.hwmode=11${mode_band}
+			set wireless.radio${devidx}.hwmode_real=11${mode_band}
 			set wireless.radio${devidx}.macaddr=${phymac}
 			${ht_capab}
 			set wireless.radio${devidx}.disabled=0
@@ -263,7 +264,41 @@ detect_mac80211() {
 			set wireless.radio${devidx}_1.expire=480
 			set wireless.radio${devidx}_1.dtim_period=1
 			set wireless.radio${devidx}_1.s11nProtection=1
-EOF
+		EOF
+
+		uci delete wireless.@web_disable_channels[0]
+		uci add wireless web_disable_channels
+		uci set wireless.@web_disable_channels[0].BR_phy1='HT40:140,144 HT80:132,136,140,144'
+		uci set wireless.@web_disable_channels[0].AR_phy1='HT40:116,120 HT80:116,120,124,128'
+		uci set wireless.@web_disable_channels[0].AU_phy1='HT40:116,120,124,128,140,144 HT80:116,120,124,128,132,136,140,144'
+		uci set wireless.@web_disable_channels[0].IN_phy1='HT40:116,120 HT80:116,120,124,128'
+		uci set wireless.@web_disable_channels[0].US_phy1='HT40:140,144 HT80:132,136,140,144'
+		uci set wireless.@web_disable_channels[0].TW_phy1='HT40:116,120,124,128,140,144 HT80:116,120,124,128'
+		uci set wireless.@web_disable_channels[0].CA_phy1='HT40:116,120,140,144 HT80:116,120,124,128,132,136,140,144'
+		uci set wireless.@web_disable_channels[0].RO_phy1='HT40:140,144 HT80:132,136,140,144'
+		uci set wireless.@web_disable_channels[0].JP_phy1='HT40:140,144 HT80:132,136,140,144'
+		uci set wireless.@web_disable_channels[0].BA_phy1='HT40:140,144 HT80:132,136,140,144'
+		uci set wireless.@web_disable_channels[0].country_0='GB AE KR TH MO NZ QA SA SG'
+		uci set wireless.@web_disable_channels[0].country_1='BR ZA UA VN HK PH NG HN EC LK TT'
+		uci set wireless.@web_disable_channels[0].country_2='AR'
+		uci set wireless.@web_disable_channels[0].country_3='AU UY'   
+		uci set wireless.@web_disable_channels[0].country_4='IN'             
+		uci set wireless.@web_disable_channels[0].country_5='RU'
+		uci set wireless.@web_disable_channels[0].country_6='IQ MY CL BH OM'
+		uci set wireless.@web_disable_channels[0].country_7='US UZ'  
+		uci set wireless.@web_disable_channels[0].country_8='TW'
+		uci set wireless.@web_disable_channels[0].country_9='CA'   
+		uci set wireless.@web_disable_channels[0].country_10='MX CO PA PR DO GT'
+		uci set wireless.@web_disable_channels[0].country_11='JO'
+		uci set wireless.@web_disable_channels[0].country_12='IL AZ GE AM IR MC TN'
+		uci set wireless.@web_disable_channels[0].country_13='RO PL IT ES HU CZ FR BG DE GR TR IE MK SI CY LV RS BY SE FI NL AT BE HR DK EE IS KW LI LT LU MT NO PT SK CH'
+		uci set wireless.@web_disable_channels[0].country_14='ID BO PE VE LB BZ BN'
+		uci set wireless.@web_disable_channels[0].country_15='PK'
+		uci set wireless.@web_disable_channels[0].country_16='JP'    
+		uci set wireless.@web_disable_channels[0].country_17='CN'
+		uci set wireless.@web_disable_channels[0].country_18='EG'
+		uci set wireless.@web_disable_channels[0].country_19='BA' 
+
 		uci -q commit wireless
 
 		devidx=$(($devidx + 1))

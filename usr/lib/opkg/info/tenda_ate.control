@@ -1,9 +1,9 @@
 Package: tenda_ate
 Version: 12
-Depends: libc, libubox20191228, libnl-tiny
+Depends: libc, libubox20191228, libnl-tiny, libcommon, libmatrixssl, td_serverd, libuci20130104, libblobmsg-json, ucloud, libsqlite3-0, qos_nl
 Source: package/tenda_property/tenda_ate
 SourceName: tenda_ate
 Section: Tenda Property
 Architecture: mips_24kc_nomips16
-Installed-Size: 16085
+Installed-Size: 16319
 Description:  tenda_ate

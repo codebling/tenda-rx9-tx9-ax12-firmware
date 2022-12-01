@@ -1,9 +1,9 @@
 Package: iwlwav-hostap-uci
 Version: 2.8
-Depends: libc, libopenssl1.0.2t, librt, libnl200
+Depends: libc, libopenssl1.0.2t, librt, libnl200, libsafec3
 Source: intel_source/feeds/ugw/wlan/feed_wlan_6x_uci/wlan_wave_feed/iwlwav-hostap-uci
 SourceName: iwlwav-hostap-uci
 Section: net
 Architecture: mips_24kc_nomips16
-Installed-Size: 781969
+Installed-Size: 808632
 Description:  IEEE 802.11 AP, IEEE 802.1X/WPA/WPA2/EAP/RADIUS Authenticator

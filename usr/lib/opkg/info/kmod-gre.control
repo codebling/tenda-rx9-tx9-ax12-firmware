@@ -1,10 +1,10 @@
 Package: kmod-gre
 Version: 4.9.206-1
-Depends: kernel (=4.9.206-1-73b4078bb8acdc578ded46d0b302884e), kmod-iptunnel
+Depends: kernel (=4.9.206-1-6ceae50cbd3fbb1b6331d5aa1f7b9cea), kmod-iptunnel
 Source: package/kernel/linux
 SourceName: kmod-gre
 License: GPL-2.0
 Section: kernel
 Architecture: mips_24kc_nomips16
-Installed-Size: 9316
+Installed-Size: 9322
 Description:  Generic Routing Encapsulation support

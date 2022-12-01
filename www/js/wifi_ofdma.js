@@ -34,7 +34,7 @@ R.module("wrlBf", view, moduleModel);
 function initEvent() {
     $("#ofdmaEn").on("click", function () {
         if ($(this).hasClass("btn-off")) {
-            if (!confirm(_("Some OFDMA terminals have compatibility problems, which may cause unknown problems. It is recommended to open them carefully!"))) {
+            if (!confirm(_("部分终端OFDMA存在兼容性问题，可能出现未知问题，建议谨慎开启！"))) {
                 return;
             }
         }
@@ -49,9 +49,9 @@ function initEvent() {
         }
         wrlBfInfo.submit();
         if ($("#ofdmaEn").val() === "1") {
-            $("#waitingTip").html(_("Enabling OFDMA")).removeClass("none");
+            $("#waitingTip").html(_("正在开启OFDMA")).removeClass("none");
         } else {
-            $("#waitingTip").html(_("Shutting down OFDMA")).removeClass("none");
+            $("#waitingTip").html(_("正在关闭OFDMA")).removeClass("none");
         }
     });
 }

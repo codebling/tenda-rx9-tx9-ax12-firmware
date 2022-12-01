@@ -9,5 +9,5 @@ LicenseFiles: COPYING
 Section: libs
 Maintainer: Felix Fietkau <nbd@nbd.name>
 Architecture: mips_24kc_nomips16
-Installed-Size: 15875
+Installed-Size: 15878
 Description:  This package contains a library for javascript object notation backends.

@@ -3,8 +3,7 @@ var G = {},
 	addMacList = [],
 	editing = false,
 	getDataTimer,
-	ajaxInterval,
-    setPendding = false;
+	ajaxInterval;
 
 var selectObjDown = {
 	"initVal": "",
@@ -44,16 +43,12 @@ var selectObjUp = {
 var netCtrlInfo;
 var pageview = R.pageView({ //页面初始化
 	init: function () {
-        setPendding=true;
 		top.loginOut();
 		top.$(".main-dailog").removeClass("none");
 		top.$(".save-msg").addClass("none");
 
 		$("#submit").on("click", function () {
-            /**by xm 页面第一次加载完成后才能点击保存按钮，避免造成数据未返回点击保存按钮出现传入后台数据为空的情况 */
-            if(!setPendding){
-                netCtrlInfo.submit();
-            }
+			netCtrlInfo.submit();
 		});
 	}
 });
@@ -220,7 +215,6 @@ var delMacList = [];
 }*/
 
 function initList(list) {
-    setPendding = false;
 	var initEn = list[0];
 	updateData(list);
 	getDataTimer = setTimeout(function () {
@@ -424,7 +418,7 @@ function drawList(dataList,orgResData) {
 			});
 		}
 	}
-	$("span[alt=limitDown] .dropdown-menu").css("right", "0");
+	$("span[alt=limitDown] .dropdown-menu").css("left", "-94px");
 	top.initIframeHeight();
 }
 

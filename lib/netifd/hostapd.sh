@@ -2,6 +2,7 @@
 if [ -f /lib/netifd/debug_infrastructure.sh ]; then
 	. /lib/netifd/debug_infrastructure.sh
 fi
+. /lib/functions.sh
 
 wpa_supplicant_add_rate() {
 	local var="$1"
@@ -44,9 +45,14 @@ hostapd_append_wpa_key_mgmt() {
 
 	case "$auth_type" in
 		psk|eap)
-			[ "${ieee80211w:-0}" -ne 2 ] && append wpa_key_mgmt "WPA-$auth_type_l"
+			if [ "$mode" = "sta" ]; then
+				append wpa_key_mgmt "WPA-$auth_type_l"
+				[ "${ieee80211w:-0}" -gt 0 ] && append wpa_key_mgmt "WPA-${auth_type_l}-SHA256"
+			else
+				[ "${ieee80211w:-0}" -ne 2 ] && append wpa_key_mgmt "WPA-$auth_type_l"
+				[ "${ieee80211w:-0}" -gt 1 ] && append wpa_key_mgmt "WPA-${auth_type_l}-SHA256"
+			fi
 			[ "${ieee80211r:-0}" -gt 0 ] && append wpa_key_mgmt "FT-${auth_type_l}"
-			[ "${ieee80211w:-0}" -gt 1 ] && append wpa_key_mgmt "WPA-${auth_type_l}-SHA256"
 		;;
 		eap192)
 			append wpa_key_mgmt "WPA-EAP-SUITE-B-192"
@@ -55,7 +61,11 @@ hostapd_append_wpa_key_mgmt() {
 			append wpa_key_mgmt "WPA-EAP-SUITE-B-192"
 			append wpa_key_mgmt "WPA-EAP"
 			[ "${ieee80211r:-0}" -gt 0 ] && append wpa_key_mgmt "FT-EAP"
-			[ "${ieee80211w:-0}" -gt 1 ] && append wpa_key_mgmt "WPA-EAP-SHA256"
+			if [ "$mode" = "sta" ]; then
+				[ "${ieee80211w:-0}" -gt 0 ] && append wpa_key_mgmt "WPA-EAP-SHA256"
+			else
+				[ "${ieee80211w:-0}" -gt 1 ] && append wpa_key_mgmt "WPA-EAP-SHA256"
+			fi
 		;;
 		sae)
 			append wpa_key_mgmt "SAE"
@@ -64,7 +74,11 @@ hostapd_append_wpa_key_mgmt() {
 		psk-sae)
 			append wpa_key_mgmt "WPA-PSK"
 			[ "${ieee80211r:-0}" -gt 0 ] && append wpa_key_mgmt "FT-PSK"
-			[ "${ieee80211w:-0}" -gt 1 ] && append wpa_key_mgmt "WPA-PSK-SHA256"
+			if [ "$mode" = "sta" ]; then
+				[ "${ieee80211w:-0}" -gt 0 ] && append wpa_key_mgmt "WPA-PSK-SHA256"
+			else
+				[ "${ieee80211w:-0}" -gt 1 ] && append wpa_key_mgmt "WPA-PSK-SHA256"
+			fi
 			append wpa_key_mgmt "SAE"
 			[ "${ieee80211r:-0}" -gt 0 ] && append wpa_key_mgmt "FT-SAE"
 		;;
@@ -72,6 +86,9 @@ hostapd_append_wpa_key_mgmt() {
 			append wpa_key_mgmt "OWE"
 		;;
 	esac
+
+	[ "$dpp_auth_enabled" -eq 1 ] && append wpa_key_mgmt "DPP"
+	[ "$auth_osen" = "1" ] && append wpa_key_mgmt "OSEN"
 }
 
 hostapd_append_wmm_params() {
@@ -144,22 +161,36 @@ hostapd_common_add_device_config() {
 	config_add_string require_mode
 	config_add_string dfs_ch_state_file
 	config_add_boolean legacy_rates
+	config_add_boolean acs_use24overlapped
+	config_add_boolean tx_mcs_set_defined
+	config_add_boolean ignore_supported_channels_errors
 	config_add_int sub_band_dfs
 	config_add_int sRadarRssiTh
+	config_add_int ScanRssiTh
+	config_add_int acs_scan_no_flush
 	config_add_int sta_statistics
+	config_add_int sConfigMRCoexActiveTime
+	config_add_int sConfigMRCoex
+	config_add_int sConfigMRCoexInactiveTime
 	config_add_string sCoCPower
 	config_add_string sCoCAutoCfg
 	config_add_string sErpSet
 	config_add_string sFWRecovery
 	config_add_string sFixedRateCfg
+	config_add_string sInterferDetThresh
+	config_add_int acs_bg_scan_do_switch
+	config_add_int acs_update_do_switch
 	config_add_int num_antennas
 	config_add_int owl
 	config_add_int notify_action_frame
 	config_add_int rts_threshold
+	config_add_int sBfMode
+	config_add_int sMaxMpduLen
+	config_add_int sProbeReqCltMode
 	config_add_boolean allow_scan_during_cac
-	config_add_string colocated_6g_radio_info
-	config_add_string colocated_6g_vap_info
-    	config_add_int acs_bg_scan_do_switch
+	config_add_boolean sQAMplus
+	config_add_int adv_proto_query_resp_len
+	config_add_int acs_bg_scan_do_switch
 	config_add_int current_rssi
 
 	if [ -f /lib/netifd/debug_infrastructure.sh ]; then
@@ -179,11 +210,14 @@ hostapd_prepare_device_config() {
 	json_get_vars country country_ie beacon_int:100 doth require_mode legacy_rates \
 					dfs_debug_chan externally_managed testbed_mode \
 					sub_band_dfs sCoCPower sCoCAutoCfg sErpSet sFWRecovery sFixedRateCfg \
-					sRadarRssiTh band num_antennas owl \
+					sInterferDetThresh acs_bg_scan_do_switch acs_update_do_switch \
+					sRadarRssiTh ScanRssiTh acs_scan_no_flush band num_antennas owl \
 					sta_statistics notify_action_frame rts_threshold \
 					allow_scan_during_cac dfs_ch_state_file \
-					colocated_6g_radio_info colocated_6g_vap_info \
-					dfs_ch_state_file  acs_bg_scan_do_switch current_rssi
+					sConfigMRCoexActiveTime sQAMplus sBfMode sConfigMRCoex \
+					sConfigMRCoexInactiveTime sProbeReqCltMode acs_use24overlapped sMaxMpduLen \
+					tx_mcs_set_defined ignore_supported_channels_errors \
+					adv_proto_query_resp_len acs_bg_scan_do_switch current_rssi
 
         json_get_var sPowerSelection txpower
 
@@ -201,6 +235,7 @@ hostapd_prepare_device_config() {
 		"12") sPowerSelection=15 ;;
 		"25") sPowerSelection=6 ;;
 		"50") sPowerSelection=3 ;;
+		"75") sPowerSelection=1 ;;
 		"100") sPowerSelection=0 ;;
 		*) sPowerSelection= ;;
 	esac
@@ -211,18 +246,41 @@ hostapd_prepare_device_config() {
 	[ -n "$sPowerSelection" ] && append base_cfg "sPowerSelection=$sPowerSelection" "$N"
 	[ -n "$sFWRecovery" ] && append base_cfg "sFWRecovery=$sFWRecovery" "$N"
 	[ -n "$sFixedRateCfg" ] && append base_cfg "sFixedRateCfg=$sFixedRateCfg" "$N"
+	[ -n "$sInterferDetThresh" ] && append base_cfg "sInterferDetThresh=$sInterferDetThresh" "$N"
+	[ -n "$acs_bg_scan_do_switch" ] && append base_cfg "acs_bg_scan_do_switch=$acs_bg_scan_do_switch" "$N"
+	[ -n "$acs_update_do_switch" ] && append base_cfg "acs_update_do_switch=$acs_update_do_switch" "$N"
 	[ -n "$sta_statistics" ] && append base_cfg "sStationsStat=$sta_statistics" "$N"
 	[ -n "$owl" ] && append base_cfg "owl=$owl" "$N"
 	[ -n "$notify_action_frame" ] && append base_cfg "notify_action_frame=$notify_action_frame" "$N"
 	[ -n "$rts_threshold" ] && append base_cfg "rts_threshold=$rts_threshold" "$N"
 	[ -n "$allow_scan_during_cac" ] && append base_cfg "allow_scan_during_cac=$allow_scan_during_cac" "$N"
-	[ -n "$colocated_6g_radio_info" ] && append base_cfg "colocated_6g_radio_info=$colocated_6g_radio_info" "$N"
-	[ -n "$colocated_6g_vap_info" ] && append base_cfg "colocated_6g_vap_info=$colocated_6g_vap_info" "$N"
+	[ -n "$sBfMode" ] && append base_cfg "sBfMode=$sBfMode" "$N"
+	[ -n "$sProbeReqCltMode" ] && append base_cfg "sProbeReqCltMode=$sProbeReqCltMode" "$N"
+	[ -n "$acs_use24overlapped" ] && append base_cfg "acs_use24overlapped=$acs_use24overlapped" "$N"
+	[ -n "$sMaxMpduLen" ] && append base_cfg "sMaxMpduLen=$sMaxMpduLen" "$N"
+	[ -n "$ScanRssiTh" ] && append base_cfg "ScanRssiTh=$ScanRssiTh" "$N"
+	[ -n "$acs_scan_no_flush" ] && append base_cfg "acs_scan_no_flush=$acs_scan_no_flush" "$N"
+
+	if [ -n "$sConfigMRCoex" ]; then
+		append base_cfg "sConfigMRCoex=$sConfigMRCoex" "$N"
+		[ -n "$sConfigMRCoexActiveTime" ] && append base_cfg "sConfigMRCoexActiveTime=$sConfigMRCoexActiveTime" "$N"
+		[ -n "$sConfigMRCoexInactiveTime" ] && append base_cfg "sConfigMRCoexInactiveTime=$sConfigMRCoexInactiveTime" "$N"
+	fi
+
 	[ -n "$dfs_ch_state_file" ] && append base_cfg "dfs_channels_state_file_location=$dfs_ch_state_file" "$N"
+
+	[ -n "$tx_mcs_set_defined" ] && append base_cfg "tx_mcs_set_defined=$tx_mcs_set_defined" "$N"
+
+	[ -n "$ignore_supported_channels_errors" ] && append base_cfg "ignore_supported_channels_errors=$ignore_supported_channels_errors" "$N"
+
 	[ -n "$acs_bg_scan_do_switch" ] && append base_cfg "acs_bg_scan_do_switch=$acs_bg_scan_do_switch" "$N"
 	[ -n "$current_rssi" ] && append base_cfg "rssi_reject_assoc_rssi=$current_rssi" "$N"
 
 	[ "$testbed_mode" -gt 0 ] && append base_cfg "testbed_mode=1" "$N"
+
+	if [ "$hwmode" = "g" ] && [ -n "$ieee80211n" ]; then
+		[ -n "$sQAMplus" ] && append base_cfg "sQAMplus=$sQAMplus" "$N"
+	fi
 
 	append base_cfg "atf_config_file=$hostapd_atf_conf_file" "$N"
 
@@ -250,6 +308,7 @@ hostapd_prepare_device_config() {
 	[ "$hwmode" = "g" ] && { # TODO: Remove? not done in FAPI
 		[ "$legacy_rates" -eq 0 ] && set_default rate_list "6000 9000 12000 18000 24000 36000 48000 54000"
 		[ -n "$require_mode" ] && set_default basic_rate_list "6000 12000 24000"
+        [ $hwmode_real == 11gn ] && set_default basic_rate_list "6000 12000 24000"
 	}
 
 	case "$require_mode" in
@@ -273,7 +332,8 @@ hostapd_prepare_device_config() {
 	[ -n "$dfs_debug_chan" ] && append base_cfg "dfs_debug_chan=$dfs_debug_chan" "$N"
 
 	[ "$externally_managed" = "1" ] && append base_cfg "acs_scan_mode=1" "$N"
-
+	[ -n "$he_beacon" ] && append base_cfg "he_beacon=$he_beacon" "$N"
+	[ -n "$adv_proto_query_resp_len" ] && append base_cfg "adv_proto_query_resp_len=$adv_proto_query_resp_len" "$N"
 	cat > "$config" <<EOF
 driver=$driver
 $base_cfg
@@ -281,13 +341,15 @@ EOF
 }
 
 hostapd_common_add_bss_config() {
+	config_add_string colocated_6g_radio_info
+	config_add_array 'colocated_6g_vap_info:list(int,macaddr,string,boolean,boolean,boolean,int)'
 	config_add_string 'bssid:macaddr' 'ssid:string'
 	config_add_boolean wds wmm uapsd hidden
 
-	config_add_int maxassoc max_inactivity
+	config_add_int maxassoc max_inactivity sae_pwe
 	config_add_boolean disassoc_low_ack isolate short_preamble
 
-	config_add_int sFourAddrMode sBridgeMode
+	config_add_int sBridgeMode
 
 	config_add_string sAddPeerAP
 
@@ -298,6 +360,9 @@ hostapd_common_add_bss_config() {
 
 	config_add_boolean rsn_preauth auth_cache
 	config_add_int ieee80211w
+	config_add_boolean beacon_protection_enabled
+	config_add_boolean disable_bigtk_rekey
+	config_add_string group_mgmt_cipher
 	config_add_int eapol_version
 
 	config_add_string 'auth_server:host' 'server:host'
@@ -340,6 +405,7 @@ hostapd_common_add_bss_config() {
 	config_add_string sae_key
 
 	config_add_boolean wps_pushbutton wps_keypad wps_label ext_registrar wps_pbc_in_m1
+	config_add_boolean wps_virtual_pushbutton wps_physical_pushbutton wps_virtual_display wps_physical_display
 	config_add_int wps_ap_setup_locked wps_independent wps_state
 	config_add_int wps_cred_processing
 	config_add_string wps_device_type wps_device_name wps_manufacturer wps_pin
@@ -370,6 +436,20 @@ hostapd_common_add_bss_config() {
 
 	config_add_string 'owe_transition_bssid:macaddr' 'owe_transition_ssid:string'
 
+	config_add_boolean hs20 disable_dgaf osen offload_gas
+	config_add_int anqp_domain_id
+	config_add_int hs20_deauth_req_timeout
+	config_add_array hs20_oper_friendly_name
+	config_add_array osu_provider
+	config_add_array operator_icon
+	config_add_array hs20_conn_capab
+	config_add_string osu_ssid hs20_wan_metrics hs20_operating_class hs20_t_c_filename hs20_t_c_timestamp
+	config_add_int hs20_release
+	config_add_boolean enable_bss_load_ie manage_p2p allow_cross_connection tdls_prohibit
+
+	config_add_string dpp_controller dpp_connector dpp_csign dpp_netaccesskey \
+		dpp_netaccesskey_expired dpp_resp_wait_time dpp_gas_query_timeout_period
+
 	config_add_int num_res_sta
 	config_add_int proxy_arp
 	config_add_int mbo
@@ -382,6 +462,11 @@ hostapd_common_add_bss_config() {
 	config_add_string authresp_elements
 	config_add_string vendor_elements
 	config_add_string assocresp_elements
+	config_add_int num_vrt_backhauls
+	config_add_string multi_ap_backhaul_ssid
+	config_add_string multi_ap_backhaul_wpa_psk
+	config_add_string multi_ap_backhaul_wpa_passphrase
+	config_add_string ul_csa
 	config_add_string mesh_mode
 	config_add_string ctrl_interface_group
 	config_add_string qos_map_set
@@ -400,6 +485,19 @@ hostapd_common_add_bss_config() {
 	config_add_string hessid
 	config_add_int management_frames_rate
 	config_add_int bss_beacon_int
+	config_add_int mem_only_cred
+	config_add_int dynamic_multicast_mode
+	config_add_int dynamic_multicast_rate
+	config_add_int roaming_anqp_ois_count
+	config_add_string roaming_consortium_0
+	config_add_string roaming_consortium_1
+	config_add_string roaming_consortium_2
+
+
+	config_add_boolean soft_block_acl_enable
+	config_add_int soft_block_acl_wait_time \
+		soft_block_acl_allow_time soft_block_acl_on_auth_req soft_block_acl_on_probe_req
+
 
 	config_add_int \
 		wmm_ac_bk_cwmin wmm_ac_bk_cwmax wmm_ac_bk_aifs wmm_ac_bk_txop_limit wmm_ac_bk_acm \
@@ -419,6 +517,66 @@ hostapd_common_add_bss_config() {
 	fi
 }
 
+append_hs20_oper_friendly_name() {
+	[ -n "$1" ] && append bss_conf "hs20_oper_friendly_name=$1" "$N"
+}
+
+append_osu_provider_service_desc() {
+	append bss_conf "osu_service_desc=$1" "$N"
+}
+
+append_hs20_icon() {
+	local width height lang type path
+	config_get width "$1" width
+	config_get height "$1" height
+	config_get lang "$1" lang
+	config_get type "$1" type
+	config_get path "$1" path
+
+	append bss_conf "hs20_icon=$width:$height:$lang:$type:$1:$path" "$N"
+}
+
+append_hs20_icons() {
+	config_load wireless
+	config_foreach append_hs20_icon hs20-icon
+}
+
+append_operator_icon() {
+	[ -n "$1" ] && append bss_conf "operator_icon=$1" "$N"
+}
+
+append_osu_icon() {
+	append bss_conf "osu_icon=$1" "$N"
+}
+
+append_osu_provider() {
+	local cfgtype osu_server_uri osu_friendly_name osu_nai osu_nai2 osu_method_list
+
+	config_load wireless
+	config_get cfgtype "$1" TYPE
+	[ "$cfgtype" != "osu-provider" ] && return
+
+	append bss_conf "# provider $1" "$N"
+	config_get osu_server_uri "$1" osu_server_uri
+	config_get osu_nai "$1" osu_nai
+	config_get osu_nai2 "$1" osu_nai2
+	config_get osu_method_list "$1" osu_method
+
+	append bss_conf "osu_server_uri=$osu_server_uri" "$N"
+	append bss_conf "osu_nai=$osu_nai" "$N"
+	append bss_conf "osu_nai2=$osu_nai2" "$N"
+	append bss_conf "osu_method_list=$osu_method_list" "$N"
+
+	config_list_foreach "$1" osu_service_desc append_osu_provider_service_desc
+	config_list_foreach "$1" osu_icon append_osu_icon
+
+	append bss_conf "$N"
+}
+
+append_hs20_conn_capab() {
+	[ -n "$1" ] && append bss_conf "hs20_conn_capab=$1" "$N"
+}
+
 hostapd_set_bss_options() {
 	local var="$1"
 	local phy="$2"
@@ -433,10 +591,12 @@ hostapd_set_bss_options() {
 	json_get_vars \
 		wep_rekey wpa_group_rekey wpa_pair_rekey wpa_master_rekey \
 		wpa_disable_eapol_key_retries \
-		maxassoc max_inactivity disassoc_low_ack isolate auth_cache \
+		maxassoc num_vrt_backhauls max_inactivity disassoc_low_ack isolate auth_cache \
+		multi_ap_backhaul_ssid multi_ap_backhaul_wpa_psk multi_ap_backhaul_wpa_passphrase \
 		wps_pushbutton wps_keypad wps_label ext_registrar wps_pbc_in_m1 wps_ap_setup_locked \
+		wps_virtual_pushbutton wps_physical_pushbutton wps_virtual_display wps_physical_display \
 		wps_independent wps_device_type wps_device_name wps_manufacturer wps_pin \
-		ssid wmm uapsd hidden short_preamble rsn_preauth \
+		macfilter ssid wmm uapsd hidden short_preamble rsn_preauth \
 		iapp_interface eapol_version acct_server acct_secret acct_port \
 		dynamic_vlan ieee80211w sec_acct_server sec_acct_secret sec_acct_port \
 		acct_interim_interval wps_state wps_rf_bands wps_uuid qos_map_set \
@@ -457,7 +617,13 @@ hostapd_set_bss_options() {
 		wps_ap_settings wps_friendly_name wps_model_url wps_upc wps_model_name \
 		sUdmaEnabled sUdmaVlanId vendor_vht internet_available asra esr uesa \
 		venue_type venue_group hessid sae_require_mfp management_frames_rate \
-		sFourAddrMode sBridgeMode sAddPeerAP bss_beacon_int
+		sBridgeMode sAddPeerAP bss_beacon_int \
+		mem_only_cred dynamic_multicast_mode dynamic_multicast_rate sae_pwe \
+		beacon_protection_enabled disable_bigtk_rekey group_mgmt_cipher \
+		soft_block_acl_enable soft_block_acl_wait_time soft_block_acl_allow_time \
+		soft_block_acl_on_auth_req soft_block_acl_on_probe_req \
+		colocated_6g_radio_info ul_csa \
+		roaming_consortium_0 roaming_consortium_1 roaming_consortium_2 roaming_anqp_ois_count
 
 	if [ -f /lib/netifd/debug_infrastructure.sh ]; then
 		debug_infrastructure_json_get_vars debug_hostap_conf_
@@ -478,10 +644,12 @@ hostapd_set_bss_options() {
 	set_default acct_port 1813
 	set_default sec_acct_port 1813
 	set_default mbo 1
+	set_default rrm_neighbor_report 0
 	set_default bss_transition 1
 	set_default interworking 1
 	set_default access_network_type 0
 	set_default vendor_vht 1
+	set_default mem_only_cred 0
 
 	append bss_conf "ctrl_interface=/var/run/hostapd" "$N"
 	append bss_conf "twt_responder_support=0" "$N"
@@ -494,14 +662,24 @@ hostapd_set_bss_options() {
 			maxassoc=1
 			num_res_sta=0
 		}
+
+		[ "$mesh_mode" = "ext_hybrid" ] && {
+			[ -n "$num_vrt_backhauls" ] && append bss_conf "num_vrt_bkh_netdevs=$num_vrt_backhauls" "$N"
+		}
+
+		[ "$mesh_mode" = "fAP" ] && {
+			[ -n "$multi_ap_backhaul_ssid" ] && append bss_conf "multi_ap_backhaul_ssid=\"$multi_ap_backhaul_ssid\"" "$N"
+			[ -n "$multi_ap_backhaul_wpa_psk" ] && append bss_conf "multi_ap_backhaul_wpa_psk=$multi_ap_backhaul_wpa_psk" "$N"
+			[ -n "$multi_ap_backhaul_wpa_passphrase" ] && append bss_conf "multi_ap_backhaul_wpa_passphrase=$multi_ap_backhaul_wpa_passphrase" "$N"
+		}
 	}
+	[ -n "$ul_csa" ] && append bss_conf "ul_csa=$ul_csa" "$N"
+
 	if [ "$isolate" -gt 0 ]; then
 		append bss_conf "ap_isolate=$isolate" "$N"
 	fi
 
 	[ -n "$maxassoc" ] && append bss_conf "max_num_sta=$maxassoc" "$N"
-
-	[ -n "$sFourAddrMode" ] && append bss_conf "sFourAddrMode=$sFourAddrMode" "$N"
 
 	[ -n "$sBridgeMode" ] && append bss_conf "sBridgeMode=$sBridgeMode" "$N"
 
@@ -516,17 +694,23 @@ hostapd_set_bss_options() {
 	if [ "$num_res_sta" -gt 0 ]; then
 		append bss_conf "num_res_sta=$num_res_sta" "$N"
 	fi
-	if [ "$gas_comeback_delay" -gt 0 ]; then
+	if [ "$gas_comeback_delay" -gt "0" ]; then
 		append bss_conf "gas_comeback_delay=$gas_comeback_delay" "$N"
 	fi
-	if [ "$rrm_neighbor_report" -gt 0 ]; then
+	if [ "$rrm_neighbor_report" -gt "0" ]; then
 		append bss_conf "rrm_neighbor_report=$rrm_neighbor_report" "$N"
 	fi
-	if [ "$bss_transition" -gt 0 ]; then
+	if [ "$bss_transition" -gt "0" ]; then
 		append bss_conf "bss_transition=$bss_transition" "$N"
 	fi
 
+	if [ "$mem_only_cred" -gt "0" ]; then
+		append bss_conf "mem_only_cred=$mem_only_cred" "$N"
+	fi
+
 	[ -n "$bss_beacon_int" ] && append bss_conf "bss_beacon_int=$bss_beacon_int" "$N"
+	[ -n "$dynamic_multicast_mode" ] && append bss_conf "dynamic_multicast_mode=$dynamic_multicast_mode" "$N"
+	[ -n "$dynamic_multicast_rate" ] && append bss_conf "dynamic_multicast_rate=$dynamic_multicast_rate" "$N"
 
 	if [ "$interworking" -gt 0 ]; then
 		append bss_conf "interworking=$interworking" "$N"
@@ -556,6 +740,18 @@ hostapd_set_bss_options() {
 		if [ -n "$hessid" ]; then
 			append bss_conf "hessid=$hessid" "$N"
 		fi
+		if [ -n "$roaming_anqp_ois_count" ]; then
+			append bss_conf "roaming_anqp_ois_count=$roaming_anqp_ois_count" "$N"
+		fi
+		if [ -n "$roaming_consortium_0" ]; then
+			append bss_conf "roaming_consortium=$roaming_consortium_0" "$N"
+		fi
+		if [ -n "$roaming_consortium_1" ]; then
+			append bss_conf "roaming_consortium=$roaming_consortium_1" "$N"
+		fi
+		if [ -n "$roaming_consortium_2" ]; then
+			append bss_conf "roaming_consortium=$roaming_consortium_2" "$N"
+		fi
 	fi
 
 	[ -n "$management_frames_rate"  ] && append bss_conf "management_frames_rate=$management_frames_rate" "$N"
@@ -564,6 +760,9 @@ hostapd_set_bss_options() {
 	append bss_conf "preamble=$short_preamble" "$N"
 	append bss_conf "wmm_enabled=$wmm" "$N"
 	append bss_conf "ignore_broadcast_ssid=$hidden" "$N"
+	 [ "$hidden" -gt 0 ] && {
+		/usr/bin/logger -s "********* WPS warning! $ifname ignore_broadcast_ssid is set, WPS will be disabled  ***********"
+	}
 	append bss_conf "uapsd_advertisement_enabled=$uapsd" "$N"
 
 	[ "$mbo" -gt 0 ] && {
@@ -592,6 +791,70 @@ hostapd_set_bss_options() {
 		append bss_conf "sUdmaEnabled=$sUdmaEnabled" "$N"
 		[ -n "$sUdmaVlanId" ] && append bss_conf "sUdmaVlanId=$sUdmaVlanId" "$N"
 	}
+
+	# if soft_block_acl_enable isn't defined or set to false/0,
+	# softblock parameters will not be written into .conf file
+	[ -n "$soft_block_acl_enable" ] && {
+		set_default soft_block_acl_enable 0
+		append bss_conf "soft_block_acl_enable=$soft_block_acl_enable" "$N"
+
+		# if soft_block_acl_enable defined and > 0, write parameters to conf
+		[ "$soft_block_acl_enable" -gt 0 ] && {
+			set_default soft_block_acl_wait_time 10000
+			set_default soft_block_acl_allow_time 15000
+			set_default soft_block_acl_on_auth_req 1
+			set_default soft_block_acl_on_probe_req 1
+			append bss_conf "soft_block_acl_wait_time=$soft_block_acl_wait_time" "$N"
+			append bss_conf "soft_block_acl_allow_time=$soft_block_acl_allow_time" "$N"
+			append bss_conf "soft_block_acl_on_auth_req=$soft_block_acl_on_auth_req" "$N"
+			append bss_conf "soft_block_acl_on_probe_req=$soft_block_acl_on_probe_req" "$N"
+		}
+	}
+
+	local hs20 disable_dgaf osen anqp_domain_id hs20_deauth_req_timeout \
+		osu_ssid hs20_wan_metrics hs20_operating_class hs20_t_c_filename hs20_t_c_timestamp \
+		hs20_release enable_bss_load_ie manage_p2p allow_cross_connection tdls_prohibit \
+		offload_gas
+	json_get_vars hs20 disable_dgaf osen anqp_domain_id hs20_deauth_req_timeout \
+		osu_ssid hs20_wan_metrics hs20_operating_class hs20_t_c_filename hs20_t_c_timestamp \
+		hs20_release enable_bss_load_ie manage_p2p allow_cross_connection tdls_prohibit \
+		offload_gas
+
+	set_default hs20 0
+	set_default osen 0
+	set_default anqp_domain_id 0
+	set_default hs20_deauth_req_timeout 60
+	set_default hs20_release 1
+	if [ "$hs20" = "1" ]; then
+		set_default offload_gas 1
+		append bss_conf "hs20=1" "$N"
+		append_hs20_icon
+		append bss_conf "osen=$osen" "$N"
+		append bss_conf "anqp_domain_id=$anqp_domain_id" "$N"
+		append bss_conf "hs20_deauth_req_timeout=$hs20_deauth_req_timeout" "$N"
+		append bss_conf "hs20_release=$hs20_release" "$N"
+		[ -n "$disable_dgaf" ] && append bss_conf "disable_dgaf=$disable_dgaf" "$N"
+		[ -n "$osu_ssid" ] && append bss_conf "osu_ssid=$osu_ssid" "$N"
+		[ -n "$hs20_wan_metrics" ] && append bss_conf "hs20_wan_metrics=$hs20_wan_metrics" "$N"
+		[ -n "$hs20_operating_class" ] && append bss_conf "hs20_operating_class=$hs20_operating_class" "$N"
+		[ -n "$hs20_t_c_filename" ] && append bss_conf "hs20_t_c_filename=$hs20_t_c_filename" "$N"
+		[ -n "$hs20_t_c_timestamp" ] && append bss_conf "hs20_t_c_timestamp=$hs20_t_c_timestamp" "$N"
+		json_for_each_item append_hs20_conn_capab hs20_conn_capab
+		json_for_each_item append_hs20_oper_friendly_name hs20_oper_friendly_name
+		json_for_each_item append_osu_provider osu_provider
+		json_for_each_item append_operator_icon operator_icon
+	fi
+
+	[ -n "$offload_gas" ] && append bss_conf "offload_gas=$offload_gas" "$N"
+	[ -n "$enable_bss_load_ie" ] && append bss_conf "enable_bss_load_ie=$enable_bss_load_ie" "$N"
+	[ -n "$tdls_prohibit" ] && append bss_conf "tdls_prohibit=$tdls_prohibit" "$N"
+	[ -n "$manage_p2p" ] && {
+		append bss_conf "manage_p2p=$manage_p2p" "$N"
+		[ -n "$allow_cross_connection" ] && append bss_conf "allow_cross_connection=$allow_cross_connection" "$N"
+	}
+
+#	bss_md5sum=$(echo $bss_conf | md5sum | cut -d" " -f1)
+#	append bss_conf "config_id=$bss_md5sum" "$N"
 
 	if [ "$hwmode" = "g" ]; then
 		[ -n "$ieee80211n" ] && append bss_conf "vendor_vht=$vendor_vht" "$N"
@@ -627,6 +890,34 @@ hostapd_set_bss_options() {
 		;;
 	esac
 	[ -n "$sae_require_mfp" ] && append bss_conf "sae_require_mfp=$sae_require_mfp" "$N"
+	[ -n "$sae_pwe" ]  && append bss_conf "sae_pwe=$sae_pwe" "$N"
+
+	# DPP configuration
+	if [ "$dpp_auth_enabled" -eq 1 ]; then
+		# For AP ieee80211w can be optional
+		set_default ieee80211w 1
+		set_default sae_require_mfp 1
+
+		json_get_vars \
+			dpp_controller dpp_connector dpp_csign dpp_netaccesskey
+
+		set_default interworking 1
+		[ -n "$dpp_controller" ] && append bss_conf "dpp_controller=$dpp_controller" "$N"
+		[ -n "$dpp_connector" ] && append bss_conf "dpp_connector=$dpp_connector" "$N"
+		[ -n "$dpp_csign" ] && append bss_conf "dpp_csign=$dpp_csign" "$N"
+		[ -n "$dpp_netaccesskey" ] && append bss_conf "dpp_netaccesskey=$dpp_netaccesskey" "$N"
+		if [ -n "$dpp_netaccesskey" ]; then
+			json_get_vars dpp_netaccesskey_expiry
+			[ -n "$dpp_netaccesskey_expiry" ] && append bss_conf "dpp_netaccesskey_expiry=$dpp_netaccesskey_expiry" "$N"
+		fi
+
+		# DPP timeouts
+		json_get_vars dpp_resp_wait_time dpp_gas_query_timeout_period
+		set_default dpp_resp_wait_time 5500
+		set_default dpp_gas_query_timeout_period 10
+		[ -n "$dpp_resp_wait_time" ] && append bss_conf "dpp_resp_wait_time=$dpp_resp_wait_time" "$N"
+		[ -n "$dpp_gas_query_timeout_period" ] && append bss_conf "dpp_gas_query_timeout_period=$dpp_gas_query_timeout_period" "$N"
+	fi
 
 	local vlan_possible=""
 
@@ -641,12 +932,16 @@ hostapd_set_bss_options() {
 			# Here we make the assumption that if we're in open mode
 			# with WPS enabled, we got to be in unconfigured state.
 			wps_not_configured=1
+			[ "$auth_type" = "none" ] &&
+				/usr/bin/logger -s "********* WPS warning! $ifname security is not set, require explicit operation to create open network  ***********"
 		;;
 		psk)
 			json_get_vars key wpa_psk_file
 			if [ ${#key} -lt 8 ]; then
-				wireless_setup_vif_failed INVALID_WPA_PSK
-				return 1
+				if [ "$mem_only_cred" != "1" ]; then
+					wireless_setup_vif_failed INVALID_WPA_PSK
+					return 1
+				fi
 			elif [ ${#key} -eq 64 ]; then
 				append bss_conf "wpa_psk=$key" "$N"
 			else
@@ -662,9 +957,11 @@ hostapd_set_bss_options() {
 		;;
 		psk-sae)
 			json_get_vars key sae_key
-			if [[ ${#key} -lt 8 || ${#key} -gt 63 ]]; then
-				wireless_setup_vif_failed INVALID_WPA_PSK
-				return 1
+			if [ "$mem_only_cred" != "1" ]; then
+				if [[ ${#key} -lt 8 || ${#key} -gt 63 ]]; then
+					wireless_setup_vif_failed INVALID_WPA_PSK
+					return 1
+				fi
 			fi
 
 			if [[ "$key" != "" && "$sae_key" != "" ]]; then
@@ -674,8 +971,10 @@ hostapd_set_bss_options() {
 				append bss_conf "wpa_passphrase=$key" "$N"
 				append bss_conf "sae_password=$key" "$N"
 			else
-				wireless_setup_vif_failed INVALID_WPA_PSK
-				return 1
+				if [ "$mem_only_cred" != "1" ]; then
+					wireless_setup_vif_failed INVALID_WPA_PSK
+					return 1
+				fi
 			fi
 
 			wps_possible=1
@@ -687,8 +986,10 @@ hostapd_set_bss_options() {
 			elif [ "$key" != "" ]; then
 				append bss_conf "sae_password=$key" "$N"
 			else
-				wireless_setup_vif_failed INVALID_WPA_PSK
-				return 1
+				if [ "$mem_only_cred" != "1" ]; then
+					wireless_setup_vif_failed INVALID_WPA_PSK
+					return 1
+				fi
 			fi
 		;;
 		eap|eap192|eap-eap192)
@@ -753,6 +1054,7 @@ hostapd_set_bss_options() {
 			hostapd_append_wep_key bss_conf
 			append bss_conf "wep_default_key=$wep_keyidx" "$N"
 			[ -n "$wep_rekey" ] && append bss_conf "wep_rekey_period=$wep_rekey" "$N"
+			/usr/bin/logger -s "********* WPS warning! $ifname wep security is set, WPS will be disabled ***********"
 		;;
 	esac
 
@@ -766,11 +1068,21 @@ hostapd_set_bss_options() {
 	set_default wps_keypad 0
 	set_default wps_label 0
 	set_default wps_pbc_in_m1 0
+	set_default wps_virtual_pushbutton 0
+	set_default wps_physical_pushbutton 0
+	set_default wps_virtual_display 0
+	set_default wps_physical_display 0
 
 	config_methods=
 	[ "$wps_pushbutton" -gt 0 ] && append config_methods push_button
 	[ "$wps_label" -gt 0 ] && append config_methods label
 	[ "$wps_keypad" -gt 0 ] && append config_methods keypad
+	[ "$wps_virtual_pushbutton" -gt 0 ] && append config_methods virtual_push_button
+	[ "$wps_physical_pushbutton" -gt 0 ] && append config_methods physical_push_button
+	[ "$wps_virtual_display" -gt 0 ] && append config_methods virtual_display
+	[ "$wps_physical_display" -gt 0 ] && append config_methods physical_display
+
+	[ "$macfilter" = "allow" ] && wps_possible=
 
 	[ -n "$wps_possible" -a -n "$config_methods" ] && {
 		set_default ext_registrar 0
@@ -784,7 +1096,7 @@ hostapd_set_bss_options() {
 		set_default wps_independent 1
 		set_default wps_state 2
 
-		if [ "$ext_registrar" -gt 0 -a -n "$network_bridge" ]; then
+		if [ "$ext_registrar" -gt "0" ] && [ -n "$network_bridge" ]; then
 			append bss_conf "upnp_iface=$network_bridge" "$N"
 		elif [ -n "$upnp_bridge" ]; then
 			append bss_conf "upnp_iface=$upnp_bridge" "$N"
@@ -821,6 +1133,32 @@ hostapd_set_bss_options() {
 	}
 
 	append bss_conf "ssid=$ssid" "$N"
+
+	[ -n "$colocated_6g_radio_info" ] && append bss_conf "colocated_6g_radio_info=$colocated_6g_radio_info" "$N"
+	json_get_values colocated_6g_vap_info_list colocated_6g_vap_info
+	i=1
+	num_coloc_vap_param=7 # <Radio_index> <BSSID> <SSID> <multibss_enable> 
+				#<is_transmitted_bssid> <unsolicited_frame_support> <max_tx_power>
+
+	if [ -n "$colocated_6g_vap_info_list" ]; then
+		for j in $colocated_6g_vap_info_list #special handling as list data type
+		do
+			if [ -n "$val" ]; then
+				val=$val" "$j
+			else
+				val=$j
+			fi
+			if [ $i -eq $num_coloc_vap_param ]; then
+				append bss_conf "colocated_6g_vap_info=$val" "$N"
+				i=1
+				val=""
+			else
+				i=$((i+1))
+			fi
+
+		done
+	fi
+
 	if [ -n "$network_bridge" ]; then
 		 append bss_conf "bridge=$network_bridge" "$N"
 	else
@@ -879,22 +1217,36 @@ hostapd_set_bss_options() {
 			append bss_conf "rsn_preauth=1" "$N"
 			append bss_conf "rsn_preauth_interfaces=$network_bridge" "$N"
 		else
-			set_default auth_cache 1
+			case "$auth_type" in
+			sae|psk-sae|owe)
+				set_default auth_cache 1
+			;;
+			*)
+				set_default auth_cache 0
+			;;
+			esac
 		fi
 
 		append bss_conf "okc=$auth_cache" "$N"
-		[ "$auth_cache" = 0 ] && append bss_conf "disable_pmksa_caching=1" "$N"
+		# Don't write parameter "disable_pmksa_caching" if dpp_auth_enabled==1
+		[ "$auth_cache" = 0 -a "$dpp_auth_enabled" -ne 1 ] && append bss_conf "disable_pmksa_caching=1" "$N"
 
 		# RSN -> allow management frame protection
 		case "$ieee80211w" in
 			[012])
-				json_get_vars ieee80211w_max_timeout ieee80211w_retry_timeout
+				json_get_vars ieee80211w_max_timeout ieee80211w_retry_timeout beacon_protection_enabled disable_bigtk_rekey group_mgmt_cipher
 				append bss_conf "ieee80211w=$ieee80211w" "$N"
 				[ "$ieee80211w" -gt "0" ] && {
 					[ -n "$ieee80211w_max_timeout" ] && \
 						append bss_conf "assoc_sa_query_max_timeout=$ieee80211w_max_timeout" "$N"
 					[ -n "$ieee80211w_retry_timeout" ] && \
 						append bss_conf "assoc_sa_query_retry_timeout=$ieee80211w_retry_timeout" "$N"
+					[ -n "$beacon_protection_enabled" ] && \
+						append bss_conf "beacon_protection_enabled=$beacon_protection_enabled" "$N"
+					[ -n "$disable_bigtk_rekey" ] && \
+						append bss_conf "disable_bigtk_rekey=$disable_bigtk_rekey" "$N"
+					[ -n "$group_mgmt_cipher" ] && \
+						append bss_conf "group_mgmt_cipher=$group_mgmt_cipher" "$N"
 				}
 			;;
 		esac
@@ -1003,7 +1355,18 @@ wpa_supplicant_prepare_interface() {
 
 	_wpa_supplicant_common "$1"
 
-	json_get_vars mode wds vendor_elems
+	json_get_vars mode wds vendor_elems wps_manufacturer wps_device_name wps_device_type \
+		wps_cred_processing wps_os_version wps_model_name wps_model_number wps_serial_number \
+		wps_pushbutton wps_keypad wps_label wps_virtual_pushbutton wps_physical_pushbutton \
+		wps_virtual_display wps_physical_display
+
+	set_default wps_pushbutton 0
+	set_default wps_keypad 0
+	set_default wps_label 0
+	set_default wps_virtual_pushbutton 0
+	set_default wps_physical_pushbutton 0
+	set_default wps_virtual_display 0
+	set_default wps_physical_display 0
 
 	[ -n "$network_bridge" ] && {
 		fail=
@@ -1055,6 +1418,58 @@ $country_str
 $vendor_elems_str
 $wds_str
 EOF
+
+	config_methods=
+	[ "$wps_pushbutton" -gt 0 ] && append config_methods push_button
+	[ "$wps_label" -gt 0 ] && append config_methods label
+	[ "$wps_keypad" -gt 0 ] && append config_methods keypad
+	[ "$wps_virtual_pushbutton" -gt 0 ] && append config_methods virtual_push_button
+	[ "$wps_physical_pushbutton" -gt 0 ] && append config_methods physical_push_button
+	[ "$wps_virtual_display" -gt 0 ] && append config_methods virtual_display
+	[ "$wps_physical_display" -gt 0 ] && append config_methods physical_display
+
+	[ -n "$config_methods" ] && {
+		set_default wps_manufacturer "Intel Corporation"
+		set_default wps_device_name "WLAN-REPEATER"
+		set_default wps_device_type "6-0050F204-1"
+		set_default wps_cred_processing 1
+		set_default wps_os_version "01020300"
+
+		[ -n "$wps_manufacturer" ] && {
+			echo "manufacturer=$wps_manufacturer" >> "$_config"
+		}
+
+		[ -n "$wps_device_name" ] && {
+			echo "device_name=$wps_device_name" >> "$_config"
+		}
+
+		[ -n "$wps_device_type" ] && {
+			echo "device_type=$wps_device_type" >> "$_config"
+		}
+
+		[ -n "$wps_cred_processing" ] && {
+			echo "wps_cred_processing=$wps_cred_processing" >> "$_config"
+		}
+
+		[ -n "$wps_os_version" ] && {
+			echo "os_version=$wps_os_version" >> "$_config"
+		}
+
+		[ -n "$wps_model_name" ] && {
+			echo "model_name=$wps_model_name" >> "$_config"
+		}
+
+		[ -n "$wps_model_number" ] && {
+			echo "model_number=$wps_model_number" >> "$_config"
+		}
+
+		[ -n "$wps_serial_number" ] && {
+			echo "serial_number=$wps_serial_number" >> "$_config"
+		}
+
+		echo "config_methods=$config_methods" >> "$_config"
+	}
+
 	return 0
 }
 
@@ -1106,6 +1521,8 @@ wpa_supplicant_add_network() {
 	}
 
 	[ "$_w_mode" = "adhoc" -o "$_w_mode" = "mesh" ] && append network_data "$_w_modestr" "$N$T"
+
+	[ "$dpp_auth_enabled" -eq 1 ] && hostapd_append_wpa_key_mgmt
 
 	case "$auth_type" in
 		none) ;;

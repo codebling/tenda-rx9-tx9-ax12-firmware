@@ -96,26 +96,26 @@ function initValue(obj) {
     top.initIframeHeight();
     //保留无线基本数据用于判断
     $.getJSON("goform/WifiBasicGet?" + Math.random, function (data) {
-        var secuSptWps = data.security === "wpa3sae" || data.security === "wpapsk",
-            secuSptWps_5g = data.security_5g === "wpa3sae" || data.security_5g === "wpapsk",
-            wrlEn = data.wrlEn === "1", //2.4G开启
-            wrlEn_5g = data.wrlEn_5g === "1"; //5G开启
-
-        //当 无线开启 && 加密方式为WPA-PSK、WPA3-SAE时，WPS不可用。并提示用户
-        if ((wrlEn && !wrlEn_5g && secuSptWps) || (!wrlEn && wrlEn_5g && secuSptWps_5g) || (wrlEn && secuSptWps && wrlEn_5g && secuSptWps_5g)) {
-            if (obj.wpsEn === "1") {
-                $("#wpsEnbTips").addClass("none");
-            }
+        var secuWPA3 = data.security === "wpa3sae" || data.security === "wpapsk",
+            secuWPA3_5g = data.security_5g === "wpa3sae" || data.security_5g === "wpapsk";
+        //当无线开启且加密方式为WPA3时，WPS不可用。并提示用户"WPS功能xx"
+				//兼容doubleBand为false
+			if ((data.wrlEn === "1" && secuWPA3) || ((data.doubleBand === "0" || data.doubleBand === false) && data.wrlEn_5g === "1" && secuWPA3_5g)) {
+            // if (obj.wpsEn === "1") {
+            //     $("#wpsMethod").addClass("none");
+            // }
             $("#wpsEn").unbind("click").css("cursor", "not-allowed");
             $("#wpsDisabledInfo").removeClass("none");
         }
-
-        //无线关闭时, WPS不可用，隐藏使用方法提示
-        if (data.wrlEn !== "1" && data.wrlEn_5g !== "1") {
-            $("#wpsApplyTip").addClass("none");
-        }
     });
-   
+    //获取dfs
+    // $.getJSON("goform/GetDfsCfg?" + Math.random(), function (obj) {
+    //     G.dfsEnable = obj.enable;
+    // });
+    //获取主网络5G是否开启
+	$.getJSON("goform/WifiBasicGet?" + Math.random(), function(obj){
+		G.main5gEn = obj.wrlEn_5g;
+	});
     G.conGetData = conSetOrGetData();
 }
 function conSetOrGetData(){
@@ -138,28 +138,30 @@ function callback(str) {
 		return;
 	}
 	var num = $.parseJSON(str).errCode;
-
 	if (num == 0) {
 		if(G.unShow){
 			G.unShow = false
 		}else{
 			top.showSaveMsg(num);
 		}
+        // if (G.main5gEn =="1" && G.dfsEnable == '1' && G.conGetData && G.conSetData && G.conGetData != G.conSetData) {
+        //     top.showDFSMsg(num);
+        // }
 		top.wrlInfo.initValue();
 		setTimeout(function () {
 			pageModel.update();
 			$("#waitingTip").html(" ").addClass("none");
 			// $("#waitingTip").next().remove();
 		}, 2000);
-    } else if (num == 1) {
-        top.showDFSMsg()
-    } else {
+	}else if(num == 1) {
+		top.showDFSMsg(0)
+	} else{
 		if ($("#wpsEn").val() == "1"){
-            $("#waitingTip").html("<span style='color:#f00;'>" + _("Please wait for the wireless interface to get up before turning on WPS")+"</span>").removeClass("none")
+			$("#waitingTip").html("<span style='color:#f00;'>"+_("Please wait for the wireless interface to get up before turning on WPS")+"</span>").removeClass("none")
 			$("#wpsEn").attr("class", "btn-off");
 		}else{
 
-            $("#waitingTip").html("<span style='color:#f00;'>" + _("Please wait for the wireless interface to get up before shutting down WPS")+"</span>").removeClass("none")
+			$("#waitingTip").html("<span style='color:#f00;'>"+_("Please wait for the wireless interface to get up before shutting down WPS")+"</span>").removeClass("none")
 			$("#wpsEn").attr("class", "btn-on");
 		}
 	}

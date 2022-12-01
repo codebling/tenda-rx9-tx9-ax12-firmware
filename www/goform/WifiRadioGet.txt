@@ -1,1 +1,19 @@
-{"adv_country":"US","adv_channel":0,"adv_mode":"bgnax","adv_band":"auto","adv_current_channel":"6","adv_current_band":"40","channel":[0,1,2,3,4,5,6,7,8,9,10,11],"adv_country_5g":"US","adv_channel_5g":40,"adv_mode_5g":"acax","adv_band_5g":"auto","adv_current_channel_5g":"40","adv_current_band_5g":"160","channel_5g":{"20":[0,36,40,44,48,149,153,157,161,165],"40":[0,36,40,44,48,149,153,157,161],"80":[0,36,40,44,48,149,153,157,161],"160":[0,36,40,44,48]}}
+{
+"adv_country":"CN",
+"adv_band":"auto",
+"adv_channel":"0",
+"adv_band_5g":"auto",
+"adv_channel_5g":"0",
+"adv_mode": "bgn",
+"adv_mode_5g": "ac",
+"channel": {
+    "20": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    "40": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+},
+"channel_5g": {
+    "20": [0, 36, 40, 44, 48, 149, 153, 157, 161, 165],
+    "40": [0, 36, 40, 44, 48, 149, 153, 157, 161],
+    "80": [0, 36, 40, 44, 48, 149, 153, 157, 161],
+    "160": [0, 36, 40, 44, 48, 149, 153, 157, 161]
+    }
+}

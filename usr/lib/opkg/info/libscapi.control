@@ -7,5 +7,5 @@ License: LGPL2.1
 Section: lib
 Maintainer: Intel Corporation
 Architecture: mips_24kc_nomips16
-Installed-Size: 55967
+Installed-Size: 55722
 Description:  UGW Framework System Configuration APIs

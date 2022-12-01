@@ -7,3 +7,4 @@
 		option ieee80211w '1'
 		option wav_bridge 'brlan0'
 		option sAggrConfig '1 1 64'
+		option rrm_neighbor_report '1'

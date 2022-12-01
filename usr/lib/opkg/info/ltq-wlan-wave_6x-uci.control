@@ -1,10 +1,10 @@
 Package: ltq-wlan-wave_6x-uci
 Version: 06.01.00
-Depends: libc
+Depends: libc, prplmesh-dwpal
 Source: intel_source/feeds/ugw/wlan/feed_wlan_6x_uci/wlan_wave_feed/lq-wave-300_6x-uci
 SourceName: ltq-wlan-wave_6x-uci
 Section: utils
 Maintainer: Intel Corporation
 Architecture: mips_24kc_nomips16
-Installed-Size: 1323292
+Installed-Size: 1362245
 Description:  This package contains wave binaries components without Debug Information

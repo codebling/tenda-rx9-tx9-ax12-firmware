@@ -87,7 +87,6 @@ if [ -n "$setup_wifi" ] && grep -sq config /etc/config/wireless; then
 	for dev in $(echo "$radio_devs" | sort -u); do
 		/sbin/wifi up "$dev"
 	done
-	sleep 1
 	ifaces=$(hostapd_cli -i wlan0 interface |grep wlan)
 	for ifc in $(echo "$ifaces"); do
 		case "$ifc" in
@@ -101,18 +100,6 @@ if [ -n "$setup_wifi" ] && grep -sq config /etc/config/wireless; then
 				flag=$(brctl show | grep wlan2.1)
 				if [ -z "$flag" ]; then
 					brctl addif br-lan "$ifc"
-				fi 
-				;;
-			'wlan2.2') 
-				flag=$(brctl show | grep wlan2.2)
-				if [ -z "$flag" ]; then
-					brctl addif br-guest "$ifc"
-				fi 
-				;;
-			'wlan0.2') 
-				flag=$(brctl show | grep wlan0.2)
-				if [ -z "$flag" ]; then
-					brctl addif br-guest "$ifc"
 				fi 
 				;;
 		esac

@@ -94,11 +94,22 @@ ate_icmp_accept() {
 			touch $LOCKFILE
 			chmod 600 $LOCKFILE
 			ate_icmp_accept_opt $1
-			exit 0
+			exit 0	
 		fi
 	done	
 }
 
+add_wlan_interface(){
+	radio0_2_disabled=`uci get wireless.radio0_2.disabled`
+	radio1_2_disabled=`uci get wireless.radio1_2.disabled`
+	 [ "$radio0_2_disabled" == "0" ] && {
+		echo add wlan1 >/proc/l2nat/dev
+	 }
+	 [ "$radio1_2_disabled" == "0" ] && {
+		echo add wlan3 >/proc/l2nat/dev
+	 }
+}
 tc_ifb_add_wlan $1
 mac80211_custom_post_vif $1
+#add_wlan_interface
 #ate_icmp_accept $1

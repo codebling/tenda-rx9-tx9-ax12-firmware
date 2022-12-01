@@ -93,11 +93,11 @@ do
 	if [ "$pbc_status" == "ok" ];then
 		break
 	fi
-	
+
 	status0=`uci get wireless.radio0_0.wps_pushbutton`
 	status1=`uci get wireless.radio1_0.wps_pushbutton`
 	[ "$status0" == "0" -a "$status1" == "0" ] && break
-	
+
 	count=$(($count + 1))
 done
 

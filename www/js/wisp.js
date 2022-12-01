@@ -8,6 +8,29 @@ var pageview = R.pageView({ //页面初始化
 });
 
 function initWispPage() {
+	$.validate.valid.ssid = {
+		all: function (str) {
+			var ret = this.specific(str);
+			//ssid 前后不能有空格，可以输入任何字符包括中文，仅32个字节的长度
+			if (ret) {
+				return ret;
+			}
+
+			/*if (str.charAt(0) == " " || str.charAt(str.length - 1) == " ") {
+				return _("The first and last characters of WiFi Name cannot be spaces.");
+			}*/
+
+			if (getStrByteNum(str) > 32) {
+				return _("The WiFi name can contain only a maximum of %s bytes.", [32]);
+			}
+		},
+		specific: function (str) {
+			var ret = str;
+			if ((null == str.match(/[^ -~]/g) ? str.length : str.length + str.match(/[^ -~]/g).length * 2) > 32) {
+				return _("The WiFi name can contain only a maximum of %s bytes.", [32]);
+			}
+		}
+	};
 	top.loginOut();
 	top.$(".main-dailog").removeClass("none");
 	top.$(".save-msg").addClass("none");
@@ -29,7 +52,7 @@ var pageModel = R.pageModel({
 	},
 	beforeSubmit: function () {
 		//如果开启万能桥接，将提示会关闭 wps，访客网络。add by zzc
-		var conflictFuns = ["WPS", _("Guest Network"), _("WiFi Schedule"), _("Sleeping Mode")],
+		var conflictFuns = ["WPS", _("Guest Network"), _("WiFi Timing"), _("Sleeping Mode")],
 			conflict = [];
 		if (subObj.wl_mode != "ap") {
 			if (initObj.wpsEn == "1") {
@@ -67,7 +90,7 @@ var pageModel = R.pageModel({
 	afterSubmit: function (str) {
 		callback(str, G.reboot, subObj.wl_mode);
 	}
-});
+})
 
 var view = R.moduleView({
 	initEvent: initEvent,
@@ -83,17 +106,25 @@ var view = R.moduleView({
 			subData,
 			password,
 			length,
+			synEn,
 			workMode;
 		subObj = {};
 		if ($("#clientApEn").val() == "0") {
 			workMode = "ap";
 		} else {
-			workMode = "apclient"//$("[name='wifiWorkMode']:checked").val();
+			workMode = $("[name='wifiWorkMode']:checked").val();
 		}
 		if ($("#clientApEn").val() == "1") {
+
+			if($("input[name=syn_enable]")[0].checked == true){
+				synEn = 1;
+			}else {
+				synEn = 0;
+			}
 			if (ssid == "-2") {
 				return _("Please select the WiFi name of the upstream router.");
 			}
+
 			if (ssid == -1) { //保存上次选的ssid
 				if (initScanObj.security == "wep") {
 					return _("WEP encryption has low security and is not supported by this router. Please change the WiFi encryption mode of the upstream router.");
@@ -107,7 +138,8 @@ var view = R.moduleView({
 					"wpapsk_key": $("#apPassword").val(),
 					"wifi_chkHz": initObj.wifi_chkHz,
 					"mac": initObj.mac,
-					"handset": "0" //1手动 2 非手动
+					"handset": "0", //1手动 2 非手动
+					"syn_enable": synEn//是否与上级无线密码一致
 				};
 
 			} else if (ssid == -3) { //手动设置
@@ -120,7 +152,8 @@ var view = R.moduleView({
 					"wpapsk_key": $("#apPassword").val(),
 					"wifi_chkHz": $("#wifi_chkHz").val(),
 					"mac": "",
-					"handset": "1" //1手动 2 非手动
+					"handset": "1",//1手动 2 非手动
+					"syn_enable": synEn//是否与上级无线密码一致
 				};
 			} else {
 				if (initScanObj[ssid].security == "wep") {
@@ -135,7 +168,8 @@ var view = R.moduleView({
 					"wpapsk_key": $("#apPassword").val(), //密钥
 					"wifi_chkHz": initScanObj[ssid].wifi_chkHz, //2.4G 5G
 					"mac": initScanObj[ssid].mac,
-					"handset": "0" //1手动 2 非手动
+					"handset": "0", //1手动 2 非手动
+					"syn_enable": synEn//是否与上级无线密码一致
 				};
 			}
 
@@ -171,7 +205,7 @@ var view = R.moduleView({
 		} else {
 			subObj = {
 				"wl_mode": workMode
-			};
+			}
 		}
 	}
 });
@@ -182,7 +216,7 @@ var moduleModel = R.moduleModel({
 	getSubmitData: function () {
 		return objTostring(subObj);
 	}
-});
+})
 
 //模块注册
 R.module("wisp", view, moduleModel);
@@ -192,6 +226,14 @@ function initEvent() {
 	$("#apSsid").on("change", changeSsid);
 	$("#clientApEn").on("click", changeBridge);
 	$("#scan").on("click", scanSsid);
+
+	$(".radio").on("click",function(){
+		if($(this).attr("for") == "wifiWorkMode2"){
+			$("#synEn").removeClass("none");
+		}else{
+			$("#synEn").addClass("none");
+		}
+	});
 
 	$(".self-select-wrapper").on("click", ".self-select-option", function () {
 		changeValue($(this).find(".self-select-data").attr("data-val"));
@@ -236,7 +278,8 @@ function changeBridge() {
 		$("#clientApEn").attr("class", "btn-on");
 		$("#clientApEn").val(1);
 		$("#wisp_set").removeClass("none");
-		$("[name='wifiWorkMode'][value='apclient']")[0].checked = true;
+		$("[name='wifiWorkMode'][value='wisp']")[0].checked = true;
+		$("#synEn").addClass("none");//隐藏sysEn
 		scanSsid();
 	} else {
 		$("#clientApEn").attr("class", "btn-off");
@@ -315,15 +358,17 @@ function initValue(obj) {
 		initScan([]);
 		changeValue("-3");
 		$(".self-select-ul").html("");
-		$("#handset_ssid").val(apSsid);
+		$("#handset_ssid").val(obj.ssid);
 		$("#wifi_chkHz").val(obj.wifi_chkHz);
 		$("#wpapsk_type").val((obj.wpapsk_type || "none"));
 		$("#wpapsk_crypto").val((obj.wpapsk_crypto || "aes"));
 		changeWpapskType();
 	} else {
-		str = "<option value='-1'>" + toHtmlCode(apSsid) + "</option>";
-		$("#apSsid2 .self-select-text").html(toHtmlCode(apSsid)).attr("data-val", "-1");
+		str = "<option value='-1'></option>";
+		$("#apSsid2 .self-select-text").text(apSsid).attr("data-val", "-1");
 		$("#apSsid").html(str);
+		$("#apSsid option").text(apSsid);
+
 	}
 
 	$("#apPassword").val(apPwd);
@@ -362,11 +407,15 @@ function initValue(obj) {
 		$("#wisp_set").addClass("none");
 	}
 
-	$("[name='wifiWorkMode'][value='apclient']")[0].checked = true;
-
 	$('#apPassword').initPassword(_(""), false, false);
-	top.initIframeHeight();
 
+	if($("input[value=apclient]")[0].checked == true){
+		$("#synEn").removeClass("none");
+	}
+
+	top.initIframeHeight();
+	//$("input[name=syn_enable]")[0].checked = true;
+	$("input[name=syn_enable]")[0].checked = obj.syn_enable === "1"? true:false;
 }
 
 function getScanValue() {
@@ -390,7 +439,7 @@ function initScan(obj) {
 		scan_str = "<option value='-2'>--" + _("Select") + "--</option>";
 		scan_str += "<option value='-3'>--" + _("Enter WiFi name manually") + "--</option>";
 		for (i = 0; i < len; i++) {
-			scan_str += "<option value='" + i + "'>" + toHtmlCode(obj[i].ssid) + "</option>";
+			scan_str += "<option value='" + i + "'>" + obj[i].ssid + "</option>";
 		}
 		$("#apSsid").html(scan_str);
 
@@ -408,9 +457,9 @@ function initCustomSelect(obj) {
 	var scan_str,
 		len = obj.length,
 		i = 0,
-		lock = "";
-	$("#apSsid2 .self-select-ul").html(""); //清空ssid
-
+		lock = "",
+	    five = "";
+	 $("#apSsid2 .self-select-ul").html(""); //清空ssid
 	/*
 		<li class="self-select-option">
         <span class="self-select-data" data-val="0">你好</span>
@@ -419,33 +468,31 @@ function initCustomSelect(obj) {
 	*/
 	$("#apSsid2 .self-select-text").html("--" + _("Select") + "--").attr("data-val", "-2");
 
-	scan_str = '<li class="self-select-option current"><span style="float:right;"></span>' + '<span class="self-select-data" data-val="-2"><span class="self-select-ssid">--' + _("Select") + '--</span></span></li>';
+	scan_str = '<li class="self-select-option current"><span style="float:right;"></span>' + '<span class="self-select-data" data-val="-2">--' + _("Select") + '--</span></li>';
 
-	scan_str += '<li class="self-select-option current"><span style="float:right;"></span>' + '<span class="self-select-data" data-val="-3"><span class="self-select-ssid">--' + _("Enter WiFi name manually") + '--</span></span></li>';
+	scan_str += '<li class="self-select-option current"><span style="float:right;"></span>' + '<span class="self-select-data" data-val="-3">--' + _("Enter WiFi name manually") + '--</span></li>';
 	var signal = "";
-	var chkHz = "";
 
 	for (i = 0; i < len; i++) {
 		lock = "";
-		chkHz = "";
+		five = "";
 		signal = +obj[i].signal;
-		if(obj[i].wifi_chkHz == "1") { //5g
-			chkHz = "<span class='self-select-chk text-success'><span class='border-success'>5G</span></span>";
-		}
 		if (obj[i].security != "none") {
 			lock = "icon-lock";
+		}
+		if(obj[i].wifi_chkHz == "1"){
+			five = '<span class="five">5G</span>'
 		}
 		if (signal > -60) {
 			signal = "signal_4";
 		} else if (signal <= -60 && signal > -70) {
 			signal = "signal_3";
 		} else if (signal <= -70 && signal > -80) {
-			signal = "signal_2";
+			signal = "signal_2"
 		} else {
-			signal = "signal_1";
+			signal = "signal_1"
 		}
-
-		scan_str += '<li class="self-select-option wifi-ssid-txt"><span class="signal ' + signal + '">&nbsp;</span><span class="' + lock + '"></span><span class="self-select-data" data-val="' + i + '"><span class="self-select-ssid">' + toHtmlCode(obj[i].ssid) + '</span>' +  chkHz +'</span></li>';
+		scan_str += '<li class="self-select-option wifi-ssid-txt" title="' + $("<div/>").text(obj[i].ssid).html() + '"><span class="signal ' + signal + '">&nbsp;</span><span class="' + lock + '">&nbsp;</span>'+ five +'<span class="self-select-data" data-val="' + i + '">' + $("<div/>").text(obj[i].ssid).html() + '</span></li>';
 	}
 	$("#apSsid2 .self-select-ul").html(scan_str).find(".wifi-ssid-txt").each(function (i) {
 		$(this).attr("title", obj[i].ssid);
@@ -463,7 +510,11 @@ function callback(str, reboot, wlMode) {
 		//getValue();
 		if (reboot) {
 
-			top.$.progress.showPro((wlMode == "apclient" || wlMode == "wisp" ? "apclient" : "reboot"), "", top.G.domain);
+			//window.location.href = "redirect.html?3";
+            //by xm 关闭弹出时取消了重启的请求，导致重启请求不能正常下发到后台，解决方法，将重启的请求放到外层
+            top.toolReboot(function (num) {
+                top.$.progress.showPro((wlMode == "apclient" || wlMode == "wisp" ? "apclient" : "reboot"), "");
+            })
 		} else {
 			top.showSaveMsg(num);
 			top.wrlInfo.initValue();
@@ -500,7 +551,7 @@ function reCreateObj(obj) {
 function changeValue(val) {
 	var value = val,
 		$spanEle = $("#apSsid2 .self-select-ul").find("[data-val=" + val + "]"),
-		html_str = $spanEle.find(".self-select-ssid").html(),
+		html_str = $spanEle.html(),
 		parent_text = $spanEle.parents(".self-select-wrapper").find(".self-select-text");
 
 	parent_text.html(html_str);
@@ -521,7 +572,7 @@ function showOption(event) {
 	} else {
 		$(".self-select-wrapper .self-select-ul").css("display", "block");
 	}
-
+	$("#apSsid2 .self-select-ul").scrollTop(0)
 	event.stopPropagation();
 }
 

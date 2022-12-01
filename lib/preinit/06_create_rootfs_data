@@ -8,7 +8,9 @@ lantiq_create_rootfs_data() {
 
 	case "$board" in
 	EASY350*|EASY550*|Falcon*|PRX*|"EASY PRX"*)
-		ubinfo /dev/ubi0 --name=rootfs_data  &>/dev/null || ubimkvol /dev/ubi0 -N rootfs_data -s 0x2000000
+		[ -e /dev/ubi0 ] && {
+			ubinfo /dev/ubi0 --name=rootfs_data  &>/dev/null || ubimkvol /dev/ubi0 -N rootfs_data -s 0x2000000
+		}
 		;;
 	esac
 }

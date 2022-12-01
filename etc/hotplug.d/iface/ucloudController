@@ -9,5 +9,6 @@
 #   miniupnpd state loss)
 
 [ "$ACTION" = "ifup" -a "$INTERFACE" != "wan" ] && {
+    sleep 5
     /etc/init.d/ucloud restart
 }

@@ -1,0 +1,118 @@
+#!/bin/sh
+. /usr/share/libubox/jshn.sh
+
+ubus_call() {
+		json_init
+		local _data="$(ubus -S call "$1" "$2")"
+		[ -z "$_data" ] && return 1
+		json_load "$_data"
+		return 0
+}
+
+get_this_addr_and_mask()
+{
+		ubus_call "network.interface.lan" status || return 0
+		
+		json_select ipv6-prefix-assignment
+		#json_get_keys ipv6-prefix-assignment
+
+		json_select 1
+		json_get_var lan_address address
+		json_get_var lan_netmask mask
+		
+		#echo "address=$address"
+		
+}
+
+get_nat66_lan_prefixaddr () {
+	local lan_expect_prefix=
+	for entry in $RA_LAN_PREFIX_EXPECT; do
+		lan_expect_prefix="${entry%%,*}"
+	done
+	if [ -n "$lan_expect_prefix" ];then
+		default_prefixaddr=$lan_expect_prefix
+	fi
+}
+
+#default prefix set and start nat66
+setup_lan_prefix_and_nat66 () {
+	local lan_ipv6_addr_num=`ip -6 -o addr show dev br-lan | sed -n '/.global/{p}' | wc -l`
+	#local lan_ipv6_addr=`ip -6 -o addr show dev br-lan | sed -n '/.global/{p}' | awk '{print $4}'`
+	get_this_addr_and_mask
+	local default_prefixaddr=`uci get ipv6UserCfg.lan.default_prefixaddr`
+	local old_nat6_enalbe=`uci get firewall.nat6.enabled`
+
+	if [ -n "$RA_ADDRESSES" -o -n "ADDRESSES" ];then
+		if [ -z "$PREFIXES" ];then
+			get_nat66_lan_prefixaddr
+			uci set network.globals.ula_prefix=$default_prefixaddr
+			uci set firewall.nat6.enabled="1"
+			uci set firewall.icmpv6_forward.enabled="0"
+			uci set firewall.nat.masq6="1"
+			uci set dhcp.lan.ra_default="1"
+			uci commit
+			if [ -n "$default_prefixaddr" -a $lan_ipv6_addr_num -eq 0 ] || [ $old_nat6_enalbe -eq 0 ] || 
+			[ -n "$default_prefixaddr" -a "$lan_address/$lan_netmask" != "$default_prefixaddr" ]; then
+				sleep 1;ifup lan > /dev/null 2>&1;
+				sleep 2;/etc/init.d/firewall restart > /dev/null 2>&1;
+				sleep 2;/usr/sbin/conntrack -D -f ipv6 > /dev/null 2>&1;
+			fi
+		else
+			uci set network.globals.ula_prefix=""
+			uci set firewall.nat6.enabled="0"
+			uci set firewall.icmpv6_forward.enabled="1"
+			uci set firewall.nat.masq6="0"
+			uci set dhcp.lan.ra_default="0"
+			uci commit
+			if [ $lan_ipv6_addr_num -ne 1 ] || [ $old_nat6_enalbe -eq 1 ];then
+				sleep 1;ifup lan > /dev/null 2>&1;
+				sleep 2;/etc/init.d/firewall restart > /dev/null 2>&1;
+				sleep 2;
+			fi
+		fi
+	fi
+}
+
+init_nat6 () {
+			uci set network.globals.ula_prefix=""
+			uci set firewall.nat6.enabled="0"
+			uci set firewall.icmpv6_forward.enabled="1"
+			uci set firewall.nat.masq6="0"
+			uci set dhcp.lan.ra_default="0"
+			uci commit
+			sleep 1;ifup lan;
+			sleep 2;/etc/init.d/firewall restart;
+			sleep 2;
+}
+
+
+# set_dns () {
+	# if [ -z "$RDNSS" ];then
+			# local default_dns=`uci get ipv6UserCfg.wan.default_dns`
+			# #wan dns set
+			# proto_add_dns_server "$default_dns"
+			
+			# #lan dns1 set
+			# ubus call dhcp updateDns "{\"dns1\":\"$default_dns\"}"
+	# fi
+# }
+
+echo -e "m_flag : $M_FLAG"
+echo -e "o_flag : $O_FLAG"
+echo -e "RA_ADDRESSES" : "$RA_ADDRESSES"
+echo -e "ADDRESSES" : "$ADDRESSES"
+echo -e "$2" 
+
+case "$2" in
+	informed|updated|rebound|ra-updated)
+		setup_lan_prefix_and_nat66 "$1"
+	;;
+	started)
+		init_nat6 "$1"
+	;;
+	bound)
+		init_nat6 "$1"
+		setup_lan_prefix_and_nat66 "$1"
+	;;
+esac
+

@@ -8,5 +8,5 @@ License: LGPL-2.1
 Section: libs
 Maintainer: Felix Fietkau <nbd@nbd.name>
 Architecture: mips_24kc_nomips16
-Installed-Size: 17467
+Installed-Size: 17471
 Description:  C library for the Unified Configuration Interface (UCI)

@@ -11,3 +11,9 @@ proto_send_update "$PPP_IPPARAM"
 		[ -x "$SCRIPT" ] && "$SCRIPT" "$@"
 	done
 }
+
+#avoid russia wan2 not dns after wan down
+wan_proto=`uci get network.wan.proto`
+if [ "$wan_proto" == "pptp" -o "$wan_proto" == "l2tp" ];then
+    ifup wan2
+fi

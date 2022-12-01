@@ -8,7 +8,7 @@ License: LGPLv2.1 GPLv2
 LicenseFiles: COPYING.LIB COPYING
 Section: libs
 Architecture: mips_24kc_nomips16
-Installed-Size: 69599
+Installed-Size: 69596
 Description:  FUSE (Filesystem in UserSpacE)
  This package contains the FUSE shared libraries, needed by other programs.
  - libfuse

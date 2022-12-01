@@ -7,5 +7,5 @@ License: BSD-3-Clause
 Section: net
 Maintainer: Markus Stenberg <fingon@iki.fi>
 Architecture: mips_24kc_nomips16
-Installed-Size: 64800
+Installed-Size: 64807
 Description:  Tenda Lightweight UPnP IGD, NAT-PMP & PCP daemon

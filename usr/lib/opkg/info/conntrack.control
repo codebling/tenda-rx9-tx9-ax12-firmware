@@ -7,7 +7,7 @@ License: GPL-2.0
 Section: net
 Maintainer: Jo-Philipp Wich <jo@mein.io>
 Architecture: mips_24kc_nomips16
-Installed-Size: 19900
+Installed-Size: 19902
 Description:  Conntrack is a userspace command line program targeted at system
  administrators. It enables them to view and manage the in-kernel
  connection tracking state table.

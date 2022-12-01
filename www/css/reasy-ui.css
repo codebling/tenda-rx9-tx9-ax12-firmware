@@ -819,7 +819,12 @@ input.btn, .btn-color-white.btn{
 	padding-top: 1px;
 	cursor:pointer;
 }
-
+.btn-off-disabled{
+	background:url(../img/btn_off_disabled.png) 0 no-repeat;
+}
+.btn-on-disabled{
+	background:url(../img/btn_on_disabled.png) 0 no-repeat;
+}
 /*============================ UI dropdown ==============================*/
 .dropdown-menu {
 	position: absolute;
@@ -888,31 +893,13 @@ input.btn, .btn-color-white.btn{
 .input-append {
 	display: inline-block;
 }
+
 .input-select {
 
-    /*zzc add*/
-    position: relative;
-    z-index: 10000
-}
+	/*zzc add*/
+	position:relative;
+	z-index: 10000
 
-#netBody .input-append{
-    position: relative;
-}
-#netBody .input-select {
-
-	/*xm add*/
-	position:absolute;
-    right:0;
-    top: 28px;
-	z-index: 10000;
-    min-width: 100%;
-
-}
-/**by xm*/
-#netBody .dropdown-menu {
-    position: relative;
-    top: 0;
-    left: 0;
 }
 
 
@@ -1082,12 +1069,12 @@ input.btn, .btn-color-white.btn{
 	/*position: relative;*/
 	position: absolute;
 	left:0;
-    top: 30px;
-    width: 100%;
+	top: 30px;
+	max-width: 240px;
 	height: 30px;
 	display: block;
 	visibility: hidden;
-    z-index: 999;
+	z-index: 999;
 }
 
 .validatebox-em .validatebox-tip{
@@ -1096,14 +1083,11 @@ input.btn, .btn-color-white.btn{
 }
 .validatebox-tip-content {
 	display: block;
-    width: 100%;
+	max-width: 240px;
 	padding: 0px 5px;
 	z-index: 1000;
 	font-size: 12px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
+	white-space: nowrap;
 }
 .validatebox-tip-pointer {
 	/*  display: inline-block;
@@ -1309,9 +1293,7 @@ body {transition: background 1s;}
 	margin-left: auto;
 	margin-right: auto;
 }
-.internetbody{
-    text-align:left;
-}
+
 .index-body {
 	/* background: url(../img/product-bg.gif) 50% 50px; */
 	background-color: #e7e7e7;
@@ -1885,9 +1867,7 @@ body {transition: background 1s;}
 }
 
 .btn-normal {
-    /**解决多国语言显示不下问题*/
-	max-width:200px;
-	min-width:120px;
+	width:120px;
 	color: #fff;
 	height:40px;
 	font-size:14px;
@@ -3604,7 +3584,7 @@ fieldset .down-line {
 }
 
 .syncimg .i-tip2{
-	top: 24%;
+	top: 30%;
 	left: 71%;
 }
 
@@ -3685,14 +3665,15 @@ input.btn-upload:hover,input.btn-upload:focus {
 	width: 170px;
 }
 .dfs-msg-con {
+	padding: 0 120px;
 	font-size: 16px;
 	width: 360px;
+	height: 280px;
 	top: 50%;
 	left: 50%;
-	transform: translate(-50%, -50%);
-	-webkit-transform: translate(-50%, -50%);
+	margin-top: -140px;
+	margin-left: -300px;
 	text-align: center;
-    padding:50px;
 }
 
 .dfs-msg-con .loading-box {
@@ -3700,7 +3681,7 @@ input.btn-upload:hover,input.btn-upload:focus {
 	height: 76px;
 	position: relative;
 	top: 0;
-	margin-bottom:20px;
+	margin: 50px 0 20px 0;
 	display: inline-block;
 }
 .dfs-msg-con .loading-box img {
@@ -3736,10 +3717,4 @@ input.btn-upload:hover,input.btn-upload:focus {
 
 .dfs-status.success {
 	color: #ed7020;
-}
-
-.wifi-power .radio{
-    vertical-align:top;
-    min-width: 100px;
-    margin-right: 10px;
 }

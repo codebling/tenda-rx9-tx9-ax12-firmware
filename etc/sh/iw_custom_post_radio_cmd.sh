@@ -14,7 +14,23 @@ mac80211_custom_post_radio() {
 		iw dev $ifname iwlwav sCcaTh -50 -50 -50 -50 -50
 		/etc/init.d/bandsteering restart
 	}
-	iw dev $ifname iwlwav sBfMode 4
+	
+
+	beamforming=`uci get system.@system[0].beamforming`
+	if [ "$beamforming" -eq 1 ]; then
+		if [ "$ifname" == "wlan0" ]; then
+			iw dev $ifname iwlwav sBfMode 255
+		else
+			iw dev $ifname iwlwav sBfMode 4
+		fi
+	else
+		if [ "$ifname" == "wlan0" ]; then
+			iw dev $ifname iwlwav sBfMode 4
+		else
+			iw dev $ifname iwlwav sBfMode 4
+		fi
+	fi
+
 }
 
 iw_ofdma_power_on_set() {

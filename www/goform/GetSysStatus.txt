@@ -7,6 +7,6 @@
     "ipMacBindEn":"0",
     "timeZone": "1",
     "remoteWeb":"1",
-    "nopwd": false,
+    "nopwd": "false",
     "syncInternetTime":"1"
 }

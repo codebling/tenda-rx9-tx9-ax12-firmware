@@ -132,10 +132,6 @@ function onlineQueryVersion(obj) {
 }
 
 function dowloadSoft() {
-    /**添加确认提示 */
-    if (!confirm(_("Are you sure you want to upgrade?"))) {
-       return;
-    } 
 	//if (window.confirm(_("When download is complete, the router starts the upgrade automatically. Keep the router powered on during the upgrade to prevent damaging the router."))) {
 	clearTimeout(G.onlineTimer);
     
@@ -384,10 +380,8 @@ function initEvent() {
 			//}
 			//$.post("goform/SysToolSetUpgrade", "action=0",callbackUpgrade)
 		} else {
-            if (confirm(_("Are you sure you want to upgrade?"))) {
-                document.forms[0].submit();
-                $("#sys_upgrade").attr("disabled", true);
-            } 
+			document.forms[0].submit();
+			$("#sys_upgrade").attr("disabled", true);
 		}
 	});
 

@@ -77,6 +77,10 @@ function initLanEvent() {
 	$("#lanIp, #lanMask").on("blur.range", function () {
 		if (!$.validate.valid.lanip.all($("#lanIp").val()) && !$.validate.valid.mask.all($("#lanMask").val())) {
 			changeDhcpRange();
+			//起始id地址屏蔽掉为xxx.xxx.xxx.1的情况
+			if($("#startIp").val() == 1){
+				$("#startIp").val(2)
+			}
 		}
 	});
 	$("#lanIp").on("blur", function () {
@@ -191,7 +195,7 @@ function checkData() {
 				return _("%s and %s (%s) must not be in the same network segment.", [_("LAN IP Address"), wanStr, wanIp]);
 			}
 
-			if (top.G.wanNum === 2 && wanIp2 != "" && checkIpInSameSegment(wanIp2, wanMask2, lanIp, lanMask)) {
+			if (wanIp2 && checkIpInSameSegment(wanIp2, wanMask2, lanIp, lanMask)) {
 				return _("%s and %s (%s) must not be in the same network segment.", [_("LAN IP Address"), _("WAN2 IP Address"), wanIp2]);
 			}
 			//SE决策：远程WEB管理IP不需要判断与其他功能关系
@@ -208,15 +212,15 @@ function checkData() {
 			/*if (guestIp != "" && checkIpInSameSegment(guestIp, G.data.guestMask, lanIp, lanMask)) {
 				return _("%s and %s (%s) must not be in the same network segment.", [_("LAN IP"),_("Guest Network IP"),guestIp]);
 			}*/
-			if (pptpSvrIp != "" && checkIpInSameSegment(pptpSvrIp, G.data.pptpSvrMask, lanIp, lanMask)) {
+			// pptpSvrIp后台给定的值无效，不需判断
+			/*if (pptpSvrIp != "" && checkIpInSameSegment(pptpSvrIp, G.data.pptpSvrMask, lanIp, lanMask)) {
 				return _("%s and %s (%s) must not be in the same network segment.", [_("LAN IP Address"), _("PPTP Server IP Address"), pptpSvrIp]);
-			}
+			}*/
 
 			if ($("#dhcpEn").val() == "1") {
 				if (parseInt($("#startIp").val(), 10) > parseInt($("#endIp").val(), 10)) {
 					return _("The end IP address must be greater than the start IP address.");
 				}
-
 				if (!checkIpInSameSegment(startIp, lanMask, lanIp, lanMask)) {
 					return _("%s and %s (%s) must be in the same network segment.", [_("Start IP Address"), _("LAN IP Address"), lanIp]);
 				}
@@ -233,11 +237,6 @@ function checkData() {
 			if (checkIpInSameSegment(lanIp, lanMask, vpnClientIp, lanMask)) {
 				return _("The LAN IP address and PPTP/L2TP client IP address (%s) cannot be in the same network segment.", [vpnClientIp]);
 			}
-
-            var errMsg = checkIsSimilarIpMask(lanIp, lanMask);
-            if (errMsg) {
-                return errMsg;
-            }
 		},
 
 		success: function () {

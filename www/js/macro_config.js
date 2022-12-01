@@ -70,6 +70,5 @@ var CONFIG_FIRWARE_DATE ="2019-01-16";
 var CONFIG_SYNC_ACCOUNT ="y";
 var CONFIG_WRL_SIGNAL ="n";
 var CONFIG_ANTI_INTERFERENCE ="y";
+// var CONFIG_MULTI_LANGUAGE_SORFWARE ="cn";
 var CONFIG_MULTI_LANGUAGE_SORFWARE ="en,zh,tr,ro,cs,de,hu,brpt,it,laes,fr,pl,nl,ko,es,pt,ru,uk";
-var CONFIG_1000M_ETH = "n";
-var CONFIG_WIFIBTN = "n";

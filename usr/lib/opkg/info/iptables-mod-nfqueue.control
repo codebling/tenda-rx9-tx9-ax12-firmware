@@ -6,7 +6,7 @@ SourceName: iptables-mod-nfqueue
 License: GPL-2.0
 Section: net
 Architecture: mips_24kc_nomips16
-Installed-Size: 2437
+Installed-Size: 2434
 Description:  iptables extension for user-space queuing via NFNETLINK.
  
  Includes:

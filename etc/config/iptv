@@ -1,5 +1,5 @@
 config igmpproxy
-	option enabled 1
+	option enabled 0
 	option quickleave 1
 #	option verbose [0-3](none, minimal[default], more, maximum)
 

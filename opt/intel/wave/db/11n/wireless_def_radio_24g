@@ -7,4 +7,5 @@
 		option country 'US'
 		option num_antennas '4'
 		option beacon_int '100'
+		option obss_interval '300'
 		option txpower '100'

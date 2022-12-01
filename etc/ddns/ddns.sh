@@ -72,11 +72,55 @@ password=`uci get advance.ddns.password`
 srv_name=`uci get advance.ddns.srv_name`
 domain=`uci get advance.ddns.domain`
 proto=`uci get network.wan.proto`
+radio0_2_disabled=`uci get wireless.radio0_2.disabled`
+radio1_2_disabled=`uci get wireless.radio1_2.disabled`
+ddns_ifname=`uci get network.wan_dev.name`
 
-wan_name="eth1"
-if [ "$proto" == "pppoe" ]
+if [[ "$radio0_2_disabled" == "1" ]] && [[ "$radio1_2_disabled" == "1" ]]
+then
+	wan_name="eth1"
+	if [ "$proto" == "pppoe" ]
+	then 
+		wan_name="pppoe-wan"
+	fi
+fi
+
+if [ "$radio0_2_disabled" == "0" ]
 then 
-wan_name="pppoe-wan"
+	wan_name="wlan1"
+elif [ "$radio1_2_disabled" == "0" ]
+then
+	wan_name="wlan3"
+fi
+
+if [ "$wan_name" == "" ]
+then 
+	if [ "$proto" == "pppoe" ]
+	then 
+		wan_name="pppoe-wan"
+	else
+		wan_name=$ddns_ifname
+	fi
+fi
+
+if [ "$wan_name" == "" ]
+then 
+	if [ "$proto" == "pptp" ]
+	then 
+		wan_name="pptp-wan"
+	else
+		wan_name=$ddns_ifname
+	fi
+fi
+
+if [ "$wan_name" == "" ]
+then 
+	if [ "$proto" == "l2tp" ]
+	then 
+		wan_name="l2tp-wan"
+	else
+		wan_name=$ddns_ifname
+	fi
 fi
 
 if [ "$1" == "start" ]

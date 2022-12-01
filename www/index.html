@@ -163,6 +163,56 @@ B.setTextDomain(["translate"]);
                         <div class="h2-title">Please select your connection type.</div>
                         <div class="recommend">As detected, your connection type may be:<span id="recommend-mode"></span></div>
                         <form id="internet-form">
+
+                            <div id="isp_set">
+                                <div class="control-group">
+                                    <label class="control-label">ISP Type:</label>
+                                    <div class="controls">
+                                        <select class="input-append fast-select" name="ispType" id="ispType">
+                                            <option value="0">Normal</option>
+                                            <option value="1">Unifi</option>
+                                            <option value="2">Maxis</option>
+                                            <option value="6">Celcom</option>
+                                            <option value="7">Digi</option>
+                                           <!-- &lt;!&ndash; Russia &ndash;&gt; -->
+                                            <option value="5">Russia</option>
+                                            <option value="3">Manual</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control-group" id="isp_area" style="display: none">
+                                    <label class="control-label">Area:</label>
+                                    <div class="controls">
+                                        <select class="input-append fast-select" id="ispArea" name="ispArea">
+                                            <!--    <option value="2">Maxis</option>
+                                                <option value="4">Maxis-special</option>
+                                                <option value="6">CELCOME WEST(BIZ)</option>
+                                                <option value="7">CELCOME WEST(HOME)</option>
+                                                <option value="8">CELCOME EAST(BIZ)</option>
+                                                <option value="9">CELCOME EAST(HOME)</option>
+                                                <option value="10">Digi-TM</option>
+                                                <option value="11">Digi</option>
+                                                <option value="12">Digi-CT</option>
+                                                <option value="13">Digi-TNB</option>-->
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="ispWrap" class="none">
+                                    <div class="control-group">
+                                        <label class="control-label">Internet VLAN ID:</label>
+                                        <div class="controls">
+                                            <input type="text" class="validatebox fast-input" id="wanVlanId" name="wanVlanId" maxlength="4" data-options="{&quot;type&quot;:&quot;num&quot;,&quot;args&quot;:[2,4094]}">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label">IPTV VLAN ID:</label>
+                                        <div class="controls">
+                                            <input type="text" placeholder="Blank VLAN ID indicates that the IPTV function is disabled" class="validatebox fast-input" id="lanVlanId" name="lanVlanId" maxlength="4" data-options="{&quot;type&quot;:&quot;num&quot;,&quot;args&quot;:[2,4094]}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="control-group">
                                 <label class="control-label">Connection Type:</label>
                                 <div class="controls">
@@ -174,7 +224,7 @@ B.setTextDomain(["translate"]);
                                     <span class="select-tab"></span>
                                 </div>
                             </div>
-                            <div id="ppoe_set">
+                            <div id="ppoe_set" class="none">
                                 <div class="control-group">
                                     <label class="control-label">ISP User Name:</label>
                                     <div class="controls">
@@ -219,7 +269,15 @@ B.setTextDomain(["translate"]);
                                 <div class="control-group">
                                     <label class="control-label head-text">Address Type:</label>
                                     <div class="controls controls-radio">
-                                        <input type="radio" name="vpnWanType" value="1" checked="">Dynamic IP Address<input type="radio" name="vpnWanType" value="0">Static IP Address</div>
+                                        <label class="radio">
+                                            <input type="radio" name="vpnWanType" value="1" checked="">
+                                            Dynamic IP Address
+                                        </label>
+                                        <label class="radio">
+                                            <input type="radio" name="vpnWanType" value="0">
+                                            Static IP Address
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                             <div id="static_ip" class="none">
@@ -342,7 +400,7 @@ B.setTextDomain(["translate"]);
             </div>
         </div>
         <div id="waiting" class="none">
-        	<div class="mastbody">
+            <div class="mastbody">
                 <div class="loadding">
                     <div class="loadding-number"></div>
                 </div>
@@ -410,7 +468,7 @@ B.setTextDomain(["translate"]);
             </li>
             <li class="syncli small">
                 <span>Importing: All LAN/WAN LED indicators of this router blink quickly.</span>
-                <span id="importSuc">导入成功：新路由器指示灯快闪8秒。</span>
+                <span id="importSuc">E#pxc#Imported: All LAN/WAN LED indicators of this router stay solid on for 3 seconds.</span>
             </li>
         </ul>
     </div>

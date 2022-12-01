@@ -4,9 +4,15 @@ PPP_IPPARAM="$6"
 . /lib/netifd/netifd-proto.sh
 proto_init_update "$IFNAME" 1 1
 proto_set_keep 1
+ispType=`uci get network.wan.ispType`
 [ -n "$PPP_IPPARAM" ] && {
 	[ -n "$IPLOCAL" ] && proto_add_ipv4_address "$IPLOCAL" 32 "" "${IPREMOTE:-2.2.2.2}"
 	[ -n "$IPREMOTE" ] && proto_add_ipv4_route 0.0.0.0 0 "$IPREMOTE"
+
+	[ "5" == "$ispType" ] && [ -n "$DNS1" ] && {
+		ubus call network.interface.wan2 "clear_dns"
+	}
+
 	[ -n "$DNS1" ] && proto_add_dns_server "$DNS1"
 	[ -n "$DNS2" -a "$DNS1" != "$DNS2" ] && proto_add_dns_server "$DNS2"
 }

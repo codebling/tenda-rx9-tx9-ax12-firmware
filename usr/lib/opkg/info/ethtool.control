@@ -8,6 +8,6 @@ LicenseFiles: COPYING
 Section: net
 Maintainer: Felix Fietkau <nbd@nbd.name>
 Architecture: mips_24kc_nomips16
-Installed-Size: 34455
+Installed-Size: 34458
 Description:  ethtool is a small utility for examining and tuning your ethernet-based
  network interface

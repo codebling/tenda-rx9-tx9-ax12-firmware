@@ -5,5 +5,5 @@ Source: package/tenda_property/calc_file_crc
 SourceName: calc_file_crc
 Section: Tenda Property
 Architecture: mips_24kc_nomips16
-Installed-Size: 3660
+Installed-Size: 3661
 Description:  file crc

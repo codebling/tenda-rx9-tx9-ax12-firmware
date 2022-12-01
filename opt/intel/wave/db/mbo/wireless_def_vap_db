@@ -6,4 +6,5 @@
 		option encryption 'psk2'
 		option ieee80211w '1'
 		option wav_bridge 'brlan0'
+		option rrm_neighbor_report '1'
 		option debug_hostap_conf_1 'wnm_bss_trans_query_auto_resp=1'

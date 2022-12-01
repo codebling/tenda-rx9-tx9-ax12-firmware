@@ -5,5 +5,5 @@ Source: package/tenda_property/httpd
 SourceName: httpd
 Section: Tenda Property
 Architecture: mips_24kc_nomips16
-Installed-Size: 1302267
+Installed-Size: 1316936
 Description:  HTTPd - tiny, single threaded HTTP server
